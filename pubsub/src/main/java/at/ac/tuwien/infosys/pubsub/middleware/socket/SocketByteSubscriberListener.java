@@ -1,0 +1,67 @@
+package at.ac.tuwien.infosys.pubsub.middleware.socket;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+
+import at.ac.tuwien.infosys.pubsub.middleware.SubscriberHandler;
+import at.ac.tuwien.infosys.pubsub.middleware.SubscriberListener;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+
+public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
+
+    private int port;
+
+    private ServerSocket server;
+
+    public SocketByteSubscriberListener(int port) {
+        this.port = port;
+        server = null;
+    }
+
+    @Override
+    public SubscriberHandler<byte[]> waitForNextHandler() {
+        if (server == null) {
+            // open socket
+            try {
+                server = new ServerSocket(port);
+                server.setSoTimeout(1000);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        if (server != null) {
+            try {
+                // wait for a new connection
+                Socket socket = server.accept();
+                socket.setSoTimeout(1000);
+
+                // create the handler
+                SubscriberHandler<byte[]> handler = new SocketByteSubscriberHandler(
+                        new SocketByteMessageReceiver(socket),
+                        new SocketByteMessageSender(socket));
+                return handler;
+            } catch (SocketTimeoutException e) {
+                // ignore
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void shutdown() {
+        if (server != null) {
+            try {
+                server.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
+}

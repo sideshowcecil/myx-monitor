@@ -40,21 +40,9 @@ public class SocketByteMessageSender implements MessageSender<byte[]> {
             break;
         }
 
-        long start, end;
         try {
             out.write(type);
-            start = System.currentTimeMillis();
-            byte[] data = Base64.encodeBase64(msg.getData());
-            end = System.currentTimeMillis();
-            if (end - start > 75) {
-                System.err.println("a: " + (end - start));
-            }
-            start = System.currentTimeMillis();
-            out.write(data);
-            end = System.currentTimeMillis();
-            if (end - start > 75) {
-                System.err.println("b: " + (end - start));
-            }
+            out.write(Base64.encodeBase64(msg.getData()));
             out.write(Protocol.CR);
             out.write(Protocol.LF);
         } catch (IOException e) {

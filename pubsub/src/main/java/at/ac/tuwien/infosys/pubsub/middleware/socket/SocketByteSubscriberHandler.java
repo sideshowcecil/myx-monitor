@@ -3,23 +3,24 @@ package at.ac.tuwien.infosys.pubsub.middleware.socket;
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.middleware.SubscriberHandler;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Implementation of SubscriberHandler based on the SocketByteMessageProtocol.
+ * @author bernd.rathmanner
+ *
+ */
 public class SocketByteSubscriberHandler extends SubscriberHandler<byte[]> {
 
-    private SocketByteMessageReceiver receiver;
-    private SocketByteMessageSender sender;
+    private SocketByteMessageProtocol protocol;
 
-    public SocketByteSubscriberHandler(SocketByteMessageReceiver receiver,
-            SocketByteMessageSender sender) {
-        this.receiver = receiver;
-        this.sender = sender;
+    public SocketByteSubscriberHandler(SocketByteMessageProtocol protocol) {
+        this.protocol = protocol;
     }
 
     @Override
     public String waitForTopicName() {
-        Message<byte[]> msg = receiver.receive();
+        Message<byte[]> msg = protocol.receive();
         if (msg.getType() == Type.TOPIC) {
             return new String(msg.getData());
         }
@@ -35,7 +36,7 @@ public class SocketByteSubscriberHandler extends SubscriberHandler<byte[]> {
 
     @Override
     public void sendMessage(Message<byte[]> msg) {
-        sender.send(msg);
+        protocol.send(msg);
     }
 
     @Override

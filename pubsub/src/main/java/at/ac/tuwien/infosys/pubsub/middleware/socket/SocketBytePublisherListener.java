@@ -7,9 +7,14 @@ import java.net.SocketTimeoutException;
 
 import at.ac.tuwien.infosys.pubsub.middleware.PubSubHandler;
 import at.ac.tuwien.infosys.pubsub.middleware.PublisherListener;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Implementation of PublisherListener based on the SocketByteMessageProtocol.
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public class SocketBytePublisherListener extends PublisherListener<byte[]> {
 
     private int port;
@@ -41,8 +46,7 @@ public class SocketBytePublisherListener extends PublisherListener<byte[]> {
 
                 // create the handler
                 PubSubHandler<byte[]> handler = new SocketBytePubSubHandler(
-                        new SocketByteMessageReceiver(socket),
-                        new SocketByteMessageSender(socket));
+                        new SocketByteMessageProtocol(socket));
                 return handler;
             } catch (SocketTimeoutException e) {
                 // ignore

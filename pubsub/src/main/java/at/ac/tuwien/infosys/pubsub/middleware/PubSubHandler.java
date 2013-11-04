@@ -10,6 +10,16 @@ import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.network.MessageReceiver;
 import at.ac.tuwien.infosys.pubsub.network.MessageSender;
 
+/**
+ * This abstract class contains the logic of the publish-subscribe pattern. It
+ * forwards all incoming messages from the publisher to all connected
+ * subscribers.
+ * 
+ * @author bernd.rathmanner
+ * 
+ * @param <E>
+ *            resembles the message data.
+ */
 public abstract class PubSubHandler<E> extends Thread {
 
     private static Logger logger = LoggerFactory.getLogger(PubSubHandler.class);
@@ -23,6 +33,12 @@ public abstract class PubSubHandler<E> extends Thread {
 
     private CopyOnWriteArrayList<SubscriberHandler<E>> subscribers;
 
+    /**
+     * Basic constructor with the publishers MessageReceiver and MessageSender.
+     * 
+     * @param receiver
+     * @param sender
+     */
     public PubSubHandler(MessageReceiver<E> receiver, MessageSender<E> sender) {
         this.receiver = receiver;
         this.sender = sender;
@@ -30,6 +46,11 @@ public abstract class PubSubHandler<E> extends Thread {
         subscribers = new CopyOnWriteArrayList<>();
     }
 
+    /**
+     * Adds a subscriber as a listener for messages.
+     * 
+     * @param handler
+     */
     public void addSubscriber(SubscriberHandler<E> handler) {
         logger.info("Adding subscriber");
         subscribers.add(handler);
@@ -38,10 +59,18 @@ public abstract class PubSubHandler<E> extends Thread {
         }
     }
 
+    /**
+     * Removes a subscriber as a listener.
+     * 
+     * @param handler
+     */
     public void removeSubscriber(SubscriberHandler<E> handler) {
         subscribers.remove(handler);
     }
 
+    /**
+     * The publish-subscribe pattern is executed.
+     */
     @Override
     public void run() {
         // wait for the topic name
@@ -93,9 +122,20 @@ public abstract class PubSubHandler<E> extends Thread {
         shutdown();
     }
 
+    /**
+     * Wait and return the topic name used by this publisher.
+     * 
+     * @return
+     */
     public abstract String waitForTopicName();
 
+    /**
+     * Send an error to the publisher if the topic name is already registered.
+     */
     public abstract void sendErrorForExistingTopic();
 
+    /**
+     * Shutdown all implementation specific resources.
+     */
     public abstract void shutdown();
 }

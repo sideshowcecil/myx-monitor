@@ -13,9 +13,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Test class to show how the subscriber can be created (real Subscriber
+ * implementation is still a TODO)
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public class SubscriberTest {
 
     public static void main(String[] args)
@@ -23,16 +29,15 @@ public class SubscriberTest {
             LineUnavailableException, InterruptedException {
         Socket socketReceiver = new Socket();
         socketReceiver.connect(new InetSocketAddress(6667));
-        SocketByteMessageReceiver r = new SocketByteMessageReceiver(
+        SocketByteMessageProtocol protocol = new SocketByteMessageProtocol(
                 socketReceiver);
-        SocketByteMessageSender s = new SocketByteMessageSender(socketReceiver);
 
-        s.send(new Message<byte[]>("test".getBytes(), Type.TOPIC));
-        
+        protocol.send(new Message<byte[]>("test".getBytes(), Type.TOPIC));
+
         SourceDataLine line = null;
         boolean play = true;
         while (play) {
-            Message<byte[]> m = r.receive();
+            Message<byte[]> m = protocol.receive();
             switch (m.getType()) {
             case TOPIC:
                 break;

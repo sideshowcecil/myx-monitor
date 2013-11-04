@@ -3,13 +3,17 @@ package at.ac.tuwien.infosys.pubsub.middleware.socket;
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.middleware.PubSubHandler;
-import at.ac.tuwien.infosys.pubsub.network.MessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.MessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Implementation of PubSubHandler based on the SocketByteMessageProtocol.
+ * @author bernd.rathmanner
+ *
+ */
 public class SocketBytePubSubHandler extends PubSubHandler<byte[]> {
 
-    public SocketBytePubSubHandler(MessageReceiver<byte[]> receiver, MessageSender<byte[]> sender) {
-        super(receiver, sender);
+    public SocketBytePubSubHandler(SocketByteMessageProtocol protocol) {
+        super(protocol, protocol);
     }
 
     @Override

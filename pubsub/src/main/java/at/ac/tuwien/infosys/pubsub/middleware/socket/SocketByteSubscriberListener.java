@@ -7,9 +7,14 @@ import java.net.SocketTimeoutException;
 
 import at.ac.tuwien.infosys.pubsub.middleware.SubscriberHandler;
 import at.ac.tuwien.infosys.pubsub.middleware.SubscriberListener;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Implementation of SubscriberListener based on the SocketByteMessageProtocol.
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
 
     private int port;
@@ -41,8 +46,7 @@ public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
 
                 // create the handler
                 SubscriberHandler<byte[]> handler = new SocketByteSubscriberHandler(
-                        new SocketByteMessageReceiver(socket),
-                        new SocketByteMessageSender(socket));
+                        new SocketByteMessageProtocol(socket));
                 return handler;
             } catch (SocketTimeoutException e) {
                 // ignore

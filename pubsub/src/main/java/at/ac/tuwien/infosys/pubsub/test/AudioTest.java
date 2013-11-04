@@ -9,12 +9,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -25,9 +19,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageReceiver;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Test class for sampled lib.
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public class AudioTest {
 
     // private static SourceDataLine line;
@@ -39,9 +38,11 @@ public class AudioTest {
         Socket socketSender = new Socket();
         socketSender.connect(new InetSocketAddress(6666));
         Socket socketReceiver = ss.accept();
-        SocketByteMessageSender s = new SocketByteMessageSender(socketSender);
-        SocketByteMessageReceiver r = new SocketByteMessageReceiver(socketReceiver);
-        
+        SocketByteMessageProtocol s = new SocketByteMessageProtocol(
+                socketSender);
+        SocketByteMessageProtocol r = new SocketByteMessageProtocol(
+                socketReceiver);
+
         URL url = ClassLoader.getSystemResource("sound.wav");
         File file = new File(url.getFile());
         InputStream is = new FileInputStream(file);
@@ -54,7 +55,7 @@ public class AudioTest {
         line.open();
         line.start();
 
-        int numBytesRead, numBytesToRead = 1024; //numBytesToRead = 44;
+        int numBytesRead, numBytesToRead = 1024; // numBytesToRead = 44;
         long total = 0, totalToRead = file.length();
         byte[] myData = new byte[numBytesToRead];
         boolean formatRead = false;
@@ -64,13 +65,13 @@ public class AudioTest {
         while (total < totalToRead) {
             numBytesRead = is.read(myData, 0, numBytesToRead);
             if (!formatRead) {
-            //try {
+                // try {
                 AudioInputStream ais = AudioSystem
                         .getAudioInputStream(new ByteArrayInputStream(myData));
                 System.out.println(ais.getFormat());
-                //System.out.println(new String(myData));
+                // System.out.println(new String(myData));
                 formatRead = true;
-            //} catch (Exception e) {}
+                // } catch (Exception e) {}
             }
             /* break; */
             if (numBytesRead == -1)
@@ -79,16 +80,16 @@ public class AudioTest {
             Message<byte[]> m = new Message<byte[]>(myData, Type.INIT);
             s.send(m);
             m = r.receive();
-            //System.out.println(new String((byte[])m.getData()));
-            line.write((byte[])m.getData(), 0, numBytesRead);
-            //break;
+            // System.out.println(new String((byte[])m.getData()));
+            line.write((byte[]) m.getData(), 0, numBytesRead);
+            // break;
             // es.execute(new FutureTask<>(new WriteLine(myData)));
         }
 
         line.stop();
         line.close();
         is.close();
-        
+
         ss.close();
 
     }

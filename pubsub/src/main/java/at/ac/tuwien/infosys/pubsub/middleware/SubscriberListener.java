@@ -6,6 +6,16 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * This abstract class contains the basic logic for listening for new
+ * subscribers.
+ * 
+ * @author bernd.rathmanner
+ * 
+ * @param <E>
+ *            resembles the message data.
+ */
 public abstract class SubscriberListener<E> extends Thread {
 
     private static Logger logger = LoggerFactory
@@ -13,6 +23,9 @@ public abstract class SubscriberListener<E> extends Thread {
 
     private volatile boolean run = true;
 
+    /**
+     * Start the listening for new subscribers.
+     */
     @Override
     public void run() {
         ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -29,6 +42,9 @@ public abstract class SubscriberListener<E> extends Thread {
         shutdown();
     }
 
+    /**
+     * Stop listening for new subscribers.
+     */
     public void close() {
         run = false;
         try {
@@ -37,7 +53,15 @@ public abstract class SubscriberListener<E> extends Thread {
         }
     }
 
+    /**
+     * Wait and return the next SubscriberHandler if a new subscriber connects.
+     * 
+     * @return
+     */
     public abstract SubscriberHandler<E> waitForNextHandler();
 
+    /**
+     * Shutdown all implementation specific resources.
+     */
     public abstract void shutdown();
 }

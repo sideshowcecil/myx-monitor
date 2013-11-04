@@ -2,7 +2,6 @@ package at.ac.tuwien.infosys.pubsub.middleware;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -11,6 +10,16 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 
+/**
+ * This abstract class contains the logic to send published messages to a
+ * subscriber. Thus it forwards all incoming messages. The forwarding is based
+ * on a simple queue, so that no messages may get lost.
+ * 
+ * @author bernd.rathmanner
+ * 
+ * @param <E>
+ *            resembles the message data.
+ */
 public abstract class SubscriberHandler<E> extends Thread {
 
     private static Logger logger = LoggerFactory
@@ -20,10 +29,19 @@ public abstract class SubscriberHandler<E> extends Thread {
 
     private volatile boolean run = true;
 
+    /**
+     * Add a message to the handlers queue.
+     * 
+     * @param msg
+     */
     public void addMessage(Message<E> msg) {
         messageQueue.offer(msg);
     }
 
+    /**
+     * Execute the registration to a publisher and the forwarding of incoming
+     * messages.
+     */
     @Override
     public void run() {
         // wait for the topic name
@@ -54,9 +72,9 @@ public abstract class SubscriberHandler<E> extends Thread {
                         try {
                             // wait for a message
                             logger.debug("Waiting for message");
-                            // msg = messageQueue.poll(500,
-                            // TimeUnit.MILLISECONDS);
-                            msg = messageQueue.take();
+                            // use poll so we may shutdown the handler correclty
+                            // and don't have to wait forever
+                            msg = messageQueue.poll(500, TimeUnit.MILLISECONDS);
                         } catch (InterruptedException e) {
                         }
                         if (msg != null) {
@@ -82,6 +100,9 @@ public abstract class SubscriberHandler<E> extends Thread {
         shutdown();
     }
 
+    /**
+     * Stops the message forwarding.
+     */
     public void close() {
         run = false;
         try {
@@ -90,11 +111,27 @@ public abstract class SubscriberHandler<E> extends Thread {
         }
     }
 
+    /**
+     * Wait and return the topic name used by this subscriber.
+     * 
+     * @return
+     */
     public abstract String waitForTopicName();
 
+    /**
+     * Send an error to the subscriber if the topic name is not registered.
+     */
     public abstract void sendErrorForNonExistingTopic();
 
+    /**
+     * Send a message to the subscriber.
+     * 
+     * @param msg
+     */
     public abstract void sendMessage(Message<E> msg);
 
+    /**
+     * Shutdown all implementation specific resources.
+     */
     public abstract void shutdown();
 }

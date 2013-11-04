@@ -14,8 +14,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
-import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageSender;
+import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
+/**
+ * Test class to show how the publisher can be created (real Publisher
+ * implementation is still a TODO)
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public class PublisherTest {
 
     public static void main(String[] args)
@@ -26,7 +33,7 @@ public class PublisherTest {
         
         Socket sock = new Socket();
         sock.connect(new InetSocketAddress(6666));
-        SocketByteMessageSender s = new SocketByteMessageSender(sock);
+        SocketByteMessageProtocol s = new SocketByteMessageProtocol(sock);
 
         //URL url = ClassLoader.getSystemResource("sound2.wav");
         URL url = ClassLoader.getSystemResource("sound.wav");

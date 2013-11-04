@@ -2,6 +2,12 @@ package at.ac.tuwien.infosys.pubsub;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
 
+/**
+ * TODO publisher interface
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
 public interface Publisher {
-    public Message<?> receive();
+    public void send(Message<?> msg);
 }

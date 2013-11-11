@@ -32,7 +32,7 @@ public class SocketBytePublisherListener extends PublisherListener<byte[]> {
             // open socket
             try {
                 server = new ServerSocket(port);
-                server.setSoTimeout(1000);
+                server.setSoTimeout(2500);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

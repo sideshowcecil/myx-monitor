@@ -49,28 +49,28 @@ public final class SocketByteMessageProtocol implements
         char type;
         switch (msg.getType()) {
         case TOPIC:
-            type = SocketByteMessageProtocol.TOPIC;
+            type = TOPIC;
             break;
         case INIT:
-            type = SocketByteMessageProtocol.INIT;
+            type = INIT;
             break;
         case DATA:
-            type = SocketByteMessageProtocol.DATA;
+            type = DATA;
             break;
         case CLOSE:
-            type = SocketByteMessageProtocol.CLOSE;
+            type = CLOSE;
             break;
         case ERROR:
         default:
-            type = SocketByteMessageProtocol.ERROR;
+            type = ERROR;
             break;
         }
 
         try {
             out.write(type);
             out.write(Base64.encodeBase64(msg.getData()));
-            out.write(SocketByteMessageProtocol.CR);
-            out.write(SocketByteMessageProtocol.LF);
+            out.write(CR);
+            out.write(LF);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -94,30 +94,28 @@ public final class SocketByteMessageProtocol implements
                 // the first char defines the type of message
                 if (type == null) {
                     switch (c) {
-                    case SocketByteMessageProtocol.TOPIC:
+                    case TOPIC:
                         type = Type.TOPIC;
                         break;
-                    case SocketByteMessageProtocol.INIT:
+                    case INIT:
                         type = Type.INIT;
                         break;
-                    case SocketByteMessageProtocol.DATA:
+                    case DATA:
                         type = Type.DATA;
                         break;
-                    case SocketByteMessageProtocol.CLOSE:
+                    case CLOSE:
                         type = Type.CLOSE;
                         break;
-                    case SocketByteMessageProtocol.ERROR:
+                    case ERROR:
                     default:
                         type = Type.ERROR;
                         break;
                     }
                 } else {
                     // read all characters until the end of the message
-                    if (c == SocketByteMessageProtocol.CR
-                            && last == SocketByteMessageProtocol.NULL) {
+                    if (c == CR && last == NULL) {
                         last = c;
-                    } else if (last == SocketByteMessageProtocol.CR
-                            && c == SocketByteMessageProtocol.LF) {
+                    } else if (last == CR && c == LF) {
                         sb.setLength(sb.length() - 1);
                         break;
                     }
@@ -125,6 +123,9 @@ public final class SocketByteMessageProtocol implements
                 }
             } catch (IOException e) {
                 type = Type.ERROR;
+                if (sb.length() == 0) {
+                    sb.append(e.getMessage());
+                }
                 break;
             }
         }

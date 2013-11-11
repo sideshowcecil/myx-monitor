@@ -32,7 +32,7 @@ public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
             // open socket
             try {
                 server = new ServerSocket(port);
-                server.setSoTimeout(1000);
+                server.setSoTimeout(2500);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -42,7 +42,7 @@ public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
             try {
                 // wait for a new connection
                 Socket socket = server.accept();
-                socket.setSoTimeout(1000);
+                socket.setSoTimeout(2500);
 
                 // create the handler
                 SubscriberHandler<byte[]> handler = new SocketByteSubscriberHandler(

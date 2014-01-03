@@ -1,11 +1,8 @@
 package at.ac.tuwien.infosys.pubsub.middleware.arch.component;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
-import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
@@ -28,8 +25,6 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 
 	private ExecutorService _executor;
 	private Runnable _endpoint;
-	
-    private BlockingQueue<Message<E>> _queue = new LinkedBlockingQueue<>();
 
 	@Override
 	public Object getServiceObject(IMyxName arg0) {
@@ -48,21 +43,14 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 			public void run() {
 				// wait for the topic name
 				String topic = waitForTopicName();
-				// if we do not get a topic name we assume the publisher died
+				// if we do not get a topic name we assume the subscriber died
 				if (topic != null) {
-					// check if the topic exists
+					// check if the topic exists and register the endpoint
 					try {
 						_registry.register(topic, SubscriberEndpoint.this);
 					} catch (IllegalArgumentException ex) {
 						sendErrorForNonExistingTopic();
 						return;
-					}
-					// wait for messages and forward them to the subscribers
-					while (true) {
-						// wait for a message
-						Message<E> msg = _queue.poll();
-						// TODO: check for CLOSE or ERROR messages so we may shut down the endpoint.
-						// TODO: maybe don't use a queue here but rather forward it directly to the real endpoint
 					}
 				}
 			}
@@ -81,11 +69,6 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 			return;
 		}
 		_executor.execute(_endpoint);
-	}
-	
-	@Override
-	public void send(Message<E> message) {
-		_queue.offer(message);
 	}
 
     /**

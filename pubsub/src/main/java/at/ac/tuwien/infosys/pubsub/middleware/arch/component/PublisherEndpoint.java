@@ -24,6 +24,8 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 	protected IRegistry<E> _registry;
 	protected ISubscriber<E> _subscriber;
 
+	protected String _topic = null;
+
 	private ExecutorService _executor;
 	private Runnable _endpoint;
 
@@ -38,12 +40,12 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 		_endpoint = new Runnable() {
 			public void run() {
 				// wait for the topic name
-				String topic = waitForTopicName();
+				_topic = waitForTopicName();
 				// if we do not get a topic name we assume the publisher died
-				if (topic != null) {
+				if (_topic != null) {
 					// check if the topic exists
 					try {
-						_registry.register(topic, PublisherEndpoint.this);
+						_registry.register(_topic, PublisherEndpoint.this);
 					} catch (IllegalArgumentException ex) {
 						sendErrorForExistingTopic();
 						return;
@@ -52,7 +54,8 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 					while (true) {
 						// wait for a message
 						Message<E> msg = receive();
-						// TODO: check for CLOSE or ERROR messages so we may shut down the endpoint.
+						// TODO: check for CLOSE or ERROR messages so we may
+						// shut down the endpoint.
 						_subscriber.send(msg);
 					}
 				}
@@ -74,6 +77,14 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			return;
 		}
 		_executor.execute(_endpoint);
+	}
+
+	@Override
+	public void end() {
+		_executor.shutdownNow();
+		if (_topic != null) {
+			_registry.unregister(_topic, this);
+		}
 	}
 
 	/**

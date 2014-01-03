@@ -22,6 +22,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 
 	protected IDispatcher<E> _dispatcher;
 	protected IRegistry<E> _registry;
+	
+	protected String _topic = null;
 
 	private ExecutorService _executor;
 	private Runnable _endpoint;
@@ -42,12 +44,12 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 		_endpoint = new Runnable() {
 			public void run() {
 				// wait for the topic name
-				String topic = waitForTopicName();
+				_topic = waitForTopicName();
 				// if we do not get a topic name we assume the subscriber died
-				if (topic != null) {
+				if (_topic != null) {
 					// check if the topic exists and register the endpoint
 					try {
-						_registry.register(topic, SubscriberEndpoint.this);
+						_registry.register(_topic, SubscriberEndpoint.this);
 					} catch (IllegalArgumentException ex) {
 						sendErrorForNonExistingTopic();
 						return;
@@ -69,6 +71,13 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 			return;
 		}
 		_executor.execute(_endpoint);
+	}
+	
+	@Override
+	public void end() {
+		if (_topic != null) {
+			_registry.unregister(_topic, this);
+		}
 	}
 
     /**

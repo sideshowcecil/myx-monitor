@@ -51,7 +51,7 @@ public class MyxRuntime {
 	private MyxJavaClassBrickDescription _publisherEndpoint;
 	private MyxJavaClassBrickDescription _subscriberDispatcher;
 	private MyxJavaClassBrickDescription _subscriberEndpoint;
-	
+
 	// connector descriptions
 	private MyxJavaClassBrickDescription _messageDistributor;
 	private MyxJavaClassBrickDescription _synchronousProxy;
@@ -96,10 +96,12 @@ public class MyxRuntime {
 				SUBSCRIBER_DISPATCHER);
 		_subscriberEndpoint = new MyxJavaClassBrickDescription(null,
 				SUBSCRIBER_ENDPOINT);
-		
+
 		// connectors
-		_messageDistributor = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR);
-		_synchronousProxy = new MyxJavaClassBrickDescription(null, SYNCHRONOUS_PROXY);
+		_messageDistributor = new MyxJavaClassBrickDescription(null,
+				MESSAGE_DISTRIBUTOR);
+		_synchronousProxy = new MyxJavaClassBrickDescription(null,
+				SYNCHRONOUS_PROXY);
 
 		// startup the application
 		_myx.init(null, null);
@@ -114,13 +116,23 @@ public class MyxRuntime {
 		IMyxName dispatcherName = MyxUtils.getName(dispatcher);
 	}
 
-	public void wirePublisherEndpoint(PublisherEndpoint<?> endpoint,
-			IDispatcher<?> dispatcher) {
+	public MessageDistributor createMessageDistributor(
+			PublisherEndpoint<?> endpoint) {
+
+		return null;
+	}
+
+	public void removeMessageDistributor(MessageDistributor distributor) {
 
 	}
 
-	public void wireSubscriberEndpoint(SubscriberEndpoint<?> endpoint,
-			IDispatcher<?> dispatcher) {
+	public void wireMessageDistributor(SubscriberEndpoint<?> endpoint,
+			MessageDistributor distributor) {
+
+	}
+
+	public void unwireMessageDistributor(SubscriberEndpoint<?> endpoint,
+			MessageDistributor distributor) {
 
 	}
 }

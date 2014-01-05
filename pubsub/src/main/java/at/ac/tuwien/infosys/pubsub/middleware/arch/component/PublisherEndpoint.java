@@ -4,10 +4,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
+import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
@@ -23,11 +25,12 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 	protected IDispatcher<E> _dispatcher;
 	protected IRegistry<E> _registry;
 	protected ISubscriber<E> _subscriber;
-
+	
+	protected Endpoint<E> _endpoint;
 	protected String _topic = null;
 
 	private ExecutorService _executor;
-	private Runnable _endpoint;
+	private Runnable _runnable;
 
 	@Override
 	public Object getServiceObject(IMyxName arg0) {
@@ -37,8 +40,10 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 	@Override
 	public void init() {
 		_executor = Executors.newSingleThreadExecutor();
-		_endpoint = new Runnable() {
+		_runnable = new Runnable() {
 			public void run() {
+				// get the endpoint from the connected dispatcher
+				_endpoint = _dispatcher.getNextEndpoint();
 				// wait for the topic name
 				_topic = waitForTopicName();
 				// if we do not get a topic name we assume the publisher died
@@ -51,11 +56,16 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 						return;
 					}
 					// wait for messages and forward them to the subscribers
-					while (true) {
+					boolean run = true;
+					while (run) {
 						// wait for a message
-						Message<E> msg = receive();
-						// TODO: check for CLOSE or ERROR messages so we may
-						// shut down the endpoint.
+						Message<E> msg = _endpoint.receive();
+						// if we receive a CLOSE or ERROR message we send
+						// shutdown the endpoint
+						if (msg.getType() == Type.CLOSE
+								|| msg.getType() == Type.ERROR) {
+							run = false;
+						}
 						_subscriber.send(msg);
 					}
 				}
@@ -76,7 +86,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			System.err.println(ex.getMessage());
 			return;
 		}
-		_executor.execute(_endpoint);
+		_executor.execute(_runnable);
 	}
 
 	@Override
@@ -86,13 +96,6 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			_registry.unregister(_topic, this);
 		}
 	}
-
-	/**
-	 * Get the next message.
-	 * 
-	 * @return
-	 */
-	public abstract Message<E> receive();
 
 	/**
 	 * Wait and return the topic name used by this publisher.

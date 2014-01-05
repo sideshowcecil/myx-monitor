@@ -10,8 +10,7 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.MyxRuntime;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
-public final class Registry<E> extends AbstractMyxSimpleBrick implements
-		IRegistry<E> {
+public final class Registry extends AbstractMyxSimpleBrick implements IRegistry {
 
 	public static final IMyxName IN_IREGISTRY = MyxUtils
 			.createName(IRegistry.class.getCanonicalName());
@@ -29,7 +28,7 @@ public final class Registry<E> extends AbstractMyxSimpleBrick implements
 	}
 
 	@Override
-	public void register(String topic, PublisherEndpoint<E> publisher) {
+	public void register(String topic, PublisherEndpoint<?> publisher) {
 		synchronized (_topics) {
 			if (_topics.containsKey(topic)) {
 				throw new IllegalArgumentException("Topic '" + topic
@@ -42,7 +41,7 @@ public final class Registry<E> extends AbstractMyxSimpleBrick implements
 	}
 
 	@Override
-	public void unregister(String topic, PublisherEndpoint<E> publisher) {
+	public void unregister(String topic, PublisherEndpoint<?> publisher) {
 		synchronized (_topics) {
 			if (!_topics.containsKey(topic)) {
 				throw new IllegalArgumentException("Topic '" + topic
@@ -54,26 +53,28 @@ public final class Registry<E> extends AbstractMyxSimpleBrick implements
 	}
 
 	@Override
-	public void register(String topic, SubscriberEndpoint<E> subscriber) {
+	public void register(String topic, SubscriberEndpoint<?> subscriber) {
 		synchronized (_topics) {
 			if (!_topics.containsKey(topic)) {
 				throw new IllegalArgumentException("Topic '" + topic
 						+ "' is not registered");
 			}
 			MessageDistributor distributor = _topics.get(topic);
-			MyxRuntime.getInstance().wireMessageDistributor(subscriber, distributor);
+			MyxRuntime.getInstance().wireMessageDistributor(subscriber,
+					distributor);
 		}
 	}
 
 	@Override
-	public void unregister(String topic, SubscriberEndpoint<E> subscriber) {
+	public void unregister(String topic, SubscriberEndpoint<?> subscriber) {
 		synchronized (_topics) {
 			if (!_topics.containsKey(topic)) {
 				throw new IllegalArgumentException("Topic '" + topic
 						+ "' is not registered");
 			}
 			MessageDistributor distributor = _topics.get(topic);
-			MyxRuntime.getInstance().unwireMessageDistributor(subscriber, distributor);
+			MyxRuntime.getInstance().unwireMessageDistributor(subscriber,
+					distributor);
 		}
 	}
 

@@ -23,7 +23,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			.createName(ISubscriber.class.getCanonicalName());
 
 	protected IDispatcher<E> _dispatcher;
-	protected IRegistry<E> _registry;
+	protected IRegistry _registry;
 	protected ISubscriber<E> _subscriber;
 
 	protected Endpoint<E> _endpoint;
@@ -85,7 +85,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 		try {
 			// connect interfaces
 			_dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
-			_registry = (IRegistry<E>) getFirstRequiredServiceObject(OUT_IREGISTRY);
+			_registry = (IRegistry) getFirstRequiredServiceObject(OUT_IREGISTRY);
 		} catch (IllegalArgumentException ex) {
 			System.err.println(ex.getMessage());
 			return;

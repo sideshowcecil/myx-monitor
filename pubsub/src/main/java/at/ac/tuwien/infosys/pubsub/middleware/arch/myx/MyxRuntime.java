@@ -136,8 +136,13 @@ public class MyxRuntime {
     public void createDispatcher(String publisherDispatcherClassName, Properties publisherProperties,
             String subscriberDispatcherClassName, Properties subscriberProperties) {
         try {
-            Class.forName(publisherDispatcherClassName);
-            Class.forName(subscriberDispatcherClassName);
+            Class<?> pubDispClass = Class.forName(publisherDispatcherClassName);
+            Class<?> subDispClass = Class.forName(subscriberDispatcherClassName);
+            if (!PublisherDispatcher.class.isAssignableFrom(pubDispClass)
+                    || !SubscriberDispatcher.class.isAssignableFrom(subDispClass)) {
+                // TODO: throw exception?
+                return;
+            }
         } catch (ClassNotFoundException e1) {
             // TODO: throw exception?
             return;
@@ -159,8 +164,8 @@ public class MyxRuntime {
             _myx.addBrick(null, pubDispName, pubDispDesc);
             _myx.addBrick(null, subDispName, subDispDesc);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            // TODO: throw exception?
             return;
         }
 
@@ -177,6 +182,18 @@ public class MyxRuntime {
     }
 
     public void createPublisherEndpoint(String publisherEndpointClassName, Dispatcher<?> dispatcher) {
+        try {
+            Class<?> pubEndClass = Class.forName(publisherEndpointClassName);
+            if (!PublisherEndpoint.class.isAssignableFrom(pubEndClass)) {
+                // TODO: throw exception?
+                return;
+            }
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+            // TODO: throw exception?
+            return;
+        }
+
         IMyxName dispatcherName = MyxUtils.getName(dispatcher);
 
         // get the class description
@@ -208,6 +225,18 @@ public class MyxRuntime {
     }
 
     public void createSubscriberEndpoint(String subscriberEndpointClassName, Dispatcher<?> dispatcher) {
+        try {
+            Class<?> subEndClass = Class.forName(subscriberEndpointClassName);
+            if (!PublisherEndpoint.class.isAssignableFrom(subEndClass)) {
+                // TODO: throw exception?
+                return;
+            }
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+            // TODO: throw exception?
+            return;
+        }
+
         IMyxName dispatcherName = MyxUtils.getName(dispatcher);
 
         // get the class description

@@ -24,7 +24,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 
 	protected IDispatcher<E> _dispatcher;
 	protected IRegistry<E> _registry;
-	
+
 	protected Endpoint<E> _endpoint;
 	protected String _topic = null;
 
@@ -48,16 +48,18 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 			public void run() {
 				// get the endpoint from the connected dispatcher
 				_endpoint = _dispatcher.getNextEndpoint();
-				// wait for the topic name
-				_topic = waitForTopicName();
-				// if we do not get a topic name we assume the subscriber died
-				if (_topic != null) {
-					// check if the topic exists and register the endpoint
-					try {
-						_registry.register(_topic, SubscriberEndpoint.this);
-					} catch (IllegalArgumentException ex) {
-						sendErrorForNonExistingTopic();
-						return;
+				if (_endpoint != null) {
+					// wait for the topic name
+					_topic = waitForTopicName();
+					// if we do not get a topic name we assume the subscriber
+					// died
+					if (_topic != null) {
+						// check if the topic exists and register the endpoint
+						try {
+							_registry.register(_topic, SubscriberEndpoint.this);
+						} catch (IllegalArgumentException ex) {
+							sendErrorForNonExistingTopic();
+						}
 					}
 				}
 			}
@@ -77,29 +79,29 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick
 		}
 		_executor.execute(_runnable);
 	}
-	
+
 	@Override
 	public void end() {
 		if (_topic != null) {
 			_registry.unregister(_topic, this);
 		}
 	}
-	
+
 	@Override
 	public void send(Message<E> message) {
 		_endpoint.send(message);
 	}
 
-    /**
-     * Wait and return the topic name used by this subscriber.
-     * 
-     * @return
-     */
-    public abstract String waitForTopicName();
+	/**
+	 * Wait and return the topic name used by this subscriber.
+	 * 
+	 * @return
+	 */
+	public abstract String waitForTopicName();
 
-    /**
-     * Send an error to the subscriber if the topic name is not registered.
-     */
-    public abstract void sendErrorForNonExistingTopic();
+	/**
+	 * Send an error to the subscriber if the topic name is not registered.
+	 */
+	public abstract void sendErrorForNonExistingTopic();
 
 }

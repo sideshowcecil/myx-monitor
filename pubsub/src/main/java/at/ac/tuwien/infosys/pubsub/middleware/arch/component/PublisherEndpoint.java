@@ -25,7 +25,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 	protected IDispatcher<E> _dispatcher;
 	protected IRegistry<E> _registry;
 	protected ISubscriber<E> _subscriber;
-	
+
 	protected Endpoint<E> _endpoint;
 	protected String _topic = null;
 
@@ -45,31 +45,34 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			public void run() {
 				// get the endpoint from the connected dispatcher
 				_endpoint = _dispatcher.getNextEndpoint();
-				// wait for the topic name
-				_topic = waitForTopicName();
-				// if we do not get a topic name we assume the publisher died
-				if (_topic != null) {
-					// check if the topic exists
-					try {
-						_registry.register(_topic, PublisherEndpoint.this);
-					} catch (IllegalArgumentException ex) {
-						sendErrorForExistingTopic();
-						return;
-					}
-					// initialize the subscriber
-					_subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
-					// wait for messages and forward them to the subscribers
-					boolean run = true;
-					while (run) {
-						// wait for a message
-						Message<E> msg = _endpoint.receive();
-						// if we receive a CLOSE or ERROR message we send
-						// shutdown the endpoint
-						if (msg.getType() == Type.CLOSE
-								|| msg.getType() == Type.ERROR) {
-							run = false;
+				if (_endpoint != null) {
+					// wait for the topic name
+					_topic = waitForTopicName();
+					// if we do not get a topic name we assume the publisher
+					// died
+					if (_topic != null) {
+						// check if the topic exists
+						try {
+							_registry.register(_topic, PublisherEndpoint.this);
+						} catch (IllegalArgumentException ex) {
+							sendErrorForExistingTopic();
+							return;
 						}
-						_subscriber.send(msg);
+						// initialize the subscriber
+						_subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
+						// wait for messages and forward them to the subscribers
+						boolean run = true;
+						while (run) {
+							// wait for a message
+							Message<E> msg = _endpoint.receive();
+							// if we receive a CLOSE or ERROR message we send
+							// shutdown the endpoint
+							if (msg.getType() == Type.CLOSE
+									|| msg.getType() == Type.ERROR) {
+								run = false;
+							}
+							_subscriber.send(msg);
+						}
 					}
 				}
 			}

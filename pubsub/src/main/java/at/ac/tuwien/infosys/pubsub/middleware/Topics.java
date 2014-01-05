@@ -26,8 +26,7 @@ public final class Topics<E> {
             if (!topics.containsKey(topicName)) {
                 topics.put(topicName, handler);
             } else {
-                throw new IllegalArgumentException("The topic '" + topicName
-                        + "' is already used!");
+                throw new IllegalArgumentException("The topic '" + topicName + "' is already used!");
             }
         }
     }

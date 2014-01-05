@@ -45,8 +45,7 @@ public class SocketBytePublisherListener extends PublisherListener<byte[]> {
                 socket.setSoTimeout(1000);
 
                 // create the handler
-                PubSubHandler<byte[]> handler = new SocketBytePubSubHandler(
-                        new SocketByteMessageProtocol(socket));
+                PubSubHandler<byte[]> handler = new SocketBytePubSubHandler(new SocketByteMessageProtocol(socket));
                 return handler;
             } catch (SocketTimeoutException e) {
                 // ignore

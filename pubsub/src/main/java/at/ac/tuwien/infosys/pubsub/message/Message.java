@@ -7,7 +7,8 @@ import java.io.Serializable;
  * 
  * @author bernd.rathmanner
  * 
- * @param <E> resembles the message data.
+ * @param <E>
+ *            resembles the message data.
  */
 public class Message<E> implements Serializable {
 

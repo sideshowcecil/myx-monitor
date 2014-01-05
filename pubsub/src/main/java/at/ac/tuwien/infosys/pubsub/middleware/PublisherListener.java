@@ -17,8 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class PublisherListener<E> extends Thread {
 
-    private static Logger logger = LoggerFactory
-            .getLogger(PublisherListener.class);
+    private static Logger logger = LoggerFactory.getLogger(PublisherListener.class);
 
     private volatile boolean run = true;
 

@@ -7,8 +7,9 @@ import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of SubscriberHandler based on the SocketByteMessageProtocol.
+ * 
  * @author bernd.rathmanner
- *
+ * 
  */
 public class SocketByteSubscriberHandler extends SubscriberHandler<byte[]> {
 
@@ -29,8 +30,7 @@ public class SocketByteSubscriberHandler extends SubscriberHandler<byte[]> {
 
     @Override
     public void sendErrorForNonExistingTopic() {
-        Message<byte[]> msg = new Message<byte[]>(
-                "The given topic does not exist!".getBytes(), Type.ERROR);
+        Message<byte[]> msg = new Message<byte[]>("The given topic does not exist!".getBytes(), Type.ERROR);
         sendMessage(msg);
     }
 

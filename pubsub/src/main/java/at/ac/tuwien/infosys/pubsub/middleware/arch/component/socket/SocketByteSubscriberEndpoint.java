@@ -14,20 +14,19 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMess
  */
 public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
 
-	@Override
-	public String waitForTopicName() {
-		Message<byte[]> msg = _endpoint.receive();
-		if (msg.getType() == Type.TOPIC) {
-			return new String(msg.getData());
-		}
-		return null;
-	}
+    @Override
+    public String waitForTopicName() {
+        Message<byte[]> msg = _endpoint.receive();
+        if (msg.getType() == Type.TOPIC) {
+            return new String(msg.getData());
+        }
+        return null;
+    }
 
-	@Override
-	public void sendErrorForNonExistingTopic() {
-		Message<byte[]> msg = new Message<byte[]>(
-				"The given topic does not exist!".getBytes(), Type.ERROR);
-		_endpoint.send(msg);
-	}
+    @Override
+    public void sendErrorForNonExistingTopic() {
+        Message<byte[]> msg = new Message<byte[]>("The given topic does not exist!".getBytes(), Type.ERROR);
+        _endpoint.send(msg);
+    }
 
 }

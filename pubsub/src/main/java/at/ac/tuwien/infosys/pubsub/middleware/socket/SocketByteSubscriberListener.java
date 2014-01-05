@@ -45,8 +45,8 @@ public class SocketByteSubscriberListener extends SubscriberListener<byte[]> {
                 socket.setSoTimeout(2500);
 
                 // create the handler
-                SubscriberHandler<byte[]> handler = new SocketByteSubscriberHandler(
-                        new SocketByteMessageProtocol(socket));
+                SubscriberHandler<byte[]> handler = new SocketByteSubscriberHandler(new SocketByteMessageProtocol(
+                        socket));
                 return handler;
             } catch (SocketTimeoutException e) {
                 // ignore

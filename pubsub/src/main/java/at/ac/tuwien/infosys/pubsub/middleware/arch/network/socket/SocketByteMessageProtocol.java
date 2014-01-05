@@ -18,8 +18,7 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
  * @author bernd.rathmanner
  * 
  */
-public final class SocketByteMessageProtocol implements
-        Endpoint<byte[]> {
+public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
     public static final char NULL = '\0';
     public static final char CR = '\r';
     public static final char LF = '\n';
@@ -131,8 +130,7 @@ public final class SocketByteMessageProtocol implements
         if (type == null) {
             type = Type.ERROR;
         }
-        return new Message<byte[]>(
-                Base64.decodeBase64(sb.toString().getBytes()), type);
+        return new Message<byte[]>(Base64.decodeBase64(sb.toString().getBytes()), type);
     }
 
 }

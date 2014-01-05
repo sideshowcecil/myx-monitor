@@ -21,17 +21,16 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
     private int _port;
     private ServerSocket _server;
 
-	@Override
-	public void init() {
-		try {
-			_port = Integer.parseInt(MyxUtils.getInitProperties(this)
-					.getProperty("port", "6667"));
-		} catch (NumberFormatException e) {
-			// use default value
-			_port = 6667;
-		}
-		super.init();
-	}
+    @Override
+    public void init() {
+        try {
+            _port = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("port", "6667"));
+        } catch (NumberFormatException e) {
+            // use default value
+            _port = 6667;
+        }
+        super.init();
+    }
 
     @Override
     public Endpoint<byte[]> waitForNewEndpoint() {
@@ -60,9 +59,9 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
         return null;
     }
 
-	@Override
-	protected String getSubscriberEndpointClass() {
-		return SocketByteSubscriberEndpoint.class.getCanonicalName();
-	}
+    @Override
+    protected String getSubscriberEndpointClass() {
+        return SocketByteSubscriberEndpoint.class.getCanonicalName();
+    }
 
 }

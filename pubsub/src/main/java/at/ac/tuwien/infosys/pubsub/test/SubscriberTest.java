@@ -24,13 +24,11 @@ import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
  */
 public class SubscriberTest {
 
-    public static void main(String[] args)
-            throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException, InterruptedException {
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException,
+            InterruptedException {
         Socket socketReceiver = new Socket();
         socketReceiver.connect(new InetSocketAddress(6667));
-        SocketByteMessageProtocol protocol = new SocketByteMessageProtocol(
-                socketReceiver);
+        SocketByteMessageProtocol protocol = new SocketByteMessageProtocol(socketReceiver);
 
         protocol.send(new Message<byte[]>("test".getBytes(), Type.TOPIC));
 
@@ -42,9 +40,7 @@ public class SubscriberTest {
             case TOPIC:
                 break;
             case INIT:
-                AudioInputStream ais = AudioSystem
-                        .getAudioInputStream(new ByteArrayInputStream(m
-                                .getData()));
+                AudioInputStream ais = AudioSystem.getAudioInputStream(new ByteArrayInputStream(m.getData()));
                 line = AudioSystem.getSourceDataLine(ais.getFormat());
                 line.open();
                 line.start();

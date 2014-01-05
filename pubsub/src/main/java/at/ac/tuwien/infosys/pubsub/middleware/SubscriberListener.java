@@ -18,8 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class SubscriberListener<E> extends Thread {
 
-    private static Logger logger = LoggerFactory
-            .getLogger(SubscriberListener.class);
+    private static Logger logger = LoggerFactory.getLogger(SubscriberListener.class);
 
     private volatile boolean run = true;
 

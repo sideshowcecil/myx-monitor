@@ -20,8 +20,7 @@ public class SocketBytePubSub {
         int subPort = 6667;
 
         PubSubMiddleware mw = new PubSubMiddleware();
-        mw.addListener(new SocketBytePublisherListener(pubPort),
-                new SocketByteSubscriberListener(subPort));
+        mw.addListener(new SocketBytePublisherListener(pubPort), new SocketByteSubscriberListener(subPort));
 
         // start the listeners
         mw.run();

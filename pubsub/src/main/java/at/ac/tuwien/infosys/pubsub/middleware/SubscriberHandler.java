@@ -22,8 +22,7 @@ import at.ac.tuwien.infosys.pubsub.message.Message.Type;
  */
 public abstract class SubscriberHandler<E> extends Thread {
 
-    private static Logger logger = LoggerFactory
-            .getLogger(SubscriberHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(SubscriberHandler.class);
 
     private BlockingQueue<Message<E>> messageQueue = new LinkedBlockingQueue<>();
 

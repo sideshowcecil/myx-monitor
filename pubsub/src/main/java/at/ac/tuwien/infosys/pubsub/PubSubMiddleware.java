@@ -30,8 +30,7 @@ public class PubSubMiddleware implements Runnable {
      * 
      * @param listeners
      */
-    public PubSubMiddleware(
-            List<Tuple<PublisherListener<?>, SubscriberListener<?>>> listeners) {
+    public PubSubMiddleware(List<Tuple<PublisherListener<?>, SubscriberListener<?>>> listeners) {
         this.listeners = listeners;
     }
 
@@ -43,8 +42,7 @@ public class PubSubMiddleware implements Runnable {
      * @param sub
      */
     public void addListener(PublisherListener<?> pub, SubscriberListener<?> sub) {
-        listeners.add(new Tuple<PublisherListener<?>, SubscriberListener<?>>(
-                pub, sub));
+        listeners.add(new Tuple<PublisherListener<?>, SubscriberListener<?>>(pub, sub));
     }
 
     /**

@@ -25,17 +25,16 @@ import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
  */
 public class PublisherTest {
 
-    public static void main(String[] args)
-            throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException, InterruptedException {
-        //ServerSocket ss = new ServerSocket(6667);
-        //SocketByteMessageSender s = new SocketByteMessageSender(ss.accept());
-        
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException,
+            InterruptedException {
+        // ServerSocket ss = new ServerSocket(6667);
+        // SocketByteMessageSender s = new SocketByteMessageSender(ss.accept());
+
         Socket sock = new Socket();
         sock.connect(new InetSocketAddress(6666));
         SocketByteMessageProtocol s = new SocketByteMessageProtocol(sock);
 
-        //URL url = ClassLoader.getSystemResource("sound2.wav");
+        // URL url = ClassLoader.getSystemResource("sound2.wav");
         URL url = ClassLoader.getSystemResource("sound.wav");
         File file = new File(url.getFile());
         InputStream is = new FileInputStream(file);
@@ -67,7 +66,7 @@ public class PublisherTest {
 
         // WE HAVE TO WAIT TILL THE CLOSE MESSAGE WAS DELEIVERED
         Thread.sleep(500);
-        //ss.close();
+        // ss.close();
 
     }
 

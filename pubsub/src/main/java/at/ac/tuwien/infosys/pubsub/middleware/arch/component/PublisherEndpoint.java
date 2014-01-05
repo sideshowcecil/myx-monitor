@@ -15,102 +15,98 @@ import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 
-	public static final IMyxName OUT_IDISPATCHER = MyxUtils
-			.createName(IDispatcher.class.getCanonicalName());
-	public static final IMyxName OUT_IREGISTRY = MyxUtils
-			.createName(IRegistry.class.getCanonicalName());
-	public static final IMyxName OUT_ISUBSCRIBER = MyxUtils
-			.createName(ISubscriber.class.getCanonicalName());
+    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getCanonicalName());
+    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getCanonicalName());
+    public static final IMyxName OUT_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getCanonicalName());
 
-	protected IDispatcher<E> _dispatcher;
-	protected IRegistry _registry;
-	protected ISubscriber<E> _subscriber;
+    protected IDispatcher<E> _dispatcher;
+    protected IRegistry _registry;
+    protected ISubscriber<E> _subscriber;
 
-	protected Endpoint<E> _endpoint;
-	protected String _topic = null;
+    protected Endpoint<E> _endpoint;
+    protected String _topic = null;
 
-	private ExecutorService _executor;
-	private Runnable _runnable;
+    private ExecutorService _executor;
+    private Runnable _runnable;
 
-	@Override
-	public Object getServiceObject(IMyxName arg0) {
-		return null;
-	}
+    @Override
+    public Object getServiceObject(IMyxName arg0) {
+        return null;
+    }
 
-	@Override
-	public void init() {
-		_executor = Executors.newSingleThreadExecutor();
-		_runnable = new Runnable() {
-			@SuppressWarnings("unchecked")
-			public void run() {
-				// get the endpoint from the connected dispatcher
-				_endpoint = _dispatcher.getNextEndpoint();
-				if (_endpoint != null) {
-					// wait for the topic name
-					_topic = waitForTopicName();
-					// if we do not get a topic name we assume the publisher
-					// died
-					if (_topic != null) {
-						// check if the topic exists
-						try {
-							_registry.register(_topic, PublisherEndpoint.this);
-						} catch (IllegalArgumentException ex) {
-							sendErrorForExistingTopic();
-							return;
-						}
-						// initialize the subscriber
-						_subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
-						// wait for messages and forward them to the subscribers
-						boolean run = true;
-						while (run) {
-							// wait for a message
-							Message<E> msg = _endpoint.receive();
-							// if we receive a CLOSE or ERROR message we send
-							// shutdown the endpoint
-							if (msg.getType() == Type.CLOSE
-									|| msg.getType() == Type.ERROR) {
-								run = false;
-							}
-							_subscriber.send(msg);
-						}
-					}
-				}
-			}
-		};
-	}
+    @Override
+    public void init() {
+        _executor = Executors.newSingleThreadExecutor();
+        _runnable = new Runnable() {
+            @SuppressWarnings("unchecked")
+            public void run() {
+                // get the endpoint from the connected dispatcher
+                _endpoint = _dispatcher.getNextEndpoint();
+                if (_endpoint != null) {
+                    // wait for the topic name
+                    _topic = waitForTopicName();
+                    // if we do not get a topic name we assume the publisher
+                    // died
+                    if (_topic != null) {
+                        // check if the topic exists
+                        try {
+                            _registry.register(_topic, PublisherEndpoint.this);
+                        } catch (IllegalArgumentException ex) {
+                            sendErrorForExistingTopic();
+                            return;
+                        }
+                        // initialize the subscriber
+                        _subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
+                        // wait for messages and forward them to the subscribers
+                        boolean run = true;
+                        while (run) {
+                            // wait for a message
+                            Message<E> msg = _endpoint.receive();
+                            // if we receive a CLOSE or ERROR message we send
+                            // shutdown the endpoint
+                            if (msg.getType() == Type.CLOSE || msg.getType() == Type.ERROR) {
+                                run = false;
+                            }
+                            _subscriber.send(msg);
+                        }
+                    }
+                }
+            }
+        };
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void begin() {
-		try {
-			// connect interfaces
-			_dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
-			_registry = (IRegistry) getFirstRequiredServiceObject(OUT_IREGISTRY);
-		} catch (IllegalArgumentException ex) {
-			System.err.println(ex.getMessage());
-			return;
-		}
-		_executor.execute(_runnable);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void begin() {
+        try {
+            // connect interfaces
+            _dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
+            _registry = (IRegistry) getFirstRequiredServiceObject(OUT_IREGISTRY);
+        } catch (IllegalArgumentException ex) {
+            System.err.println(ex.getMessage());
+            return;
+        }
+        _executor.execute(_runnable);
+    }
 
-	@Override
-	public void end() {
-		_executor.shutdownNow();
-		if (_topic != null) {
-			_registry.unregister(_topic, this);
-		}
-	}
+    @Override
+    public void end() {
+        _executor.shutdownNow();
+        if (_topic != null) {
+            _registry.unregister(_topic, this);
+        }
+    }
 
-	/**
-	 * Wait and return the topic name used by this publisher.
-	 * 
-	 * @return
-	 */
-	public abstract String waitForTopicName();
+    /**
+     * Wait and return the topic name used by this publisher.
+     * 
+     * @return
+     */
+    public abstract String waitForTopicName();
 
-	/**
-	 * Send an error to the publisher if the topic name is already registered.
-	 */
-	public abstract void sendErrorForExistingTopic();
+    /**
+     * Send an error to the publisher if the topic name is already registered.
+     */
+    public abstract void sendErrorForExistingTopic();
 
 }

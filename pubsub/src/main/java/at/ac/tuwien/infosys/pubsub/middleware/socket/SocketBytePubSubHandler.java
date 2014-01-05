@@ -7,8 +7,9 @@ import at.ac.tuwien.infosys.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of PubSubHandler based on the SocketByteMessageProtocol.
+ * 
  * @author bernd.rathmanner
- *
+ * 
  */
 public class SocketBytePubSubHandler extends PubSubHandler<byte[]> {
 
@@ -27,8 +28,7 @@ public class SocketBytePubSubHandler extends PubSubHandler<byte[]> {
 
     @Override
     public void sendErrorForExistingTopic() {
-        Message<byte[]> msg = new Message<byte[]>(
-                "The given topic already exists!".getBytes(), Type.ERROR);
+        Message<byte[]> msg = new Message<byte[]>("The given topic already exists!".getBytes(), Type.ERROR);
         sender.send(msg);
     }
 

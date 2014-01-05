@@ -31,17 +31,14 @@ public class AudioTest {
 
     // private static SourceDataLine line;
 
-    public static void main(String[] args)
-            throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException, InterruptedException {
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException,
+            InterruptedException {
         ServerSocket ss = new ServerSocket(6666);
         Socket socketSender = new Socket();
         socketSender.connect(new InetSocketAddress(6666));
         Socket socketReceiver = ss.accept();
-        SocketByteMessageProtocol s = new SocketByteMessageProtocol(
-                socketSender);
-        SocketByteMessageProtocol r = new SocketByteMessageProtocol(
-                socketReceiver);
+        SocketByteMessageProtocol s = new SocketByteMessageProtocol(socketSender);
+        SocketByteMessageProtocol r = new SocketByteMessageProtocol(socketReceiver);
 
         URL url = ClassLoader.getSystemResource("sound.wav");
         File file = new File(url.getFile());
@@ -66,8 +63,7 @@ public class AudioTest {
             numBytesRead = is.read(myData, 0, numBytesToRead);
             if (!formatRead) {
                 // try {
-                AudioInputStream ais = AudioSystem
-                        .getAudioInputStream(new ByteArrayInputStream(myData));
+                AudioInputStream ais = AudioSystem.getAudioInputStream(new ByteArrayInputStream(myData));
                 System.out.println(ais.getFormat());
                 // System.out.println(new String(myData));
                 formatRead = true;

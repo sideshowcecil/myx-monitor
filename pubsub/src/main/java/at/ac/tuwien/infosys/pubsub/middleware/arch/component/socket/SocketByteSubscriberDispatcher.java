@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import edu.uci.isr.myx.fw.MyxUtils;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
@@ -17,30 +18,41 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMess
  */
 public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]> {
 
-    private int port;
-
-    private ServerSocket server;
+    private int _port;
+    private ServerSocket _server;
 
     public SocketByteSubscriberDispatcher(int port) {
-        this.port = port;
-        server = null;
+        this._port = port;
+        _server = null;
     }
+
+	@Override
+	public void init() {
+		try {
+			_port = Integer.parseInt(MyxUtils.getInitProperties(this)
+					.getProperty("port", "6667"));
+		} catch (NumberFormatException e) {
+			// use default value
+			_port = 6667;
+		}
+		super.init();
+	}
 
     @Override
     public Endpoint<byte[]> waitForNewEndpoint() {
-        if (server == null) {
+        if (_server == null) {
             // open socket
             try {
-                server = new ServerSocket(port);
+                _server = new ServerSocket(_port);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        if (server != null) {
+        if (_server != null) {
             try {
                 // wait for a new connection
-                Socket socket = server.accept();
+                Socket socket = _server.accept();
                 // create the handler
                 return new SocketByteMessageProtocol(socket);
             } catch (SocketTimeoutException e) {

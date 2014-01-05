@@ -41,6 +41,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 	public void init() {
 		_executor = Executors.newSingleThreadExecutor();
 		_runnable = new Runnable() {
+			@SuppressWarnings("unchecked")
 			public void run() {
 				// get the endpoint from the connected dispatcher
 				_endpoint = _dispatcher.getNextEndpoint();
@@ -55,6 +56,8 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 						sendErrorForExistingTopic();
 						return;
 					}
+					// initialize the subscriber
+					_subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
 					// wait for messages and forward them to the subscribers
 					boolean run = true;
 					while (run) {
@@ -80,8 +83,6 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 			// connect interfaces
 			_dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
 			_registry = (IRegistry<E>) getFirstRequiredServiceObject(OUT_IREGISTRY);
-			// TODO: can we initialize the interface now?
-			_subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
 		} catch (IllegalArgumentException ex) {
 			System.err.println(ex.getMessage());
 			return;

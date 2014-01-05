@@ -29,16 +29,16 @@ import edu.uci.isr.myx.fw.MyxUtils;
 public class MyxRuntime {
 
     // interface class names
-    public static final String IDISPATCHER_NAME = IDispatcher.class.getCanonicalName();
-    public static final String IREGISTRY_NAME = IRegistry.class.getCanonicalName();
-    public static final String ISUBSCRIBER_NAME = ISubscriber.class.getCanonicalName();
+    public static final String IDISPATCHER_NAME = IDispatcher.class.getName();
+    public static final String IREGISTRY_NAME = IRegistry.class.getName();
+    public static final String ISUBSCRIBER_NAME = ISubscriber.class.getName();
 
     // component class names
-    public static final String REGISTRY_NAME = Registry.class.getCanonicalName();
+    public static final String REGISTRY_NAME = Registry.class.getName();
 
     // connector class names
-    public static final String MESSAGE_DISTRIBUTOR = MessageDistributor.class.getCanonicalName();
-    public static final String SYNCHRONOUS_PROXY = SynchronousProxyConnector.class.getCanonicalName();
+    public static final String MESSAGE_DISTRIBUTOR = MessageDistributor.class.getName();
+    public static final String SYNCHRONOUS_PROXY = SynchronousProxyConnector.class.getName();
 
     // interface names
     public static final IMyxName IDISPATCHER = MyxUtils.createName(IDISPATCHER_NAME);

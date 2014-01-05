@@ -12,7 +12,7 @@ import edu.uci.isr.myx.fw.MyxUtils;
 
 public final class Registry extends AbstractMyxSimpleBrick implements IRegistry {
 
-    public static final IMyxName IN_IREGISTRY = MyxUtils.createName(IRegistry.class.getCanonicalName());
+    public static final IMyxName IN_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
 
     private Map<String, MessageDistributor> _topics = new HashMap<>();
 

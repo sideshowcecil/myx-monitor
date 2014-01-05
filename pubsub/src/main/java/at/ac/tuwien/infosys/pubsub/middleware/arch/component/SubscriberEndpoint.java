@@ -14,9 +14,9 @@ import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick implements ISubscriber<E> {
 
-    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getCanonicalName());
-    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getCanonicalName());
-    public static final IMyxName IN_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getCanonicalName());
+    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
+    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
+    public static final IMyxName IN_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
 
     protected IDispatcher<E> _dispatcher;
     protected IRegistry _registry;

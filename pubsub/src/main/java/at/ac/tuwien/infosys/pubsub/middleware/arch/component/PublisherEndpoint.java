@@ -15,9 +15,9 @@ import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
 
-    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getCanonicalName());
-    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getCanonicalName());
-    public static final IMyxName OUT_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getCanonicalName());
+    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
+    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
+    public static final IMyxName OUT_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
 
     protected IDispatcher<E> _dispatcher;
     protected IRegistry _registry;

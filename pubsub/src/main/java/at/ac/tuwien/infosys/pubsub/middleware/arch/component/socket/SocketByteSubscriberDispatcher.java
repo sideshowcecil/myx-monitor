@@ -61,7 +61,7 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
 
     @Override
     protected String getSubscriberEndpointClass() {
-        return SocketByteSubscriberEndpoint.class.getCanonicalName();
+        return SocketByteSubscriberEndpoint.class.getName();
     }
 
 }

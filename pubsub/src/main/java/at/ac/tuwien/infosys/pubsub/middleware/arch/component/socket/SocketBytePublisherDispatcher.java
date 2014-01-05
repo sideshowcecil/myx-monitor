@@ -62,7 +62,7 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
 
     @Override
     protected String getPublisherEndpointClass() {
-        return SocketBytePublisherEndpoint.class.getClass().getCanonicalName();
+        return SocketBytePublisherEndpoint.class.getClass().getName();
     }
 
 }

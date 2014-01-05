@@ -13,7 +13,7 @@ import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements IDispatcher<E> {
 
-    public static final IMyxName IN_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getCanonicalName());
+    public static final IMyxName IN_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
 
     private ExecutorService _executor;
     private Runnable _dispatcher;

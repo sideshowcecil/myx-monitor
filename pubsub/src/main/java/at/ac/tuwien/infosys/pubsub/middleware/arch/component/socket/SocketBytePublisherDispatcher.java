@@ -5,10 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-import edu.uci.isr.myx.fw.MyxUtils;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import edu.uci.isr.myx.fw.MyxUtils;
 
 /**
  * Implementation of {@link PublisherDispatcher} based on the
@@ -59,6 +59,11 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected String getPublisherEndpointClass() {
+		return SocketBytePublisherEndpoint.class.getClass().getCanonicalName();
 	}
 
 }

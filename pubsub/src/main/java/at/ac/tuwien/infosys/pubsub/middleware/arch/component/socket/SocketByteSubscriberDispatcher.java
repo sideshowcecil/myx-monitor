@@ -5,10 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-import edu.uci.isr.myx.fw.MyxUtils;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import edu.uci.isr.myx.fw.MyxUtils;
 
 /**
  * Implementation of SubscriberListener based on the SocketByteMessageProtocol.
@@ -59,5 +59,10 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
         }
         return null;
     }
+
+	@Override
+	protected String getSubscriberEndpointClass() {
+		return SocketByteSubscriberEndpoint.class.getCanonicalName();
+	}
 
 }

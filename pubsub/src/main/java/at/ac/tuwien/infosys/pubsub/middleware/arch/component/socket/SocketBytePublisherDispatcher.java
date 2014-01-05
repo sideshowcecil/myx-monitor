@@ -22,11 +22,6 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
 	private int _port;
 	private ServerSocket _server;
 
-	public SocketBytePublisherDispatcher(int port) {
-		this._port = port;
-		_server = null;
-	}
-
 	@Override
 	public void init() {
 		try {

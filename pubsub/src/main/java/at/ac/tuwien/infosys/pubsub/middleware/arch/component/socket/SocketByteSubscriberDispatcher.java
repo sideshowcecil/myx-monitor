@@ -21,11 +21,6 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
     private int _port;
     private ServerSocket _server;
 
-    public SocketByteSubscriberDispatcher(int port) {
-        this._port = port;
-        _server = null;
-    }
-
 	@Override
 	public void init() {
 		try {

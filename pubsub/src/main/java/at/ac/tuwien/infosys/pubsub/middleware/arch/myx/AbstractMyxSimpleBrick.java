@@ -16,7 +16,8 @@ public abstract class AbstractMyxSimpleBrick extends edu.uci.isr.myx.fw.Abstract
     protected Object getFirstRequiredServiceObject(IMyxName name) throws IllegalArgumentException {
         Object o = MyxUtils.getFirstRequiredServiceObject(this, name);
         if (o == null) {
-            throw new IllegalArgumentException("Error: Interface " + name.getName() + "returned null");
+            throw new IllegalArgumentException("[" + this.getClass().getName() + "] Error: Interface " + name.getName()
+                    + " returned null");
         }
         return o;
     }

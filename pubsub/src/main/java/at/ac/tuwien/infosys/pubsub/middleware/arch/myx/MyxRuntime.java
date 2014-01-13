@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.Dispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherDispatcher;
@@ -11,6 +12,8 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherEndpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.Registry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberEndpoint;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketBytePublisherDispatcher;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketByteSubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
@@ -44,9 +47,10 @@ public class MyxRuntime {
     public static final IMyxName IDISPATCHER = MyxUtils.createName(IDISPATCHER_NAME);
     public static final IMyxName IREGISTRY = MyxUtils.createName(IREGISTRY_NAME);
     public static final IMyxName ISUBSCRIBER = MyxUtils.createName(ISUBSCRIBER_NAME);
-    
+
     // interface name prefixes
-    public static final String IDISPATCHER_PREFIX = IDispatcher.class.getSimpleName();
+    public static final String IDISPATCHER_PUB_PREFIX = "Pub" + IDispatcher.class.getSimpleName();
+    public static final String IDISPATCHER_SUB_PREFIX = "Sub" + IDispatcher.class.getSimpleName();
     public static final String ISUBSCRIBER_PREFIX = ISubscriber.class.getSimpleName();
 
     // component names
@@ -62,7 +66,7 @@ public class MyxRuntime {
     private MyxJavaClassInterfaceDescription _iDispatcherDesc;
     private MyxJavaClassInterfaceDescription _iRegistryDesc;
     private MyxJavaClassInterfaceDescription _iSubscriberDesc;
-    
+
     // connector descriptions
     private MyxJavaClassBrickDescription _synchronousProxyDesc;
     private MyxJavaClassBrickDescription _messageDistributorDesc;
@@ -81,6 +85,8 @@ public class MyxRuntime {
     public static void main(String args[]) { // TODO: remove main from here
         try {
             getInstance().boostrapArchitecture();
+            getInstance().createDispatcher(SocketBytePublisherDispatcher.class.getName(), null,
+                    SocketByteSubscriberDispatcher.class.getName(), null);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -114,22 +120,22 @@ public class MyxRuntime {
         generateComponentInterfaces(REGISTRY, _iRegistryDesc, IREGISTRY_NAME, EMyxInterfaceDirection.IN);
 
         // connectors
-        _synchronousProxyDesc = new MyxJavaClassBrickDescription(null,
-                SYNCHRONOUS_PROXY);
-        _messageDistributorDesc = new MyxJavaClassBrickDescription(null,
-                MESSAGE_DISTRIBUTOR);
+        _synchronousProxyDesc = new MyxJavaClassBrickDescription(null, SYNCHRONOUS_PROXY);
+        _messageDistributorDesc = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR);
 
-        _myx.addBrick(null, IDISPATCHER, _synchronousProxyDesc);
+        // TODO: remove the commented out calls
+        //_myx.addBrick(null, IDISPATCHER, _synchronousProxyDesc);
         _myx.addBrick(null, IREGISTRY, _synchronousProxyDesc);
         _myx.addBrick(null, ISUBSCRIBER, _messageDistributorDesc);
 
         // add interfaces to connectors
-        generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
+        //generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
         generateConnectorInterfaces(IREGISTRY, _iRegistryDesc);
         generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
 
         // wire up the components and connectors
-        addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, REGISTRY);
+        addComponent2ConnectorWeld(REGISTRY, IREGISTRY_NAME, IREGISTRY);
+        //addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, REGISTRY);
 
         // initialize the components map
         _components = new HashMap<>();
@@ -163,22 +169,22 @@ public class MyxRuntime {
         // create the names
         int dispatcherId = ++_dispatcherCount;
         IMyxName pubDispName = MyxUtils.createName(PUBLISHER_DISPATCHER_PREFIX + dispatcherId);
-        IMyxName iPubDispName = MyxUtils.createName(IDISPATCHER_PREFIX + dispatcherId);
+        IMyxName iPubDispName = MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId);
         IMyxName subDispName = MyxUtils.createName(SUBSCRIBER_DISPATCHER_PREFIX + dispatcherId);
-        IMyxName iSubDispName = MyxUtils.createName(IDISPATCHER_PREFIX + dispatcherId);
+        IMyxName iSubDispName = MyxUtils.createName(IDISPATCHER_SUB_PREFIX + dispatcherId);
 
         // add the bricks
         try {
             _myx.addBrick(null, pubDispName, pubDispDesc);
-            _myx.addBrick(null, subDispName, subDispDesc);
             _myx.addBrick(null, iPubDispName, _synchronousProxyDesc);
+            _myx.addBrick(null, subDispName, subDispDesc);
             _myx.addBrick(null, iSubDispName, _synchronousProxyDesc);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
             // TODO: throw exception?
             return;
         }
-        
+
         // add interfaces to connectors
         generateConnectorInterfaces(iPubDispName, _iDispatcherDesc);
         generateConnectorInterfaces(iSubDispName, _iDispatcherDesc);
@@ -188,14 +194,18 @@ public class MyxRuntime {
         generateComponentInterfaces(subDispName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
 
         // wire up the components and connectors
-        addConnector2ComponentWeld(iPubDispName, IDISPATCHER_NAME, pubDispName);
-        addConnector2ComponentWeld(iSubDispName, IDISPATCHER_NAME, subDispName);
+        addComponent2ConnectorWeld(pubDispName, IDISPATCHER_NAME, iPubDispName);
+        addComponent2ConnectorWeld(subDispName, IDISPATCHER_NAME, iSubDispName);
 
-        // TODO: do we have to call init and begin?? its seems like it
+        // start up the created components
         _myx.init(null, pubDispName);
+        _myx.init(null, iPubDispName);
         _myx.init(null, subDispName);
+        _myx.init(null, iSubDispName);
         _myx.begin(null, pubDispName);
+        _myx.begin(null, iPubDispName);
         _myx.begin(null, subDispName);
+        _myx.begin(null, iSubDispName);
     }
 
     public void createPublisherEndpoint(String publisherEndpointClassName, Dispatcher<?> dispatcher) {
@@ -223,8 +233,9 @@ public class MyxRuntime {
         try {
             _myx.addBrick(null, pubEndName, pubEndDesc);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            // TODO throw exception??
+            return;
         }
 
         // add interfaces to components
@@ -234,11 +245,15 @@ public class MyxRuntime {
 
         // wire up the endpoint
         // TODO: do we have to create a new connector each time?? i think so
-        addComponent2ConnectorWeld(pubEndName, IDISPATCHER_NAME, dispatcherName);
-        addComponent2ConnectorWeld(pubEndName, IREGISTRY_NAME, IREGISTRY);
-        addComponent2ConnectorWeld(pubEndName, ISUBSCRIBER_NAME, ISUBSCRIBER);
+        // should be extracted into own method and should be validated somehow
+        int dispatcherId = extractId(dispatcherName.getName());
+        addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId), IDISPATCHER_NAME, pubEndName);
+        addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, pubEndName);
+        addConnector2ComponentWeld(ISUBSCRIBER, ISUBSCRIBER_NAME, pubEndName);
 
-        // TODO: do we have to call init and begin??
+        // start the created component
+        _myx.init(null, pubEndName);
+        _myx.begin(null, pubEndName);
     }
 
     public void createSubscriberEndpoint(String subscriberEndpointClassName, Dispatcher<?> dispatcher) {
@@ -260,14 +275,15 @@ public class MyxRuntime {
         MyxJavaClassBrickDescription subEndDesc = new MyxJavaClassBrickDescription(null, subscriberEndpointClassName);
 
         // create name
-        IMyxName subEndName = MyxUtils.createName(PUBLISHER_ENDPOINT_PREFIX + ++_subscriberEndpointCount);
+        IMyxName subEndName = MyxUtils.createName(SUBSCRIBER_ENDPOINT_PREFIX + ++_subscriberEndpointCount);
 
         // add the bricks
         try {
             _myx.addBrick(null, subEndName, subEndDesc);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            // TODO throw exception??
+            return;
         }
 
         // add interfaces to components
@@ -277,11 +293,15 @@ public class MyxRuntime {
 
         // wire up the endpoint
         // TODO: do we have to create a new connector each time?? i think so
-        addComponent2ConnectorWeld(subEndName, IDISPATCHER_NAME, dispatcherName);
-        addComponent2ConnectorWeld(subEndName, IREGISTRY_NAME, IREGISTRY);
-        addConnector2ComponentWeld(ISUBSCRIBER, ISUBSCRIBER_NAME, subEndName);
+        int dispatcherId = extractId(dispatcherName.getName());
+        addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_SUB_PREFIX + dispatcherId), IDISPATCHER_NAME,
+                subEndName);
+        addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, subEndName);
+        addComponent2ConnectorWeld(subEndName, ISUBSCRIBER_NAME, ISUBSCRIBER);
 
-        // TODO: do we have to call init and begin??
+        // start the created component
+        _myx.init(null, subEndName);
+        _myx.begin(null, subEndName);
     }
 
     public MessageDistributor createMessageDistributor(PublisherEndpoint<?> endpoint) {
@@ -381,5 +401,19 @@ public class MyxRuntime {
                 _components.remove(comp);
             }
         }
+    }
+
+    /**
+     * Extract an integer from the given string.
+     * 
+     * @param name
+     * @return
+     */
+    protected int extractId(String name) {
+        Scanner sc = new Scanner(name);
+        sc.useDelimiter("[^0-9]+");
+        int id = sc.nextInt();
+        sc.close();
+        return id;
     }
 }

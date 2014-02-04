@@ -131,7 +131,7 @@ public class MyxRuntime {
         // add interfaces to connectors
         //generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
         generateConnectorInterfaces(IREGISTRY, _iRegistryDesc);
-        generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
+        //generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
 
         // wire up the components and connectors
         addComponent2ConnectorWeld(REGISTRY, IREGISTRY_NAME, IREGISTRY);
@@ -227,16 +227,22 @@ public class MyxRuntime {
         MyxJavaClassBrickDescription pubEndDesc = new MyxJavaClassBrickDescription(null, publisherEndpointClassName);
 
         // create name
-        IMyxName pubEndName = MyxUtils.createName(PUBLISHER_ENDPOINT_PREFIX + ++_publisherEndpointCount);
+        int endPointId = ++_publisherEndpointCount;
+        IMyxName pubEndName = MyxUtils.createName(PUBLISHER_ENDPOINT_PREFIX + endPointId);
+        IMyxName iSubscriberName = MyxUtils.createName(ISUBSCRIBER_PREFIX + endPointId);
 
         // add the bricks
         try {
             _myx.addBrick(null, pubEndName, pubEndDesc);
+            _myx.addBrick(null, iSubscriberName, _messageDistributorDesc);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
             // TODO throw exception??
             return;
         }
+
+        // add interfaces to connectors
+        generateConnectorInterfaces(iSubscriberName, _iSubscriberDesc);
 
         // add interfaces to components
         generateComponentInterfaces(pubEndName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.OUT);
@@ -247,13 +253,18 @@ public class MyxRuntime {
         // TODO: do we have to create a new connector each time?? i think so
         // should be extracted into own method and should be validated somehow
         int dispatcherId = extractId(dispatcherName.getName());
+        //addComponent2ConnectorWeld(pubEndName, IDISPATCHER_NAME, MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId));
+        //addComponent2ConnectorWeld(pubEndName, IREGISTRY_NAME, IREGISTRY);
+        //addComponent2ConnectorWeld(pubEndName, ISUBSCRIBER_NAME, iSubscriberName);
         addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId), IDISPATCHER_NAME, pubEndName);
         addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, pubEndName);
-        addConnector2ComponentWeld(ISUBSCRIBER, ISUBSCRIBER_NAME, pubEndName);
+        addConnector2ComponentWeld(iSubscriberName, ISUBSCRIBER_NAME, pubEndName);
 
         // start the created component
         _myx.init(null, pubEndName);
+        _myx.init(null, iSubscriberName);
         _myx.begin(null, pubEndName);
+        _myx.begin(null, iSubscriberName);
     }
 
     public void createSubscriberEndpoint(String subscriberEndpointClassName, Dispatcher<?> dispatcher) {

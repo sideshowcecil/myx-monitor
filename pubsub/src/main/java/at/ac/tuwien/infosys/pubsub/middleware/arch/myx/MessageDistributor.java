@@ -24,27 +24,31 @@ public class MessageDistributor extends EventPumpConnector {
 
     @Override
     public void interfaceConnected(IMyxName interfaceName, Object serviceObject) {
-        super.interfaceConnected(interfaceName, serviceObject);
-        if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
-            if (initCalls.size() > 0) {
-                final Object tso = serviceObject;
-                for (Tuple<Method, Object[]> call : initCalls) {
-                    final Method m = call.getFst();
-                    final Object[] a = call.getSnd();
-                    Runnable r = new Runnable() {
-                        public void run() {
-                            try {
-                                m.invoke(tso, a);
-                            } catch (IllegalAccessException iae) {
-                                iae.printStackTrace();
-                                return;
-                            } catch (InvocationTargetException ite) {
-                                ite.printStackTrace();
-                                return;
+        System.out.println(interfaceName.getName() + ", " + serviceObject);
+        // TODO the serviceObject is null, what to do now
+        if (serviceObject != null) {
+            super.interfaceConnected(interfaceName, serviceObject);
+            if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
+                if (initCalls.size() > 0) {
+                    final Object tso = serviceObject;
+                    for (Tuple<Method, Object[]> call : initCalls) {
+                        final Method m = call.getFst();
+                        final Object[] a = call.getSnd();
+                        Runnable r = new Runnable() {
+                            public void run() {
+                                try {
+                                    m.invoke(tso, a);
+                                } catch (IllegalAccessException iae) {
+                                    iae.printStackTrace();
+                                    return;
+                                } catch (InvocationTargetException ite) {
+                                    ite.printStackTrace();
+                                    return;
+                                }
                             }
-                        }
-                    };
-                    asyncExecutor.execute(r);
+                        };
+                        asyncExecutor.execute(r);
+                    }
                 }
             }
         }

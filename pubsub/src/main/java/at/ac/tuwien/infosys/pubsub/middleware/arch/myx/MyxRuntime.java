@@ -124,18 +124,18 @@ public class MyxRuntime {
         _messageDistributorDesc = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR);
 
         // TODO: remove the commented out calls
-        //_myx.addBrick(null, IDISPATCHER, _synchronousProxyDesc);
+        // _myx.addBrick(null, IDISPATCHER, _synchronousProxyDesc);
         _myx.addBrick(null, IREGISTRY, _synchronousProxyDesc);
-        _myx.addBrick(null, ISUBSCRIBER, _messageDistributorDesc);
+        // _myx.addBrick(null, ISUBSCRIBER, _messageDistributorDesc);
 
         // add interfaces to connectors
-        //generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
+        // generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
         generateConnectorInterfaces(IREGISTRY, _iRegistryDesc);
-        //generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
+        // generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
 
         // wire up the components and connectors
         addComponent2ConnectorWeld(REGISTRY, IREGISTRY_NAME, IREGISTRY);
-        //addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, REGISTRY);
+        // addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, REGISTRY);
 
         // initialize the components map
         _components = new HashMap<>();
@@ -193,15 +193,16 @@ public class MyxRuntime {
         generateComponentInterfaces(pubDispName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
         generateComponentInterfaces(subDispName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
 
+        _myx.init(null, pubDispName);
+        _myx.init(null, iPubDispName);
+        _myx.init(null, subDispName);
+        _myx.init(null, iSubDispName);
+
         // wire up the components and connectors
         addComponent2ConnectorWeld(pubDispName, IDISPATCHER_NAME, iPubDispName);
         addComponent2ConnectorWeld(subDispName, IDISPATCHER_NAME, iSubDispName);
 
         // start up the created components
-        _myx.init(null, pubDispName);
-        _myx.init(null, iPubDispName);
-        _myx.init(null, subDispName);
-        _myx.init(null, iSubDispName);
         _myx.begin(null, pubDispName);
         _myx.begin(null, iPubDispName);
         _myx.begin(null, subDispName);
@@ -249,20 +250,22 @@ public class MyxRuntime {
         generateComponentInterfaces(pubEndName, _iRegistryDesc, IREGISTRY_NAME, EMyxInterfaceDirection.OUT);
         generateComponentInterfaces(pubEndName, _iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.OUT);
 
+        // TODO: important note: we have to call the init methods before we add
+        // the welds for the connectors so the proxy object of the connector (in
+        // this case the message distributor) gets created
+        _myx.init(null, pubEndName);
+        _myx.init(null, iSubscriberName);
+
         // wire up the endpoint
-        // TODO: do we have to create a new connector each time?? i think so
-        // should be extracted into own method and should be validated somehow
+        // TODO should be extracted into own method and should be validated
+        // somehow
         int dispatcherId = extractId(dispatcherName.getName());
-        //addComponent2ConnectorWeld(pubEndName, IDISPATCHER_NAME, MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId));
-        //addComponent2ConnectorWeld(pubEndName, IREGISTRY_NAME, IREGISTRY);
-        //addComponent2ConnectorWeld(pubEndName, ISUBSCRIBER_NAME, iSubscriberName);
-        addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId), IDISPATCHER_NAME, pubEndName);
+        addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId), IDISPATCHER_NAME,
+                pubEndName);
         addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, pubEndName);
         addConnector2ComponentWeld(iSubscriberName, ISUBSCRIBER_NAME, pubEndName);
 
         // start the created component
-        _myx.init(null, pubEndName);
-        _myx.init(null, iSubscriberName);
         _myx.begin(null, pubEndName);
         _myx.begin(null, iSubscriberName);
     }
@@ -270,7 +273,7 @@ public class MyxRuntime {
     public void createSubscriberEndpoint(String subscriberEndpointClassName, Dispatcher<?> dispatcher) {
         try {
             Class<?> subEndClass = Class.forName(subscriberEndpointClassName);
-            if (!PublisherEndpoint.class.isAssignableFrom(subEndClass)) {
+            if (!SubscriberEndpoint.class.isAssignableFrom(subEndClass)) {
                 // TODO: throw exception?
                 return;
             }
@@ -308,30 +311,31 @@ public class MyxRuntime {
         addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_SUB_PREFIX + dispatcherId), IDISPATCHER_NAME,
                 subEndName);
         addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, subEndName);
-        addComponent2ConnectorWeld(subEndName, ISUBSCRIBER_NAME, ISUBSCRIBER);
+        // addComponent2ConnectorWeld(subEndName, ISUBSCRIBER_NAME,
+        // ISUBSCRIBER);
 
         // start the created component
         _myx.init(null, subEndName);
         _myx.begin(null, subEndName);
     }
 
-    public MessageDistributor createMessageDistributor(PublisherEndpoint<?> endpoint) {
-
-        return null;
-    }
-
-    public void removeMessageDistributor(MessageDistributor distributor) {
+    public void shutdownEndpoint(PublisherEndpoint<?> endpoint) {
 
     }
 
-    public void wireMessageDistributor(SubscriberEndpoint<?> endpoint, MessageDistributor distributor) {
-        IMyxName endpointName = MyxUtils.getName(endpoint);
-        IMyxName distributorName = MyxUtils.getName(distributor);
+    public void shutdownEndpoint(SubscriberEndpoint<?> endpoint) {
 
-        addComponent2ConnectorWeld(endpointName, ISUBSCRIBER_NAME, distributorName);
     }
 
-    public void unwireMessageDistributor(SubscriberEndpoint<?> endpoint, MessageDistributor distributor) {
+    public void wireEndpoint(SubscriberEndpoint<?> subscriber, PublisherEndpoint<?> publisher) {
+        IMyxName endpointName = MyxUtils.getName(subscriber);
+        int pubEndpointId = extractId(endpointName.getName());
+        IMyxName iSubscriberName = MyxUtils.createName(ISUBSCRIBER_PREFIX + pubEndpointId);
+
+        addComponent2ConnectorWeld(endpointName, ISUBSCRIBER_NAME, iSubscriberName);
+    }
+
+    public void unwireEndpoint(SubscriberEndpoint<?> subscriber, PublisherEndpoint<?> publisher) {
 
     }
 

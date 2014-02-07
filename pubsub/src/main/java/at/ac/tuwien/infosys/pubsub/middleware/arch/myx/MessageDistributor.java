@@ -2,7 +2,9 @@ package at.ac.tuwien.infosys.pubsub.middleware.arch.myx;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
@@ -24,32 +26,42 @@ public class MessageDistributor extends EventPumpConnector {
 
     @Override
     public void interfaceConnected(IMyxName interfaceName, Object serviceObject) {
-        System.out.println(interfaceName.getName() + ", " + serviceObject);
-        // TODO the serviceObject is null, what to do now
-        if (serviceObject != null) {
-            super.interfaceConnected(interfaceName, serviceObject);
-            if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
-                if (initCalls.size() > 0) {
-                    final Object tso = serviceObject;
-                    for (Tuple<Method, Object[]> call : initCalls) {
-                        final Method m = call.getFst();
-                        final Object[] a = call.getSnd();
-                        Runnable r = new Runnable() {
-                            public void run() {
-                                try {
-                                    m.invoke(tso, a);
-                                } catch (IllegalAccessException iae) {
-                                    iae.printStackTrace();
-                                    return;
-                                } catch (InvocationTargetException ite) {
-                                    ite.printStackTrace();
-                                    return;
-                                }
+        if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
+            // for the OUT side --> message sink side, where to forward the
+            // invocation to.
+            // will not be called for the message source side, thus proxy needs
+            // to be set differently
+            synchronized(this){
+                List<Object> l = new ArrayList<Object>(Arrays.asList(trueServiceObjects));
+                l.add(serviceObject);
+                trueServiceObjects = l.toArray(new Object[l.size()]);
+            }
+            if (initCalls.size() > 0) {
+                final Object tso = serviceObject;
+                for (Tuple<Method, Object[]> call : initCalls) {
+                    final Method m = call.getFst();
+                    final Object[] a = call.getSnd();
+                    Runnable r = new Runnable() {
+                        public void run() {
+                            try {
+                                m.invoke(tso, a);
+                            } catch (IllegalAccessException iae) {
+                                iae.printStackTrace();
+                                return;
+                            } catch (InvocationTargetException ite) {
+                                ite.printStackTrace();
+                                return;
                             }
-                        };
-                        asyncExecutor.execute(r);
-                    }
+                        }
+                    };
+                    asyncExecutor.execute(r);
                 }
+            }
+        } else if (interfaceName.equals(PROVIDED_INTERFACE_NAME)) {
+            if (proxyObject == null) {
+                ClassLoader cl = serviceObject.getClass().getClassLoader();
+                Class<?>[] interfaceClasses = serviceObject.getClass().getInterfaces();
+                proxyObject = Proxy.newProxyInstance(cl, interfaceClasses, this);
             }
         }
     }

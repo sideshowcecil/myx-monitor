@@ -48,7 +48,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                     // if we do not get a topic name we assume the publisher
                     // died
                     if (_topic != null) {
-                        // check if the topic exists
+                        // check if the topic exists and register the endpoint
                         try {
                             _registry.register(_topic, PublisherEndpoint.this);
                         } catch (IllegalArgumentException ex) {
@@ -62,12 +62,17 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                         while (run) {
                             // wait for a message
                             Message<E> msg = _endpoint.receive();
-                            // if we receive a CLOSE or ERROR message we send
+                            // if we receive a CLOSE or ERROR message we
                             // shutdown the endpoint
                             if (msg.getType() == Type.CLOSE || msg.getType() == Type.ERROR) {
                                 run = false;
                             }
                             _subscriber.send(msg);
+                        }
+                        // unregister the endpoint
+                        try {
+                            _registry.unregister(_topic, PublisherEndpoint.this);
+                        } catch (IllegalArgumentException e) {
                         }
                     }
                 }

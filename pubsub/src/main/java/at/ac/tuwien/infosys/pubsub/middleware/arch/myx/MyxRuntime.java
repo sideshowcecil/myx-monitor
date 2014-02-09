@@ -123,19 +123,13 @@ public class MyxRuntime {
         _synchronousProxyDesc = new MyxJavaClassBrickDescription(null, SYNCHRONOUS_PROXY);
         _messageDistributorDesc = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR);
 
-        // TODO: remove the commented out calls
-        // _myx.addBrick(null, IDISPATCHER, _synchronousProxyDesc);
         _myx.addBrick(null, IREGISTRY, _synchronousProxyDesc);
-        // _myx.addBrick(null, ISUBSCRIBER, _messageDistributorDesc);
 
         // add interfaces to connectors
-        // generateConnectorInterfaces(IDISPATCHER, _iDispatcherDesc);
         generateConnectorInterfaces(IREGISTRY, _iRegistryDesc);
-        // generateConnectorInterfaces(ISUBSCRIBER, _iSubscriberDesc);
 
         // wire up the components and connectors
         addComponent2ConnectorWeld(REGISTRY, IREGISTRY_NAME, IREGISTRY);
-        // addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, REGISTRY);
 
         // initialize the components map
         _components = new HashMap<>();
@@ -250,15 +244,13 @@ public class MyxRuntime {
         generateComponentInterfaces(pubEndName, _iRegistryDesc, IREGISTRY_NAME, EMyxInterfaceDirection.OUT);
         generateComponentInterfaces(pubEndName, _iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.OUT);
 
-        // TODO: important note: we have to call the init methods before we add
+        // important note: we have to call the init methods before we add
         // the welds for the connectors so the proxy object of the connector (in
         // this case the message distributor) gets created
         _myx.init(null, pubEndName);
         _myx.init(null, iSubscriberName);
 
         // wire up the endpoint
-        // TODO should be extracted into own method and should be validated
-        // somehow
         int dispatcherId = extractId(dispatcherName.getName());
         addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId), IDISPATCHER_NAME,
                 pubEndName);
@@ -306,13 +298,10 @@ public class MyxRuntime {
         generateComponentInterfaces(subEndName, _iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.IN);
 
         // wire up the endpoint
-        // TODO: do we have to create a new connector each time?? i think so
         int dispatcherId = extractId(dispatcherName.getName());
         addConnector2ComponentWeld(MyxUtils.createName(IDISPATCHER_SUB_PREFIX + dispatcherId), IDISPATCHER_NAME,
                 subEndName);
         addConnector2ComponentWeld(IREGISTRY, IREGISTRY_NAME, subEndName);
-        // addComponent2ConnectorWeld(subEndName, ISUBSCRIBER_NAME,
-        // ISUBSCRIBER);
 
         // start the created component
         _myx.init(null, subEndName);

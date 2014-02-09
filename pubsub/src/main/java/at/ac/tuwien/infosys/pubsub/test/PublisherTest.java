@@ -47,6 +47,13 @@ public class PublisherTest {
         Message<byte[]> m;
         m = new Message<byte[]>("test".getBytes(), Type.TOPIC);
         s.send(m);
+        m = s.receive();
+        if (m.getType() == Type.ERROR) {
+            System.err.println(new String(m.getData()));
+            is.close();
+            return;
+        }
+        Thread.sleep(5000);
         while (total < totalToRead) {
             numBytesRead = is.read(myData, 0, numBytesToRead);
             if (numBytesRead == -1)

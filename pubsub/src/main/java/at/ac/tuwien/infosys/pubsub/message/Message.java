@@ -67,6 +67,6 @@ public class Message<E> implements Serializable {
      * 
      */
     public enum Type {
-        TOPIC, INIT, DATA, CLOSE, ERROR
+        TOPIC, INIT, ACK, DATA, CLOSE, ERROR
     }
 }

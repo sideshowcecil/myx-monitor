@@ -23,6 +23,12 @@ public class SocketBytePublisherEndpoint extends PublisherEndpoint<byte[]> {
     }
 
     @Override
+    public void sendTopicAcnowledgement() {
+        Message<byte[]> msg = new Message<byte[]>("The given topic was successfuly registered!".getBytes(), Type.ACK);
+        _endpoint.send(msg);
+    }
+
+    @Override
     public void sendErrorForExistingTopic() {
         Message<byte[]> msg = new Message<byte[]>("The given topic already exists!".getBytes(), Type.ERROR);
         _endpoint.send(msg);

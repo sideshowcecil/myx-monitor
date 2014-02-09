@@ -51,6 +51,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                         // check if the topic exists and register the endpoint
                         try {
                             _registry.register(_topic, PublisherEndpoint.this);
+                            sendTopicAcnowledgement();
                         } catch (IllegalArgumentException ex) {
                             sendErrorForExistingTopic();
                             return;
@@ -108,6 +109,11 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
      * @return
      */
     public abstract String waitForTopicName();
+
+    /**
+     * Send an acknowledgment to the publisher that the topic name was successfuly registered.
+     */
+    public abstract void sendTopicAcnowledgement();
 
     /**
      * Send an error to the publisher if the topic name is already registered.

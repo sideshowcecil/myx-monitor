@@ -26,6 +26,7 @@ public final class SocketByteMessageProtocol implements MessageReceiver<byte[]>,
 
     public static final char TOPIC = '#';
     public static final char INIT = '*';
+    public static final char ACK = '/';
     public static final char DATA = '+';
     public static final char CLOSE = '$';
     public static final char ERROR = '-';
@@ -52,6 +53,9 @@ public final class SocketByteMessageProtocol implements MessageReceiver<byte[]>,
             break;
         case INIT:
             type = INIT;
+            break;
+        case ACK:
+            type = ACK;
             break;
         case DATA:
             type = DATA;
@@ -98,6 +102,9 @@ public final class SocketByteMessageProtocol implements MessageReceiver<byte[]>,
                         break;
                     case INIT:
                         type = Type.INIT;
+                        break;
+                    case ACK:
+                        type = Type.ACK;
                         break;
                     case DATA:
                         type = Type.DATA;

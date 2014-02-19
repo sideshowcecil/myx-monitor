@@ -3,6 +3,9 @@ package at.ac.tuwien.infosys.pubsub.middleware.arch.component;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
@@ -14,6 +17,8 @@ import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
+
+    private static Logger logger = LoggerFactory.getLogger(PublisherEndpoint.class);
 
     public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
     public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
@@ -30,7 +35,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
     private Runnable _runnable;
 
     @Override
-    public Object getServiceObject(IMyxName arg0) {
+    public Object getServiceObject(@SuppressWarnings("unused") IMyxName arg0) {
         return null;
     }
 
@@ -41,18 +46,22 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
             @SuppressWarnings("unchecked")
             public void run() {
                 // get the endpoint from the connected dispatcher
+                logger.info("Getting endpoint from dispatcher");
                 _endpoint = _dispatcher.getNextEndpoint();
                 if (_endpoint != null) {
                     // wait for the topic name
+                    logger.info("Waiting for topic");
                     _topic = waitForTopicName();
                     // if we do not get a topic name we assume the publisher
                     // died
                     if (_topic != null) {
+                        logger.error("Registering topic publisher '" + _topic + "'");
                         // check if the topic exists and register the endpoint
                         try {
                             _registry.register(_topic, PublisherEndpoint.this);
                             sendTopicAcnowledgement();
                         } catch (IllegalArgumentException ex) {
+                            logger.error("Topic '" + _topic + "' is already registered");
                             sendErrorForExistingTopic();
                             return;
                         }
@@ -60,6 +69,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                         _subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
                         // wait for messages and forward them to the subscribers
                         boolean run = true;
+                        logger.debug("Waiting for messages");
                         while (run) {
                             // wait for a message
                             Message<E> msg = _endpoint.receive();
@@ -70,6 +80,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                             }
                             _subscriber.send(msg);
                         }
+                        logger.debug("All messages received, unregistering topic");
                         // unregister the endpoint
                         try {
                             _registry.unregister(_topic, PublisherEndpoint.this);
@@ -111,7 +122,8 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
     public abstract String waitForTopicName();
 
     /**
-     * Send an acknowledgment to the publisher that the topic name was successfuly registered.
+     * Send an acknowledgment to the publisher that the topic name was
+     * successfuly registered.
      */
     public abstract void sendTopicAcnowledgement();
 

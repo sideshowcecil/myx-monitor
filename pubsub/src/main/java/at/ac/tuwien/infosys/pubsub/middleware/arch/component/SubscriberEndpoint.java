@@ -3,6 +3,9 @@ package at.ac.tuwien.infosys.pubsub.middleware.arch.component;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.tuwien.infosys.pubsub.message.Message;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
@@ -13,6 +16,8 @@ import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
 public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick implements ISubscriber<E> {
+
+    private static Logger logger = LoggerFactory.getLogger(SubscriberEndpoint.class);
 
     public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
     public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
@@ -43,17 +48,21 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
         _runnable = new Runnable() {
             public void run() {
                 // get the endpoint from the connected dispatcher
+                logger.info("Getting endpoint from dispatcher");
                 _endpoint = _dispatcher.getNextEndpoint();
                 if (_endpoint != null) {
                     // wait for the topic name
+                    logger.info("Waiting for topic");
                     _topic = waitForTopicName();
                     // if we do not get a topic name we assume the subscriber
                     // died
                     if (_topic != null) {
                         // check if the topic exists and register the endpoint
+                        logger.error("Registering topic subscriber '" + _topic + "'");
                         try {
                             _registry.register(_topic, SubscriberEndpoint.this);
                         } catch (IllegalArgumentException ex) {
+                            logger.error("Topic '" + _topic + "' is not registered");
                             sendErrorForNonExistingTopic();
                         }
                     }

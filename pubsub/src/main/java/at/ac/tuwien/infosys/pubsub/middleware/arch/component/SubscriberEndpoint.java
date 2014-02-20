@@ -33,6 +33,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
     private ExecutorService executor;
     private Runnable runnable;
 
+    private boolean shutdown = false;
+
     @Override
     public Object getServiceObject(IMyxName arg0) {
         // if no interfaces are going in, always return null
@@ -91,7 +93,11 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
             try {
                 endpoint.send(message);
             } catch (IOException e) {
-                // TODO shutdown the endpoint
+                if (!shutdown) {
+                    // shutdown the endpoint
+                    MyxRuntime.getInstance().shutdownEndpoint(this);
+                    shutdown = true;
+                }
             }
         }
     }

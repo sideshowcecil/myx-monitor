@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherDispatcher;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.MyxRuntime;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
 import edu.uci.isr.myx.fw.MyxUtils;
@@ -39,7 +40,8 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
             try {
                 _server = new ServerSocket(_port);
             } catch (IOException e) {
-                // TODO: we should shutdown the dispatcher
+                // shutdown the dispatcher
+                MyxRuntime.getInstance().shutdownDispatcher(this);
             }
         }
         if (_server != null) {

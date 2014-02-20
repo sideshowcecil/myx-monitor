@@ -31,7 +31,7 @@ public class MessageDistributor extends EventPumpConnector {
             // invocation to.
             // will not be called for the message source side, thus proxy needs
             // to be set differently
-            synchronized(this){
+            synchronized (this) {
                 List<Object> l = new ArrayList<Object>(Arrays.asList(trueServiceObjects));
                 l.add(serviceObject);
                 trueServiceObjects = l.toArray(new Object[l.size()]);
@@ -62,6 +62,20 @@ public class MessageDistributor extends EventPumpConnector {
                 ClassLoader cl = serviceObject.getClass().getClassLoader();
                 Class<?>[] interfaceClasses = serviceObject.getClass().getInterfaces();
                 proxyObject = Proxy.newProxyInstance(cl, interfaceClasses, this);
+            }
+        }
+    }
+
+    @Override
+    public void interfaceDisconnected(IMyxName interfaceName, Object serviceObject) {
+        if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
+            synchronized (this) {
+                List<Object> l = new ArrayList<Object>(Arrays.asList(trueServiceObjects));
+                l.remove(serviceObject);
+                trueServiceObjects = l.toArray(new Object[l.size()]);
+                if (trueServiceObjects.length == 0) {
+                    trueServiceObjects = null;
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.MyxRuntime;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
@@ -55,6 +56,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                     logger.debug("All messages received");
                     endpoint.close();
                 }
+                MyxRuntime.getInstance().shutdownEndpoint(PublisherEndpoint.this);
             }
         };
     }

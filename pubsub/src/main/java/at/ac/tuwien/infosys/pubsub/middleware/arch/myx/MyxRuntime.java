@@ -141,11 +141,13 @@ public class MyxRuntime {
         try {
             _myx.addBrick(null, pubDispName, pubDispDesc);
             _myx.addBrick(null, iPubDispName, _synchronousProxyDesc);
-            _components.put(pubDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(), new ArrayList<IMyxWeld>()));
+            _components.put(pubDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+                    new ArrayList<IMyxWeld>()));
             _components.get(pubDispName).getFst().add(iPubDispName);
             _myx.addBrick(null, subDispName, subDispDesc);
             _myx.addBrick(null, iSubDispName, _synchronousProxyDesc);
-            _components.put(subDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(), new ArrayList<IMyxWeld>()));
+            _components.put(subDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+                    new ArrayList<IMyxWeld>()));
             _components.get(subDispName).getFst().add(iSubDispName);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
@@ -201,7 +203,8 @@ public class MyxRuntime {
         // add the bricks
         try {
             _myx.addBrick(null, pubEndName, pubEndDesc);
-            _components.put(pubEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(), new ArrayList<IMyxWeld>()));
+            _components.put(pubEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+                    new ArrayList<IMyxWeld>()));
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
             // TODO throw exception??
@@ -250,7 +253,8 @@ public class MyxRuntime {
         // add the bricks
         try {
             _myx.addBrick(null, subEndName, subEndDesc);
-            _components.put(subEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(), new ArrayList<IMyxWeld>()));
+            _components.put(subEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+                    new ArrayList<IMyxWeld>()));
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
             // TODO throw exception??
@@ -269,6 +273,13 @@ public class MyxRuntime {
         // start the created component
         _myx.init(null, subEndName);
         _myx.begin(null, subEndName);
+    }
+
+    public void shutdownDispatcher(Dispatcher<?> dispatcher) {
+        IMyxName comp = MyxUtils.getName(dispatcher);
+        _myx.end(null, comp);
+        _myx.destroy(null, comp);
+        removeComponent(comp);
     }
 
     public void shutdownEndpoint(PublisherEndpoint<?> endpoint) {
@@ -327,8 +338,7 @@ public class MyxRuntime {
     protected void addConnector2ComponentWeld(IMyxName conn, String intfName, IMyxName comp) {
         IMyxWeld weld = null;
         synchronized (_myx) {
-            weld = _myx.createWeld(null, conn, MyxUtils.createName("out"), null, comp,
-                    MyxUtils.createName(intfName));
+            weld = _myx.createWeld(null, conn, MyxUtils.createName("out"), null, comp, MyxUtils.createName(intfName));
             _myx.addWeld(weld);
         }
         _components.get(comp).getSnd().add(weld);
@@ -344,8 +354,7 @@ public class MyxRuntime {
     protected void addComponent2ConnectorWeld(IMyxName comp, String intfName, IMyxName conn) {
         IMyxWeld weld = null;
         synchronized (_myx) {
-            weld = _myx.createWeld(null, comp, MyxUtils.createName(intfName), null, conn,
-                    MyxUtils.createName("in"));
+            weld = _myx.createWeld(null, comp, MyxUtils.createName(intfName), null, conn, MyxUtils.createName("in"));
             _myx.addWeld(weld);
         }
         _components.get(comp).getSnd().add(weld);
@@ -358,7 +367,10 @@ public class MyxRuntime {
                     Tuple<List<IMyxName>, List<IMyxWeld>> t = _components.get(comp);
                     // remove the welds
                     for (IMyxWeld weld : t.getSnd()) {
-                        _myx.removeWeld(weld);
+                        try {
+                            _myx.removeWeld(weld);
+                        } catch (NullPointerException e) {
+                        }
                     }
                     // remove the interfaces
                     for (IMyxName connector : t.getFst()) {

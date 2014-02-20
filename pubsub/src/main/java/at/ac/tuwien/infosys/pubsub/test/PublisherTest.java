@@ -33,8 +33,8 @@ public class PublisherTest {
         sock.connect(new InetSocketAddress(6666));
         SocketByteMessageProtocol s = new SocketByteMessageProtocol(sock);
 
-        // URL url = ClassLoader.getSystemResource("sound2.wav");
-        URL url = ClassLoader.getSystemResource("sound.wav");
+        URL url = ClassLoader.getSystemResource("sound2.wav");
+        //URL url = ClassLoader.getSystemResource("sound.wav");
         File file = new File(url.getFile());
         InputStream is = new FileInputStream(file);
 
@@ -43,7 +43,7 @@ public class PublisherTest {
         byte[] myData = new byte[numBytesToRead];
         boolean initSent = false;
 
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         
         String topic = "test";
         Message<byte[]> m;

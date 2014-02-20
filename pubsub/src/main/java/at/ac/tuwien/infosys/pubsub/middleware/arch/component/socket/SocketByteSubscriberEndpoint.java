@@ -1,7 +1,11 @@
 package at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import at.ac.tuwien.infosys.pubsub.message.Message;
-import at.ac.tuwien.infosys.pubsub.message.Message.Type;
+import at.ac.tuwien.infosys.pubsub.message.Topic;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberEndpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
 
@@ -15,18 +19,20 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMess
 public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
 
     @Override
-    public String waitForTopicName() {
-        Message<byte[]> msg = _endpoint.receive();
-        if (msg.getType() == Type.TOPIC) {
-            return new String(msg.getData());
+    public List<Topic> getTopics() {
+        try {
+            Message<byte[]> msg = endpoint.receive();
+            if (msg.getType() == Message.Type.TOPIC) {
+                Topic.Type type = Topic.Type.valueOf(msg.getTopic());
+                List<Topic> topics = new ArrayList<>();
+                for (String topic : new String(msg.getData())
+                        .split(String.valueOf(SocketByteMessageProtocol.SEPARATOR))) {
+                    topics.add(new Topic(topic, type));
+                }
+                return topics;
+            }
+        } catch (IOException | IllegalArgumentException e) {
         }
         return null;
     }
-
-    @Override
-    public void sendErrorForNonExistingTopic() {
-        Message<byte[]> msg = new Message<byte[]>("The given topic does not exist!".getBytes(), Type.ERROR);
-        _endpoint.send(msg);
-    }
-
 }

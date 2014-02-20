@@ -20,10 +20,10 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     public static final IMyxName IN_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
 
-    private ExecutorService _executor;
-    private Runnable _dispatcher;
+    private ExecutorService executor;
+    private Runnable runnable;
 
-    private Queue<Endpoint<E>> _queue = new ConcurrentLinkedQueue<>();
+    private Queue<Endpoint<E>> queue = new ConcurrentLinkedQueue<>();
 
     @Override
     public Object getServiceObject(IMyxName arg0) {
@@ -37,16 +37,16 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     @Override
     public void init() {
-        _executor = Executors.newSingleThreadExecutor();
-        _dispatcher = new Runnable() {
+        executor = Executors.newSingleThreadExecutor();
+        runnable = new Runnable() {
             public void run() {
                 while (true) {
                     logger.info("Waiting for next endpoint");
-                    Endpoint<E> endpoint = waitForNewEndpoint();
+                    Endpoint<E> endpoint = waitForNextEndpoint();
                     if (endpoint != null) {
                         logger.info("Endpoint connected");
                         // enqueue the endpoint
-                        _queue.add(endpoint);
+                        queue.add(endpoint);
                         // create the endpoint
                         createEndpoint();
                     }
@@ -57,17 +57,17 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     @Override
     public void begin() {
-        _executor.execute(_dispatcher);
+        executor.execute(runnable);
     }
 
     @Override
     public void end() {
-        _executor.shutdownNow();
+        executor.shutdownNow();
     }
 
     @Override
     public Endpoint<E> getNextEndpoint() {
-        return _queue.poll();
+        return queue.poll();
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
      * 
      * @return
      */
-    public abstract Endpoint<E> waitForNewEndpoint();
+    public abstract Endpoint<E> waitForNextEndpoint();
 
     /**
      * Create the real endpoint and execute it.

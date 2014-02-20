@@ -12,7 +12,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
-import at.ac.tuwien.infosys.pubsub.message.Message.Type;
+import at.ac.tuwien.infosys.pubsub.message.Topic;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
 
 /**
@@ -30,7 +30,7 @@ public class SubscriberTest {
         socketReceiver.connect(new InetSocketAddress(6667));
         SocketByteMessageProtocol protocol = new SocketByteMessageProtocol(socketReceiver);
 
-        protocol.send(new Message<byte[]>("test".getBytes(), Type.TOPIC));
+        protocol.send(new Message<byte[]>(Message.Type.TOPIC, Topic.Type.REGEX.toString(), "test".getBytes()));
 
         SourceDataLine line = null;
         boolean play = true;

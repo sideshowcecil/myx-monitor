@@ -14,16 +14,17 @@ public class Message<E> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private E data;
     private Type type;
+    private String topic;
+    private E data;
 
     /**
      * Basic constructor with predefined message type <code>DATA</code>.
      * 
      * @param data
      */
-    public Message(E data) {
-        this(data, Type.DATA);
+    public Message(String topic, E data) {
+        this(Type.DATA, topic, data);
     }
 
     /**
@@ -32,18 +33,10 @@ public class Message<E> implements Serializable {
      * @param data
      * @param type
      */
-    public Message(E data, Type type) {
-        this.data = data;
+    public Message(Type type, String topic, E data) {
+        this.topic = topic;
         this.type = type;
-    }
-
-    /**
-     * Get the message data.
-     * 
-     * @return
-     */
-    public E getData() {
-        return data;
+        this.data = data;
     }
 
     /**
@@ -55,18 +48,36 @@ public class Message<E> implements Serializable {
         return type;
     }
 
-    @Override
-    public String toString() {
-        return "[" + type + "] " + data;
+    /**
+     * Get the message topic.
+     * 
+     * @return
+     */
+    public String getTopic() {
+        return topic;
     }
 
     /**
-     * All message types avaliable.
+     * Get the message data.
+     * 
+     * @return
+     */
+    public E getData() {
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getType() + "] [" + getTopic() + "] " + getData();
+    }
+
+    /**
+     * All message types available.
      * 
      * @author bernd.rathmanner
      * 
      */
     public enum Type {
-        TOPIC, INIT, ACK, DATA, CLOSE, ERROR
+        TOPIC, INIT, DATA, CLOSE, ERROR
     }
 }

@@ -1,5 +1,7 @@
 package at.ac.tuwien.infosys.pubsub.middleware.arch.network;
 
+import java.io.IOException;
+
 import at.ac.tuwien.infosys.pubsub.message.Message;
 
 /**
@@ -15,12 +17,17 @@ public interface Endpoint<E> {
      * 
      * @return
      */
-    public Message<E> receive();
+    public Message<E> receive() throws IOException;
 
     /**
      * Send a message.
      * 
      * @param msg
      */
-    public void send(Message<E> msg);
+    public void send(Message<E> msg) throws IOException;
+    
+    /**
+     * Closes (shutdown) the endpoint.
+     */
+    public void close();
 }

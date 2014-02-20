@@ -9,14 +9,14 @@
             <param name="ConversionPattern" value="[%d] [%t] %-5p: %c - %m%n" />
         </layout>
     </appender>
-    <appender name="file" class="org.apache.log4j.FileAppender">
+    <!--<appender name="file" class="org.apache.log4j.FileAppender">
         <param name="file" value="${log}/log.out" />
         <param name="immediateFlush" value="true" />
         <param name="append" value="false" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] [%t] %-5p: %c - %m%n" />
         </layout>
-    </appender>
+    </appender>-->
 
     <!-- Application Loggers -->
     <logger name="at.ac.tuwien.infosys.pubsub">

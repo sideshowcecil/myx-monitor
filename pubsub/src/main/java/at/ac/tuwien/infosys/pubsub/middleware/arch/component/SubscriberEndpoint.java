@@ -1,5 +1,7 @@
 package at.ac.tuwien.infosys.pubsub.middleware.arch.component;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -7,10 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
+import at.ac.tuwien.infosys.pubsub.message.Topic;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
-import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.MyxRuntime;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
@@ -20,17 +23,15 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
     private static Logger logger = LoggerFactory.getLogger(SubscriberEndpoint.class);
 
     public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
-    public static final IMyxName OUT_IREGISTRY = MyxUtils.createName(IRegistry.class.getName());
     public static final IMyxName IN_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
 
-    protected IDispatcher<E> _dispatcher;
-    protected IRegistry _registry;
+    protected IDispatcher<E> dispatcher;
 
-    protected Endpoint<E> _endpoint;
-    protected String _topic = null;
+    protected Endpoint<E> endpoint;
+    protected List<Topic> topics = null;
 
-    private ExecutorService _executor;
-    private Runnable _runnable;
+    private ExecutorService executor;
+    private Runnable runnable;
 
     @Override
     public Object getServiceObject(IMyxName arg0) {
@@ -44,27 +45,20 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
 
     @Override
     public void init() {
-        _executor = Executors.newSingleThreadExecutor();
-        _runnable = new Runnable() {
+        executor = Executors.newSingleThreadExecutor();
+        runnable = new Runnable() {
             public void run() {
                 // get the endpoint from the connected dispatcher
                 logger.info("Getting endpoint from dispatcher");
-                _endpoint = _dispatcher.getNextEndpoint();
-                if (_endpoint != null) {
+                endpoint = dispatcher.getNextEndpoint();
+                if (endpoint != null) {
                     // wait for the topic name
-                    logger.info("Waiting for topic");
-                    _topic = waitForTopicName();
-                    // if we do not get a topic name we assume the subscriber
-                    // died
-                    if (_topic != null) {
-                        // check if the topic exists and register the endpoint
-                        logger.error("Registering topic subscriber '" + _topic + "'");
-                        try {
-                            _registry.register(_topic, SubscriberEndpoint.this);
-                        } catch (IllegalArgumentException ex) {
-                            logger.error("Topic '" + _topic + "' is not registered");
-                            sendErrorForNonExistingTopic();
-                        }
+                    logger.info("Waiting for topics");
+                    topics = getTopics();
+                    // if we do not get topics name we assume the endpoint died
+                    if (topics != null) {
+                        // connect to MessageDistributor
+                        MyxRuntime.getInstance().wireEndpoint(SubscriberEndpoint.this);
                     }
                 }
             }
@@ -76,37 +70,52 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
     public void begin() {
         try {
             // connect interfaces
-            _dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
-            _registry = (IRegistry) getFirstRequiredServiceObject(OUT_IREGISTRY);
+            dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
         } catch (IllegalArgumentException ex) {
             System.err.println(ex.getMessage());
             return;
         }
-        _executor.execute(_runnable);
+        executor.execute(runnable);
     }
 
     @Override
     public void end() {
-        if (_topic != null) {
-            _registry.unregister(_topic, this);
-        }
+        executor.shutdownNow();
     }
 
     @Override
     public void send(Message<E> message) {
-        _endpoint.send(message);
+        // we only send the message to the subscriber if the subscribed topic
+        // matches
+        if (matches(message.getTopic())) {
+            try {
+                endpoint.send(message);
+            } catch (IOException e) {
+                // TODO shutdown the endpoint
+            }
+        }
     }
 
     /**
-     * Wait and return the topic name used by this subscriber.
+     * Return if the given topic matches any of the subscribed topics.
+     * 
+     * @param topic
+     * @return
+     */
+    private boolean matches(String topic) {
+        for (Topic t : topics) {
+            if (t.match(topic)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the topics for which the subscriber wants notifications.
      * 
      * @return
      */
-    public abstract String waitForTopicName();
-
-    /**
-     * Send an error to the subscriber if the topic name is not registered.
-     */
-    public abstract void sendErrorForNonExistingTopic();
+    public abstract List<Topic> getTopics();
 
 }

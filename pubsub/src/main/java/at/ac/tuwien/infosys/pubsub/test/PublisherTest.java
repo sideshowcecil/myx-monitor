@@ -13,7 +13,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.infosys.pubsub.message.Message;
-import at.ac.tuwien.infosys.pubsub.message.Message.Type;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
 
 /**
@@ -44,30 +43,24 @@ public class PublisherTest {
         byte[] myData = new byte[numBytesToRead];
         boolean initSent = false;
 
-        Message<byte[]> m;
-        m = new Message<byte[]>("test".getBytes(), Type.TOPIC);
-        s.send(m);
-        m = s.receive();
-        if (m.getType() == Type.ERROR) {
-            System.err.println(new String(m.getData()));
-            is.close();
-            return;
-        }
         Thread.sleep(5000);
+        
+        String topic = "test";
+        Message<byte[]> m;
         while (total < totalToRead) {
             numBytesRead = is.read(myData, 0, numBytesToRead);
             if (numBytesRead == -1)
                 break;
             if (!initSent) {
-                m = new Message<byte[]>(myData, Type.INIT);
+                m = new Message<byte[]>(Message.Type.INIT, topic, myData);
                 initSent = true;
             } else {
-                m = new Message<byte[]>(myData);
+                m = new Message<byte[]>(topic, myData);
             }
             total += numBytesRead;
             s.send(m);
         }
-        m = new Message<byte[]>(new byte[] { 'a' }, Type.CLOSE);
+        m = new Message<byte[]>(Message.Type.CLOSE, topic, new byte[] { 'a' });
         s.send(m);
         is.close();
 

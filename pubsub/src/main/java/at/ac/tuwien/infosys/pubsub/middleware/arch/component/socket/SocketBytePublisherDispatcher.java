@@ -3,7 +3,6 @@ package at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.network.Endpoint;
@@ -34,14 +33,13 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
     }
 
     @Override
-    public Endpoint<byte[]> waitForNewEndpoint() {
+    public Endpoint<byte[]> waitForNextEndpoint() {
         if (_server == null) {
             // open socket
             try {
                 _server = new ServerSocket(_port);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                // TODO: we should shutdown the dispatcher
             }
         }
         if (_server != null) {
@@ -50,11 +48,8 @@ public class SocketBytePublisherDispatcher extends PublisherDispatcher<byte[]> {
                 Socket socket = _server.accept();
                 // create the handler
                 return new SocketByteMessageProtocol(socket);
-            } catch (SocketTimeoutException e) {
-                // ignore
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                // ignore
             }
         }
         return null;

@@ -12,8 +12,6 @@ import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherEndpoint;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.Registry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberEndpoint;
-import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketBytePublisherDispatcher;
-import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketByteSubscriberDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IDispatcher;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.IRegistry;
 import at.ac.tuwien.infosys.pubsub.middleware.arch.interfaces.ISubscriber;
@@ -81,17 +79,6 @@ public class MyxRuntime {
      * (list of interface names, list of welds) }
      */
     private Map<IMyxName, Tuple<List<IMyxName>, List<IMyxWeld>>> _components;
-
-    public static void main(String args[]) { // TODO: remove main from here
-        try {
-            getInstance().boostrapArchitecture();
-            getInstance().createDispatcher(SocketBytePublisherDispatcher.class.getName(), null,
-                    SocketByteSubscriberDispatcher.class.getName(), null);
-        } catch (MyxBrickLoadException | MyxBrickCreationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     private static MyxRuntime _instance = new MyxRuntime();
 

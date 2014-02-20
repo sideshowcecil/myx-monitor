@@ -3,8 +3,11 @@ package at.ac.tuwien.infosys.pubsub;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.infosys.pubsub.middleware.PublisherListener;
-import at.ac.tuwien.infosys.pubsub.middleware.SubscriberListener;
+import edu.uci.isr.myx.fw.MyxBrickCreationException;
+import edu.uci.isr.myx.fw.MyxBrickLoadException;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.PublisherDispatcher;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.SubscriberDispatcher;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.myx.MyxRuntime;
 import at.ac.tuwien.infosys.pubsub.util.Tuple;
 
 /**
@@ -16,22 +19,22 @@ import at.ac.tuwien.infosys.pubsub.util.Tuple;
  */
 public class PubSubMiddleware implements Runnable {
 
-    private List<Tuple<PublisherListener<?>, SubscriberListener<?>>> listeners;
+    private List<Tuple<Class<? extends PublisherDispatcher<?>>, Class<? extends SubscriberDispatcher<?>>>> dispatchers;
 
     /**
      * Basic constructor.
      */
     public PubSubMiddleware() {
-        listeners = new ArrayList<>();
+        dispatchers = new ArrayList<>();
     }
 
     /**
      * Extended constructor with predefined list of listener pairs.
      * 
-     * @param listeners
+     * @param dispatchers
      */
-    public PubSubMiddleware(List<Tuple<PublisherListener<?>, SubscriberListener<?>>> listeners) {
-        this.listeners = listeners;
+    public PubSubMiddleware(List<Tuple<Class<? extends PublisherDispatcher<?>>, Class<? extends SubscriberDispatcher<?>>>> dispatchers) {
+        this.dispatchers = dispatchers;
     }
 
     /**
@@ -41,8 +44,10 @@ public class PubSubMiddleware implements Runnable {
      * @param pub
      * @param sub
      */
-    public void addListener(PublisherListener<?> pub, SubscriberListener<?> sub) {
-        listeners.add(new Tuple<PublisherListener<?>, SubscriberListener<?>>(pub, sub));
+    public void addDispatcher(Class<? extends PublisherDispatcher<?>> publisherDispatcher,
+            Class<? extends SubscriberDispatcher<?>> subscriberDispatcher) {
+        dispatchers.add(new Tuple<Class<? extends PublisherDispatcher<?>>, Class<? extends SubscriberDispatcher<?>>>(publisherDispatcher,
+                subscriberDispatcher));
     }
 
     /**
@@ -51,9 +56,14 @@ public class PubSubMiddleware implements Runnable {
      */
     @Override
     public void run() {
-        for (Tuple<PublisherListener<?>, SubscriberListener<?>> pubsub : listeners) {
-            pubsub.getFst().start();
-            pubsub.getSnd().start();
+        try {
+            MyxRuntime.getInstance().boostrapArchitecture();
+            for (Tuple<Class<? extends PublisherDispatcher<?>>, Class<? extends SubscriberDispatcher<?>>> pubsub : dispatchers) {
+                MyxRuntime.getInstance().createDispatcher(pubsub.getFst().getName(), null, pubsub.getSnd().getName(), null);
+            }
+        } catch (MyxBrickLoadException | MyxBrickCreationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -61,10 +71,7 @@ public class PubSubMiddleware implements Runnable {
      * Shutdown all publishers and subscribers.
      */
     public void close() {
-        for (Tuple<PublisherListener<?>, SubscriberListener<?>> pubsub : listeners) {
-            pubsub.getFst().close();
-            pubsub.getSnd().close();
-        }
+        System.exit(0);
     }
 
 }

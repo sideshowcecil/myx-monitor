@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import at.ac.tuwien.infosys.pubsub.PubSubMiddleware;
-import at.ac.tuwien.infosys.pubsub.middleware.socket.SocketBytePublisherListener;
-import at.ac.tuwien.infosys.pubsub.middleware.socket.SocketByteSubscriberListener;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketBytePublisherDispatcher;
+import at.ac.tuwien.infosys.pubsub.middleware.arch.component.socket.SocketByteSubscriberDispatcher;
 
 /**
  * Test class ot show how the PubSubMiddleware can be used.
@@ -16,11 +16,9 @@ import at.ac.tuwien.infosys.pubsub.middleware.socket.SocketByteSubscriberListene
  */
 public class SocketBytePubSub {
     public static void main(String[] args) {
-        int pubPort = 6666;
-        int subPort = 6667;
 
         PubSubMiddleware mw = new PubSubMiddleware();
-        mw.addListener(new SocketBytePublisherListener(pubPort), new SocketByteSubscriberListener(subPort));
+        mw.addDispatcher(SocketBytePublisherDispatcher.class, SocketByteSubscriberDispatcher.class);
 
         // start the listeners
         mw.run();

@@ -87,13 +87,13 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
 
     @Override
     public void send(Message<E> message) {
-        // we only send the message to the subscriber if the subscribed topic
-        // matches
-        if (matches(message.getTopic())) {
-            try {
-                endpoint.send(message);
-            } catch (IOException e) {
-                if (!shutdown) {
+        if (!shutdown) {
+            // we only send the message to the subscriber if the subscribed
+            // topic matches
+            if (matches(message.getTopic())) {
+                try {
+                    endpoint.send(message);
+                } catch (IOException e) {
                     // shutdown the endpoint
                     MyxRuntime.getInstance().shutdownEndpoint(this);
                     shutdown = true;
@@ -110,7 +110,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
      */
     private boolean matches(String topic) {
         for (Topic t : topics) {
-            if (t.match(topic)) {
+            if (t.matches(topic)) {
                 return true;
             }
         }

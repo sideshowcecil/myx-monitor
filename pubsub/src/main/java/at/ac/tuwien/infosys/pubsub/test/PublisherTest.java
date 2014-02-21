@@ -47,20 +47,21 @@ public class PublisherTest {
         
         String topic = "test";
         Message<byte[]> m;
+        int i = 0;
         while (total < totalToRead) {
             numBytesRead = is.read(myData, 0, numBytesToRead);
             if (numBytesRead == -1)
                 break;
             if (!initSent) {
-                m = new Message<byte[]>(Message.Type.INIT, topic, myData);
+                m = new Message<byte[]>(Message.Type.INIT, topic + "." + ++i, myData);
                 initSent = true;
             } else {
-                m = new Message<byte[]>(topic, myData);
+                m = new Message<byte[]>(topic + "." + ++i, myData);
             }
             total += numBytesRead;
             s.send(m);
         }
-        m = new Message<byte[]>(Message.Type.CLOSE, topic, new byte[] { 'a' });
+        m = new Message<byte[]>(Message.Type.CLOSE, topic + "." + ++i, new byte[] { 'a' });
         s.send(m);
         is.close();
 

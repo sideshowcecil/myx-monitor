@@ -23,7 +23,7 @@ public class Topic {
         return name;
     }
 
-    public boolean match(String name) {
+    public boolean matches(String name) {
         return pattern.matcher(name).matches();
     }
 

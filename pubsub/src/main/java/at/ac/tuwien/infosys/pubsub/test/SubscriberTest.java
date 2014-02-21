@@ -30,7 +30,7 @@ public class SubscriberTest {
         socketReceiver.connect(new InetSocketAddress(6667));
         SocketByteMessageProtocol protocol = new SocketByteMessageProtocol(socketReceiver);
 
-        protocol.send(new Message<byte[]>(Message.Type.TOPIC, Topic.Type.REGEX.toString(), "test".getBytes()));
+        protocol.send(new Message<byte[]>(Message.Type.TOPIC, Topic.Type.GLOB.toString(), "test.*".getBytes()));
 
         SourceDataLine line = null;
         boolean play = true;

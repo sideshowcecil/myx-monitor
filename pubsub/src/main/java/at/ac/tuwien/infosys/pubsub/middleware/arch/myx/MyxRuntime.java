@@ -57,56 +57,56 @@ public class MyxRuntime {
     public static final String SUBSCRIBER_ENDPOINT_PREFIX = SubscriberEndpoint.class.getSimpleName();
 
     // interface descriptions
-    private MyxJavaClassInterfaceDescription _iDispatcherDesc;
-    private MyxJavaClassInterfaceDescription _iSubscriberDesc;
+    private MyxJavaClassInterfaceDescription iDispatcherDesc;
+    private MyxJavaClassInterfaceDescription iSubscriberDesc;
 
     // connector descriptions
-    private MyxJavaClassBrickDescription _synchronousProxyDesc;
-    private MyxJavaClassBrickDescription _messageDistributorDesc;
+    private MyxJavaClassBrickDescription synchronousProxyDesc;
+    private MyxJavaClassBrickDescription messageDistributorDesc;
 
     // counts for naming
-    private int _dispatcherCount = 0;
-    private int _publisherEndpointCount = 0;
-    private int _subscriberEndpointCount = 0;
+    private int dispatcherCount = 0;
+    private int publisherEndpointCount = 0;
+    private int subscriberEndpointCount = 0;
 
     /**
      * Track the interfaces and welds of each component. { component name =>
      * (list of connectors, list of welds) }
      */
-    private Map<IMyxName, Tuple<List<IMyxName>, List<IMyxWeld>>> _components;
+    private Map<IMyxName, Tuple<List<IMyxName>, List<IMyxWeld>>> components;
 
-    private static MyxRuntime _instance = new MyxRuntime();
+    private static MyxRuntime instance = new MyxRuntime();
 
     public static MyxRuntime getInstance() {
-        return _instance;
+        return instance;
     }
 
-    private IMyxRuntime _myx;
+    private IMyxRuntime myx;
 
     private MyxRuntime() {
-        _myx = MyxUtils.getDefaultImplementation().createRuntime();
+        myx = MyxUtils.getDefaultImplementation().createRuntime();
     }
 
     public void boostrapArchitecture() throws MyxBrickLoadException, MyxBrickCreationException {
         // interfaces
-        _iDispatcherDesc = new MyxJavaClassInterfaceDescription(new String[] { IDISPATCHER_NAME });
-        _iSubscriberDesc = new MyxJavaClassInterfaceDescription(new String[] { ISUBSCRIBER_NAME });
+        iDispatcherDesc = new MyxJavaClassInterfaceDescription(new String[] { IDISPATCHER_NAME });
+        iSubscriberDesc = new MyxJavaClassInterfaceDescription(new String[] { ISUBSCRIBER_NAME });
 
         // connectors
-        _synchronousProxyDesc = new MyxJavaClassBrickDescription(null, SYNCHRONOUS_PROXY_NAME);
-        _messageDistributorDesc = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR_NAME);
+        synchronousProxyDesc = new MyxJavaClassBrickDescription(null, SYNCHRONOUS_PROXY_NAME);
+        messageDistributorDesc = new MyxJavaClassBrickDescription(null, MESSAGE_DISTRIBUTOR_NAME);
 
-        _myx.addBrick(null, MESSAGE_DISTRIBUTOR, _messageDistributorDesc);
+        myx.addBrick(null, MESSAGE_DISTRIBUTOR, messageDistributorDesc);
 
         // add interfaces to connectors
-        generateConnectorInterfaces(MESSAGE_DISTRIBUTOR, _iSubscriberDesc);
+        generateConnectorInterfaces(MESSAGE_DISTRIBUTOR, iSubscriberDesc);
 
         // initialize the components map
-        _components = new HashMap<>();
+        components = new HashMap<>();
 
         // startup the application
-        _myx.init(null, null);
-        _myx.begin(null, null);
+        myx.init(null, null);
+        myx.begin(null, null);
     }
 
     public void createDispatcher(String publisherDispatcherClassName, Properties publisherProperties,
@@ -131,7 +131,7 @@ public class MyxRuntime {
                 subscriberDispatcherClassName);
 
         // create the names
-        int dispatcherId = ++_dispatcherCount;
+        int dispatcherId = ++dispatcherCount;
         IMyxName pubDispName = MyxUtils.createName(PUBLISHER_DISPATCHER_PREFIX + dispatcherId);
         IMyxName iPubDispName = MyxUtils.createName(IDISPATCHER_PUB_PREFIX + dispatcherId);
         IMyxName subDispName = MyxUtils.createName(SUBSCRIBER_DISPATCHER_PREFIX + dispatcherId);
@@ -139,16 +139,16 @@ public class MyxRuntime {
 
         // add the bricks
         try {
-            _myx.addBrick(null, pubDispName, pubDispDesc);
-            _myx.addBrick(null, iPubDispName, _synchronousProxyDesc);
-            _components.put(pubDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+            myx.addBrick(null, pubDispName, pubDispDesc);
+            myx.addBrick(null, iPubDispName, synchronousProxyDesc);
+            components.put(pubDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
                     new ArrayList<IMyxWeld>()));
-            _components.get(pubDispName).getFst().add(iPubDispName);
-            _myx.addBrick(null, subDispName, subDispDesc);
-            _myx.addBrick(null, iSubDispName, _synchronousProxyDesc);
-            _components.put(subDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+            components.get(pubDispName).getFst().add(iPubDispName);
+            myx.addBrick(null, subDispName, subDispDesc);
+            myx.addBrick(null, iSubDispName, synchronousProxyDesc);
+            components.put(subDispName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
                     new ArrayList<IMyxWeld>()));
-            _components.get(subDispName).getFst().add(iSubDispName);
+            components.get(subDispName).getFst().add(iSubDispName);
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
             // TODO: throw exception?
@@ -156,12 +156,12 @@ public class MyxRuntime {
         }
 
         // add interfaces to connectors
-        generateConnectorInterfaces(iPubDispName, _iDispatcherDesc);
-        generateConnectorInterfaces(iSubDispName, _iDispatcherDesc);
+        generateConnectorInterfaces(iPubDispName, iDispatcherDesc);
+        generateConnectorInterfaces(iSubDispName, iDispatcherDesc);
 
         // add interfaces to the components
-        generateComponentInterfaces(pubDispName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
-        generateComponentInterfaces(subDispName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
+        generateComponentInterfaces(pubDispName, iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
+        generateComponentInterfaces(subDispName, iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.IN);
 
         // wire up the components and connectors
         addConnector2ComponentWeld(iPubDispName, IDISPATCHER_NAME, pubDispName);
@@ -169,15 +169,15 @@ public class MyxRuntime {
 
         // start up the created components
 
-        _myx.init(null, pubDispName);
-        _myx.init(null, iPubDispName);
-        _myx.init(null, subDispName);
-        _myx.init(null, iSubDispName);
+        myx.init(null, pubDispName);
+        myx.init(null, iPubDispName);
+        myx.init(null, subDispName);
+        myx.init(null, iSubDispName);
 
-        _myx.begin(null, pubDispName);
-        _myx.begin(null, iPubDispName);
-        _myx.begin(null, subDispName);
-        _myx.begin(null, iSubDispName);
+        myx.begin(null, pubDispName);
+        myx.begin(null, iPubDispName);
+        myx.begin(null, subDispName);
+        myx.begin(null, iSubDispName);
     }
 
     public void createPublisherEndpoint(String publisherEndpointClassName, Dispatcher<?> dispatcher) {
@@ -197,13 +197,13 @@ public class MyxRuntime {
         MyxJavaClassBrickDescription pubEndDesc = new MyxJavaClassBrickDescription(null, publisherEndpointClassName);
 
         // create name
-        int endPointId = ++_publisherEndpointCount;
+        int endPointId = ++publisherEndpointCount;
         IMyxName pubEndName = MyxUtils.createName(PUBLISHER_ENDPOINT_PREFIX + endPointId);
 
         // add the bricks
         try {
-            _myx.addBrick(null, pubEndName, pubEndDesc);
-            _components.put(pubEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+            myx.addBrick(null, pubEndName, pubEndDesc);
+            components.put(pubEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
                     new ArrayList<IMyxWeld>()));
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
@@ -212,8 +212,8 @@ public class MyxRuntime {
         }
 
         // add interfaces to components
-        generateComponentInterfaces(pubEndName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.OUT);
-        generateComponentInterfaces(pubEndName, _iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.OUT);
+        generateComponentInterfaces(pubEndName, iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.OUT);
+        generateComponentInterfaces(pubEndName, iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.OUT);
 
         // important note: we have to call the init methods before we add
         // the welds for the connectors so the proxy object of the connector (in
@@ -227,8 +227,8 @@ public class MyxRuntime {
         addComponent2ConnectorWeld(pubEndName, ISUBSCRIBER_NAME, MESSAGE_DISTRIBUTOR);
 
         // start the created component
-        _myx.init(null, pubEndName);
-        _myx.begin(null, pubEndName);
+        myx.init(null, pubEndName);
+        myx.begin(null, pubEndName);
     }
 
     public void createSubscriberEndpoint(String subscriberEndpointClassName, Dispatcher<?> dispatcher) {
@@ -248,12 +248,12 @@ public class MyxRuntime {
         MyxJavaClassBrickDescription subEndDesc = new MyxJavaClassBrickDescription(null, subscriberEndpointClassName);
 
         // create name
-        IMyxName subEndName = MyxUtils.createName(SUBSCRIBER_ENDPOINT_PREFIX + ++_subscriberEndpointCount);
+        IMyxName subEndName = MyxUtils.createName(SUBSCRIBER_ENDPOINT_PREFIX + ++subscriberEndpointCount);
 
         // add the bricks
         try {
-            _myx.addBrick(null, subEndName, subEndDesc);
-            _components.put(subEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
+            myx.addBrick(null, subEndName, subEndDesc);
+            components.put(subEndName, new Tuple<List<IMyxName>, List<IMyxWeld>>(new ArrayList<IMyxName>(),
                     new ArrayList<IMyxWeld>()));
         } catch (MyxBrickLoadException | MyxBrickCreationException e) {
             e.printStackTrace();
@@ -262,8 +262,8 @@ public class MyxRuntime {
         }
 
         // add interfaces to components
-        generateComponentInterfaces(subEndName, _iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.OUT);
-        generateComponentInterfaces(subEndName, _iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.IN);
+        generateComponentInterfaces(subEndName, iDispatcherDesc, IDISPATCHER_NAME, EMyxInterfaceDirection.OUT);
+        generateComponentInterfaces(subEndName, iSubscriberDesc, ISUBSCRIBER_NAME, EMyxInterfaceDirection.IN);
 
         // wire up the endpoint
         int dispatcherId = extractId(MyxUtils.getName(dispatcher).getName());
@@ -271,28 +271,28 @@ public class MyxRuntime {
                 MyxUtils.createName(IDISPATCHER_SUB_PREFIX + dispatcherId));
 
         // start the created component
-        _myx.init(null, subEndName);
-        _myx.begin(null, subEndName);
+        myx.init(null, subEndName);
+        myx.begin(null, subEndName);
     }
 
     public void shutdownDispatcher(Dispatcher<?> dispatcher) {
         IMyxName comp = MyxUtils.getName(dispatcher);
-        _myx.end(null, comp);
-        _myx.destroy(null, comp);
+        myx.end(null, comp);
+        myx.destroy(null, comp);
         removeComponent(comp);
     }
 
     public void shutdownEndpoint(PublisherEndpoint<?> endpoint) {
         IMyxName comp = MyxUtils.getName(endpoint);
-        _myx.end(null, comp);
-        _myx.destroy(null, comp);
+        myx.end(null, comp);
+        myx.destroy(null, comp);
         removeComponent(comp);
     }
 
     public void shutdownEndpoint(SubscriberEndpoint<?> endpoint) {
         IMyxName comp = MyxUtils.getName(endpoint);
-        _myx.end(null, comp);
-        _myx.destroy(null, comp);
+        myx.end(null, comp);
+        myx.destroy(null, comp);
         removeComponent(comp);
     }
 
@@ -310,8 +310,8 @@ public class MyxRuntime {
      */
     protected void generateComponentInterfaces(IMyxName comp, MyxJavaClassInterfaceDescription intf, String intfName,
             EMyxInterfaceDirection dir) {
-        synchronized (_myx) {
-            _myx.addInterface(null, comp, MyxUtils.createName(intfName), intf, dir);
+        synchronized (myx) {
+            myx.addInterface(null, comp, MyxUtils.createName(intfName), intf, dir);
         }
     }
 
@@ -322,9 +322,9 @@ public class MyxRuntime {
      * @param intf
      */
     protected void generateConnectorInterfaces(IMyxName conn, MyxJavaClassInterfaceDescription intf) {
-        synchronized (_myx) {
-            _myx.addInterface(null, conn, MyxUtils.createName("out"), intf, EMyxInterfaceDirection.OUT);
-            _myx.addInterface(null, conn, MyxUtils.createName("in"), intf, EMyxInterfaceDirection.IN);
+        synchronized (myx) {
+            myx.addInterface(null, conn, MyxUtils.createName("out"), intf, EMyxInterfaceDirection.OUT);
+            myx.addInterface(null, conn, MyxUtils.createName("in"), intf, EMyxInterfaceDirection.IN);
         }
     }
 
@@ -337,11 +337,11 @@ public class MyxRuntime {
      */
     protected void addConnector2ComponentWeld(IMyxName conn, String intfName, IMyxName comp) {
         IMyxWeld weld = null;
-        synchronized (_myx) {
-            weld = _myx.createWeld(null, conn, MyxUtils.createName("out"), null, comp, MyxUtils.createName(intfName));
-            _myx.addWeld(weld);
+        synchronized (myx) {
+            weld = myx.createWeld(null, conn, MyxUtils.createName("out"), null, comp, MyxUtils.createName(intfName));
+            myx.addWeld(weld);
         }
-        _components.get(comp).getSnd().add(weld);
+        components.get(comp).getSnd().add(weld);
     }
 
     /**
@@ -353,35 +353,35 @@ public class MyxRuntime {
      */
     protected void addComponent2ConnectorWeld(IMyxName comp, String intfName, IMyxName conn) {
         IMyxWeld weld = null;
-        synchronized (_myx) {
-            weld = _myx.createWeld(null, comp, MyxUtils.createName(intfName), null, conn, MyxUtils.createName("in"));
-            _myx.addWeld(weld);
+        synchronized (myx) {
+            weld = myx.createWeld(null, comp, MyxUtils.createName(intfName), null, conn, MyxUtils.createName("in"));
+            myx.addWeld(weld);
         }
-        _components.get(comp).getSnd().add(weld);
+        components.get(comp).getSnd().add(weld);
     }
 
     protected void removeComponent(IMyxName comp) {
-        synchronized (_components) {
-            if (_components.containsKey(comp)) {
-                synchronized (_myx) {
-                    Tuple<List<IMyxName>, List<IMyxWeld>> t = _components.get(comp);
+        synchronized (components) {
+            if (components.containsKey(comp)) {
+                synchronized (myx) {
+                    Tuple<List<IMyxName>, List<IMyxWeld>> t = components.get(comp);
                     // remove the welds
                     for (IMyxWeld weld : t.getSnd()) {
                         try {
-                            _myx.removeWeld(weld);
+                            myx.removeWeld(weld);
                         } catch (NullPointerException e) {
                         }
                     }
                     // remove the interfaces
                     for (IMyxName connector : t.getFst()) {
-                        _myx.removeBrick(null, connector);
+                        myx.removeBrick(null, connector);
                     }
                     // remove the component itself (brick)
-                    _myx.removeBrick(null, comp);
+                    myx.removeBrick(null, comp);
                 }
 
                 // remove the key from the map
-                _components.remove(comp);
+                components.remove(comp);
             }
         }
     }

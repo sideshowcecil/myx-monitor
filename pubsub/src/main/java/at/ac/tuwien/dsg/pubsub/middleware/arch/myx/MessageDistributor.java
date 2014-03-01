@@ -6,6 +6,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
@@ -23,6 +24,13 @@ import edu.uci.isr.myx.fw.IMyxName;
 public class MessageDistributor extends EventPumpConnector {
 
     private List<Tuple<Method, Object[]>> initCalls = new ArrayList<>();
+    
+    @Override
+    public void init() {
+        super.init();
+        // here we use a fixed thread pool to increase the throughput
+        asyncExecutor = Executors.newFixedThreadPool(2);
+    }
 
     @Override
     public void interfaceConnected(IMyxName interfaceName, Object serviceObject) {

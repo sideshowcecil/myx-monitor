@@ -1,7 +1,7 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
 import at.ac.tuwien.dsg.myx.MyxUtils;
-import at.ac.tuwien.dsg.myx.monitor.event.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxRuntime;

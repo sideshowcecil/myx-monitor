@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
-import at.ac.tuwien.dsg.myx.monitor.event.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxWeld;

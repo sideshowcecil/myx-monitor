@@ -3,7 +3,7 @@ package at.ac.tuwien.dsg.myx;
 import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.monitor.MyxMonitoringImplementation;
-import at.ac.tuwien.dsg.myx.monitor.event.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxContainer;

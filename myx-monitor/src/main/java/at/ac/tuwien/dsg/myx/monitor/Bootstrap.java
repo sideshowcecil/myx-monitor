@@ -9,7 +9,7 @@ import at.ac.tuwien.dsg.myx.monitor.comp.EventManagerComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.LauncherComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.ModelRootComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.MyxRuntimeComponent;
-import at.ac.tuwien.dsg.myx.monitor.event.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxName;
@@ -171,6 +171,8 @@ public class Bootstrap {
             myx.begin(null, MYX_RUNTIME_NAME);
             myx.begin(null, LAUNCHER_NAME);
             myx.begin(null, BOOTSTRAP_NAME);
+            
+            // TODO: add weld EventManager -> ModelRoot
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-3);

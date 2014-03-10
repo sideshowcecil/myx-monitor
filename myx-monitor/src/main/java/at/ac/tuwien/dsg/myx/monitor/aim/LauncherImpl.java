@@ -130,15 +130,10 @@ public class LauncherImpl implements Launcher {
                     throw new ArchitectureInstantiationException("Java implementation of type "
                             + t.getDescription().getValue() + " lacks main class name");
                 }
-                ct.getSignatures().addAll(getSignatures(DBLUtils.getSignatures(t)));
+                List<Signature> signatures = getSignatures(DBLUtils.getSignatures(t));
+                ct.getSignatures().addAll(signatures);
                 if (t.getSubArchitecture() != null) {
-                    try {
-                        ct.setSubArchitecture(getSubArchitecture(t));
-                    } catch (ArchitectureInstantiationException e) {
-                        // TODO we ignore errors in the subarchitecture because
-                        // it might not be used, is that alright?
-                        ct.setSubArchitecture(null);
-                    }
+                    ct.setSubArchitecture(getSubArchitecture(t, signatures));
                 }
                 types.put(ct.getId(), ct);
             }
@@ -151,13 +146,10 @@ public class LauncherImpl implements Launcher {
                     throw new ArchitectureInstantiationException("Java implementation of type "
                             + t.getDescription().getValue() + " lacks main class name");
                 }
-                ct.getSignatures().addAll(getSignatures(DBLUtils.getSignatures(t)));
+                List<Signature> signatures = getSignatures(DBLUtils.getSignatures(t));
+                ct.getSignatures().addAll(signatures);
                 if (t.getSubArchitecture() != null) {
-                    try {
-                        ct.setSubArchitecture(getSubArchitecture(t));
-                    } catch (ArchitectureInstantiationException e) {
-                        ct.setSubArchitecture(null);
-                    }
+                    ct.setSubArchitecture(getSubArchitecture(t, signatures));
                 }
                 types.put(ct.getId(), ct);
             }
@@ -233,20 +225,14 @@ public class LauncherImpl implements Launcher {
      * Get the subarchitecture of a connector or component if one exists.
      * 
      * @param element
+     * @param signatures
      * @return
      * @throws ArchitectureInstantiationException
      */
-    private SubArchitecture getSubArchitecture(IXArchElement element) throws ArchitectureInstantiationException {
-        String elementDescription = null;
-        ISubArchitecture subArch = null;
-        if (element instanceof IComponentType) {
-            elementDescription = ((IComponentType) element).getDescription().getValue();
-            subArch = ((IComponentType) element).getSubArchitecture();
-
-        } else if (element instanceof IConnectorType) {
-            elementDescription = ((IConnectorType) element).getDescription().getValue();
-            subArch = ((IConnectorType) element).getSubArchitecture();
-        }
+    private SubArchitecture getSubArchitecture(IXArchElement element, List<Signature> signatures)
+            throws ArchitectureInstantiationException {
+        String elementDescription = DBLUtils.getDescription(element);
+        ISubArchitecture subArch = DBLUtils.getSubArchitecture(element);
         if (subArch != null) {
             IXMLLink archStructureRef = subArch.getArchStructure();
             if (archStructureRef == null) {
@@ -262,15 +248,54 @@ public class LauncherImpl implements Launcher {
             SubArchitecture sa = new SubArchitecture(id, innerArchStructure);
             sa.setDescription(innerArchStructure.getDescription().getValue());
             for (ISignatureInterfaceMapping m : DBLUtils.getSignatureInterfaceMappings(subArch)) {
-                IInterface outer = null, inner = DBLUtils.getInterface(innerArchStructure,
-                        DBLUtils.getId(m.getInnerInterface()));
-                // TODO read interface
-                // DBLUtils.getInterface(structure, id)
-                Tuple<InstantiationElement, Interface> innerInterfaceData = new Tuple<>();
-                // innerInterfaceData.setFst(fst);
-                innerInterfaceData.setSnd(new Interface(inner.getId(), DBLUtils.getDirection(inner)));
-                // TODO:
-                // sa.getInterfaceMapping().put(outer, innerInterfaceData);
+                String signatureId = DBLUtils.getId(m.getOuterSignature());
+                Signature outer = null;
+                for (Signature s : signatures) {
+                    if (s.getId() == signatureId) {
+                        outer = s;
+                    }
+                }
+                if (outer == null) {
+                    throw new ArchitectureInstantiationException(
+                            "Invalid or missing outer signature link on signature-interface-mapping in "
+                                    + elementDescription);
+                }
+
+                String interfaceId = DBLUtils.getId(m.getInnerInterface());
+                IInterface iInner = DBLUtils.getInterface(innerArchStructure, interfaceId);
+                if (iInner == null) {
+                    throw new ArchitectureInstantiationException(
+                            "Invalid or missing inner interface link on signature-interface-mapping in "
+                                    + elementDescription);
+                }
+                Interface inner = null;
+                IXArchElement parent = DBLUtils.getParentOfInterface(innerArchStructure, iInner);
+                if (parent == null) {
+                    throw new ArchitectureInstantiationException("Invalid or missing parent on interface "
+                            + iInner.getDescription().getValue());
+                }
+                String parentId = DBLUtils.getId(parent);
+                if (parentId == DBLUtils.getId(element)) {
+                    throw new ArchitectureInstantiationException("Can't apply mapping on duplucate component in "
+                            + elementDescription);
+                }
+
+                for (Interface i : getInterfaces(DBLUtils.getInterfaces(parent))) {
+                    if (i.getId() == interfaceId) {
+                        inner = i;
+                    }
+                }
+                if (inner == null) {
+                    throw new ArchitectureInstantiationException(
+                            "Invalid or missing inner interface link on signature-interface-mapping in "
+                                    + elementDescription);
+                }
+
+                Tuple<String, Interface> innerInterfaceData = new Tuple<>();
+                innerInterfaceData.setFst(parentId);
+                innerInterfaceData.setSnd(inner);
+
+                sa.getInterfaceMapping().put(outer, innerInterfaceData);
             }
             return sa;
         }
@@ -350,16 +375,20 @@ public class LauncherImpl implements Launcher {
             instantiate(element.getId(), subArch.getArchStructure(), innerPath.toArray(new IMyxName[0]));
             // now we have to wire the interface mappings
             for (Interface outerIntf : element.getInterfaces()) {
-                Tuple<InstantiationElement, Interface> m = subArch.getInterfaceMapping().get(outerIntf);
-                InstantiationElement innerBrick = m.getFst();
-                Interface innerIntf = m.getSnd();
-                if (innerIntf == null) {
+                if (outerIntf.getSignature() == null
+                        || !subArch.getInterfaceMapping().containsKey(outerIntf.getSignature())) {
                     throw new ArchitectureInstantiationException("There exists no interface mapping for interface "
                             + outerIntf.getDescription() + " in subArchitecture " + subArch.getDescription());
                 }
-                // TODO add intal brick- and interface names
-                IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(new String[0]);
-                myx.addContainerInterface(path, brickName, null, intfDesc, outerIntf.getDirection(), null, null);
+                Tuple<String, Interface> m = subArch.getInterfaceMapping().get(outerIntf);
+
+                IMyxName outerIntfName = MyxUtils.createName(outerIntf.getName());
+                IMyxName innerBrickName = MyxUtils.createName(m.getFst());
+                IMyxName innerIntfName = MyxUtils.createName(m.getSnd().getName());
+                IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(outerIntf
+                        .getImplementationMainClassNames().toArray(new String[0]));
+                myx.addContainerInterface(path, brickName, outerIntfName, intfDesc, outerIntf.getDirection(),
+                        innerBrickName, innerIntfName);
             }
         } else {
             // add the brick

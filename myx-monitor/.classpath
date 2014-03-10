@@ -22,6 +22,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="src/main/java-apigen"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -33,9 +34,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/edu.uci.isr.myx.fw"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/edu.uci.isr.archstudio4.comp.xarchadt"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/edu.uci.isr.xarchflat"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ADAF.interfaces"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/pubsub"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MyxSimpleLunarLander"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

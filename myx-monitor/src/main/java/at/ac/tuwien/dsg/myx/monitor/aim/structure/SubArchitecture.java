@@ -9,7 +9,7 @@ import edu.uci.isr.xarch.types.IArchStructure;
 public class SubArchitecture extends ArchitectureElement {
 
     private final IArchStructure archStructure;
-    private final Map<Interface, Tuple<InstantiationElement, Interface>> interfaceMapping = new HashMap<>();
+    private final Map<Signature, Tuple<String, Interface>> interfaceMapping = new HashMap<>();
 
     public SubArchitecture(String id, IArchStructure archStructure) {
         super(id);
@@ -20,7 +20,7 @@ public class SubArchitecture extends ArchitectureElement {
         return archStructure;
     }
 
-    public Map<Interface, Tuple<InstantiationElement, Interface>> getInterfaceMapping() {
+    public Map<Signature, Tuple<String, Interface>> getInterfaceMapping() {
         return interfaceMapping;
     }
 }

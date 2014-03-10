@@ -70,6 +70,57 @@ public final class DBLUtils {
     }
 
     /**
+     * Get the id of an {@link IXArchElement}. This method currently supports
+     * {@link IComponent}, {@link IConnector} and {@link IInterface}.
+     * 
+     * @param e
+     * @return
+     */
+    public static String getId(IXArchElement e) {
+        if (e instanceof IConnector) {
+            return ((IConnector) e).getId();
+        } else if (e instanceof IComponent) {
+            return ((IComponent) e).getId();
+        } else if (e instanceof IInterface) {
+            return ((IInterface) e).getId();
+        }
+        return null;
+    }
+
+    /**
+     * Get the description of an {@link IXArchElement}. This method currently
+     * supports {@link IComponent} and {@link IConnector}.
+     * 
+     * @param e
+     * @return
+     */
+    public static String getDescription(IXArchElement e) {
+        if (e instanceof IComponentType) {
+            return ((IComponentType) e).getDescription().getValue();
+        } else if (e instanceof IConnectorType) {
+            return ((IConnectorType) e).getDescription().getValue();
+        }
+        return null;
+    }
+
+    /**
+     * Get the {@link ISubArchitecture} of an {@link IXArchElement}. This method
+     * currently supports {@link IComponent} and {@link IConnector}.
+     * 
+     * @param e
+     * @return
+     */
+    public static ISubArchitecture getSubArchitecture(IXArchElement e) {
+        if (e instanceof IComponentType) {
+            return ((IComponentType) e).getSubArchitecture();
+
+        } else if (e instanceof IConnectorType) {
+            return ((IConnectorType) e).getSubArchitecture();
+        }
+        return null;
+    }
+
+    /**
      * Get all {@link IArchStructure} elements in an {@link IXArch} instance.
      * 
      * @param root
@@ -229,6 +280,22 @@ public final class DBLUtils {
             if (o instanceof IPoint) {
                 elements.add((IPoint) o);
             }
+        }
+        return elements;
+    }
+
+    /**
+     * Get all {@link IInterface}s of an {@link IXArchElement}.
+     * 
+     * @param e
+     * @return
+     */
+    public static Collection<IInterface> getInterfaces(IXArchElement e) {
+        Collection<IInterface> elements = new ArrayList<>();
+        if (e instanceof IComponent) {
+            elements.addAll(getInterfaces((IComponent) e));
+        } else if (e instanceof IConnector) {
+            elements.addAll(getInterfaces((IConnector) e));
         }
         return elements;
     }

@@ -3,6 +3,7 @@ package at.ac.tuwien.dsg.myx;
 import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.monitor.MyxMonitoringImplementation;
+import at.ac.tuwien.dsg.myx.monitor.event.EventManager;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxContainer;
@@ -19,13 +20,11 @@ import edu.uci.isr.myx.fw.IMyxName;
  */
 public final class MyxUtils {
 
-    protected static final IMyxImplementation MONITORING_MYX_IMPLEMENTATION = new MyxMonitoringImplementation();
-
     private MyxUtils() {
     }
 
-    public static IMyxImplementation getMonitoringImplementation() {
-        return MONITORING_MYX_IMPLEMENTATION;
+    public static IMyxImplementation getMonitoringImplementation(EventManager eventManager) {
+        return new MyxMonitoringImplementation(eventManager);
     }
 
     public static IMyxImplementation getDefaultImplementation() {

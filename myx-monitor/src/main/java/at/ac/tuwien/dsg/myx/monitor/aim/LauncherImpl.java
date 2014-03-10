@@ -735,7 +735,7 @@ public class LauncherImpl implements Launcher {
         public String toString() {
             String EOL = System.getProperty("line.separator");
             StringBuffer sb = new StringBuffer();
-            sb.append(element.getDescription());
+            sb.append("[").append(element.getId()).append("] ").append(element.getDescription());
             sb.append(" <- ").append(getDescriptions(dependents)).append(EOL);
             sb.append(" - init:  ").append(getDescriptionsOfLinks(element.getInitLinks())).append(EOL);
             sb.append(" - begin: ").append(getDescriptionsOfLinks(element.getBeginLinks())).append(EOL);

@@ -8,8 +8,8 @@ public class MyxMonitoringImplementation extends MyxBasicImplementation {
     
     protected IMyxRuntime runtime;
     
-    public MyxMonitoringImplementation(EventManager eventManager) {
-        runtime = new MyxMonitoringRuntime(eventManager);
+    public MyxMonitoringImplementation(String architectureRuntimeId, EventManager eventManager) {
+        runtime = new MyxMonitoringRuntime(architectureRuntimeId, eventManager);
     }
     
     @Override

@@ -26,9 +26,11 @@ import edu.uci.isr.myx.fw.MyxInvalidPathException;
 
 public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
+    protected String architectureRuntimeId;
     protected EventManager eventManager;
 
-    public MyxMonitoringRuntime(EventManager eventManager) {
+    public MyxMonitoringRuntime(String architectureRuntimeId, EventManager eventManager) {
+        this.architectureRuntimeId = architectureRuntimeId;
         this.eventManager = eventManager;
     }
 
@@ -38,7 +40,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.addBrick(path, brickName, brickDescription);
 
         // TODO send event
-        XADLEvent e = new XADLEvent("1", brickName.getName(), XADLEventType.ADD);
+        XADLEvent e = new XADLEvent(architectureRuntimeId, brickName.getName(), XADLEventType.ADD);
         e.setEventSourceId(this.getClass().getName());
         e.setXadlElementType(XADLElementType.COMPONENT); // TODO: how can we know
                                                          // if it is really a
@@ -58,7 +60,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.addWeld(weld);
 
         // TODO send event
-        XADLLinkEvent e = new XADLLinkEvent("1", weld.getRequiredBrickName().getName(), weld.getRequiredInterfaceName()
+        XADLLinkEvent e = new XADLLinkEvent(architectureRuntimeId, weld.getRequiredBrickName().getName(), weld.getRequiredInterfaceName()
                 .getName(), weld.getProvidedBrickName().getName(), weld.getProvidedInterfaceName().getName(),
                 XADLEventType.ADD);
         e.setEventSourceId(this.getClass().getName());
@@ -71,7 +73,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         // TODO send event
         for (IMyxName b : getBrickNames(path, brickName)) {
-            XADLRuntimeEvent e = new XADLRuntimeEvent("1", b.getName(), XADLRuntimeEventType.BEGIN);
+            XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, b.getName(), XADLRuntimeEventType.BEGIN);
             e.setEventSourceId(this.getClass().getName());
             eventManager.handle(e);
         }
@@ -83,7 +85,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         // TODO send event
         for (IMyxName b : getBrickNames(path, brickName)) {
-            XADLRuntimeEvent e = new XADLRuntimeEvent("1", b.getName(), XADLRuntimeEventType.END);
+            XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, b.getName(), XADLRuntimeEventType.END);
             e.setEventSourceId(this.getClass().getName());
             eventManager.handle(e);
         }

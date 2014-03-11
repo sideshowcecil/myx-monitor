@@ -29,12 +29,13 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         Properties[] p = parseArgs(args);
-        new Bootstrap().doBootstrap(p[0], p[1]);
+        new Bootstrap().doBootstrap(p[0], p[1], p[2]);
     }
 
     private static Properties[] parseArgs(String[] args) {
         String xadlFile = null;
         String structureName = null;
+        String architectureInstanceId = null;
 
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-s")) {
@@ -42,6 +43,11 @@ public class Bootstrap {
                     usage();
                 }
                 structureName = args[i];
+            } else if (args[i].equals("--id")) {
+                if (++i == args.length || architectureInstanceId != null) {
+                    usage();
+                }
+                architectureInstanceId = args[i];
             } else {
                 if (xadlFile != null) {
                     usage();
@@ -53,24 +59,30 @@ public class Bootstrap {
             usage();
         }
 
-        Properties[] p = new Properties[2];
+        Properties[] p = new Properties[3];
         p[0] = new Properties();
-        if (structureName != null) {
-            p[0].setProperty("structure", structureName);
-        }
+        p[0].setProperty("file", xadlFile);
         p[1] = new Properties();
-        p[1].setProperty("file", xadlFile);
-        
+        if (structureName != null) {
+            p[1].setProperty("structure", structureName);
+        }
+        p[2] = new Properties();
+        if (architectureInstanceId != null) {
+            p[2].setProperty(MyxRuntimeComponent.PROPERTY_ARCHITECTURE_RUNTIME_ID, architectureInstanceId);
+        }
+
         return p;
     }
 
     private static void usage() {
         System.err.println("Usage:");
-        System.err.println("  java " + Bootstrap.class.getName() + " file [-s structureName]");
+        System.err.println("  java " + Bootstrap.class.getName()
+                + " file [-s structureName] [--id architectureInstanceId]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
         System.err.println("    structureName: the name of the structure to bootstrap");
+        System.err.println("    architectureInstanceId: the architecture instance id");
         System.err.println();
         System.exit(-2);
     }
@@ -79,7 +91,7 @@ public class Bootstrap {
         myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
     }
 
-    public void doBootstrap(Properties bootstrapProps, Properties modelRootProps) {
+    public void doBootstrap(Properties modelRootProps, Properties bootstrapProps, Properties myxRuntimeProps) {
         try {
             MyxJavaClassBrickDescription bootstrapDesc = new MyxJavaClassBrickDescription(bootstrapProps,
                     BootstrapComponent.class.getName());
@@ -89,7 +101,7 @@ public class Bootstrap {
                     LauncherComponent.class.getName());
             MyxJavaClassBrickDescription modelRootDesc = new MyxJavaClassBrickDescription(modelRootProps,
                     ModelRootComponent.class.getName());
-            MyxJavaClassBrickDescription myxruntimeDesc = new MyxJavaClassBrickDescription(null,
+            MyxJavaClassBrickDescription myxruntimeDesc = new MyxJavaClassBrickDescription(myxRuntimeProps,
                     MyxRuntimeComponent.class.getName());
 
             MyxJavaClassInterfaceDescription eventManagerIfaceDesc = new MyxJavaClassInterfaceDescription(
@@ -127,7 +139,7 @@ public class Bootstrap {
                     null, EVENTMANAGER_NAME, EventManagerComponent.INTERFACE_NAME_IN_EVENTMANAGER));
 
             myx.init(null, MYX_RUNTIME_NAME);
-            
+
             // TODO Create and bind additional event dispatchers
 
             // Launcher
@@ -159,7 +171,7 @@ public class Bootstrap {
             // Bootstrap -> Launcher
             myx.addWeld(myx.createWeld(null, BOOTSTRAP_NAME, BootstrapComponent.INTERFACE_NAME_OUT_LAUNCHER, null,
                     LAUNCHER_NAME, LauncherComponent.INTERFACE_NAME_IN_LAUNCHER));
-            
+
             // Bootstrap -> ModelRoot
             myx.addWeld(myx.createWeld(null, BOOTSTRAP_NAME, BootstrapComponent.INTERFACE_NAME_OUT_MODELROOT, null,
                     MODEL_ROOT_NAME, ModelRootComponent.INTERFACE_NAME_IN_MODELROOT));
@@ -171,7 +183,7 @@ public class Bootstrap {
             myx.begin(null, MYX_RUNTIME_NAME);
             myx.begin(null, LAUNCHER_NAME);
             myx.begin(null, BOOTSTRAP_NAME);
-            
+
             // TODO: add weld EventManager -> ModelRoot
         } catch (Exception e) {
             e.printStackTrace();

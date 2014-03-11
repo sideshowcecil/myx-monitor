@@ -5,20 +5,20 @@ import java.util.UUID;
 public abstract class Event {
 
     private final String id;
-    private final String archInstanceId;
+    private final String architectureRuntimeId;
     private final long timestamp;
 
     private String eventSourceId;
 
     public Event(String archInstanceId) {
         id = UUID.randomUUID().toString();
-        this.archInstanceId = archInstanceId;
+        this.architectureRuntimeId = archInstanceId;
         timestamp = System.currentTimeMillis();
     }
 
     public Event(Event copyFrom) {
         id = UUID.randomUUID().toString();
-        archInstanceId = copyFrom.getArchInstanceId();
+        architectureRuntimeId = copyFrom.getArchitectureRuntimeId();
         timestamp = copyFrom.getTimestamp();
         eventSourceId = copyFrom.getEventSourceId();
     }
@@ -27,8 +27,8 @@ public abstract class Event {
         return id;
     }
 
-    public String getArchInstanceId() {
-        return archInstanceId;
+    public String getArchitectureRuntimeId() {
+        return architectureRuntimeId;
     }
 
     public long getTimestamp() {
@@ -45,7 +45,7 @@ public abstract class Event {
 
     @Override
     public String toString() {
-        return "Event [id=" + getId() + ", archInstanceId=" + getArchInstanceId() + ", timestamp=" + getTimestamp()
-                + ", eventSourceId=" + getEventSourceId() + "]";
+        return "Event [id=" + getId() + ", architectureRuntimeId=" + getArchitectureRuntimeId() + ", timestamp="
+                + getTimestamp() + ", eventSourceId=" + getEventSourceId() + "]";
     }
 }

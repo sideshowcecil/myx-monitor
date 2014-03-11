@@ -26,8 +26,8 @@ public final class MyxMonitoringUtils {
     private MyxMonitoringUtils() {
     }
     
-    public static void initMontioringImplementation(EventManager eventManager) {
-        currentImplementation = new MyxMonitoringImplementation(eventManager);
+    public static void initMontioringImplementation(String architecturRuntimeId, EventManager eventManager) {
+        currentImplementation = new MyxMonitoringImplementation(architecturRuntimeId, eventManager);
     }
 
     public static IMyxImplementation getMonitoringImplementation() {

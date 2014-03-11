@@ -3,7 +3,6 @@ package at.ac.tuwien.dsg.myx.monitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
@@ -11,6 +10,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEventType;
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;

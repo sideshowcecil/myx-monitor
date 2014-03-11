@@ -1,8 +1,8 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
-import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRootImpl;
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 

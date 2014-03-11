@@ -3,11 +3,11 @@ package at.ac.tuwien.dsg.myx.monitor.comp;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.dsg.myx.DBLUtils;
-import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.ArchitectureInstantiationException;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
+import at.ac.tuwien.dsg.myx.util.DBLUtils;
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.xarch.types.IArchStructure;

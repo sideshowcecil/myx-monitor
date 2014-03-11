@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import at.ac.tuwien.dsg.myx.DBLUtils;
-import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Component;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Connector;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Implementation;
@@ -24,6 +22,8 @@ import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ComponentType;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ConnectorType;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.InterfaceType;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
+import at.ac.tuwien.dsg.myx.util.DBLUtils;
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;

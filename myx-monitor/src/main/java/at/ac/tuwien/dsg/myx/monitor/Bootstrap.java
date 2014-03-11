@@ -2,7 +2,6 @@ package at.ac.tuwien.dsg.myx.monitor;
 
 import java.util.Properties;
 
-import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.comp.BootstrapComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.EventManagerComponent;
@@ -11,6 +10,7 @@ import at.ac.tuwien.dsg.myx.monitor.comp.ModelRootComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.MyxRuntimeComponent;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxRuntime;

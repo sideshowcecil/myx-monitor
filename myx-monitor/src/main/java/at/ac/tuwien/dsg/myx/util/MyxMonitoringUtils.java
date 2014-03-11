@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.myx;
+package at.ac.tuwien.dsg.myx.util;
 
 import java.util.Properties;
 

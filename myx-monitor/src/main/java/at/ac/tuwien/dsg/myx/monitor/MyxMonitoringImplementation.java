@@ -6,14 +6,14 @@ import edu.uci.isr.myx.fw.MyxBasicImplementation;
 
 public class MyxMonitoringImplementation extends MyxBasicImplementation {
     
-    protected EventManager eventManager;
+    protected IMyxRuntime runtime;
     
     public MyxMonitoringImplementation(EventManager eventManager) {
-        this.eventManager = eventManager;
+        runtime = new MyxMonitoringRuntime(eventManager);
     }
     
     @Override
     public IMyxRuntime createRuntime() {
-        return new MyxMonitoringRuntime(eventManager);
+        return runtime;
     }
 }

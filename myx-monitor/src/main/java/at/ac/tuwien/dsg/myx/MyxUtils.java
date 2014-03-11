@@ -19,12 +19,21 @@ import edu.uci.isr.myx.fw.IMyxName;
  * 
  */
 public final class MyxUtils {
+    
+    private static IMyxImplementation currentImplementation;
 
     private MyxUtils() {
     }
+    
+    public static void initMontioringImplementation(EventManager eventManager) {
+        currentImplementation = new MyxMonitoringImplementation(eventManager);
+    }
 
-    public static IMyxImplementation getMonitoringImplementation(EventManager eventManager) {
-        return new MyxMonitoringImplementation(eventManager);
+    public static IMyxImplementation getMonitoringImplementation() {
+        if (currentImplementation == null) {
+            throw new NullPointerException("MyxMonitoringImplementation has not been initialized!");
+        }
+        return currentImplementation;
     }
 
     public static IMyxImplementation getDefaultImplementation() {

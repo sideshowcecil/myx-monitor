@@ -24,7 +24,8 @@ public class MyxRuntimeComponent extends AbstractMyxSimpleBrick {
     @Override
     public void init() {
         EventManager eventManager = (EventManager) MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_EVENTMANAGER);
-        runtime = MyxUtils.getMonitoringImplementation(eventManager).createRuntime();
+        MyxUtils.initMontioringImplementation(eventManager);
+        runtime = MyxUtils.getMonitoringImplementation().createRuntime();
     }
 
 }

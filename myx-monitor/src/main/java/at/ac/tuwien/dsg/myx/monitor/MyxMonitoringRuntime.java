@@ -11,10 +11,12 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEventType;
+import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxBrickItems;
 import edu.uci.isr.myx.fw.IMyxContainer;
+import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxWeld;
 import edu.uci.isr.myx.fw.MyxBasicRuntime;
@@ -42,6 +44,13 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                                                          // if it is really a
                                                          // component
         eventManager.handle(e);
+    }
+    
+    @Override
+    public void addInterface(IMyxName[] path, IMyxName brickName, IMyxName interfaceName,
+            IMyxInterfaceDescription interfaceDescription, EMyxInterfaceDirection interfaceDirection) {
+        // TODO Auto-generated method stub
+        super.addInterface(path, brickName, interfaceName, interfaceDescription, interfaceDirection);
     }
 
     @Override

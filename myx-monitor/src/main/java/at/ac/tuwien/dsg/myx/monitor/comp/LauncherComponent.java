@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
-import at.ac.tuwien.dsg.myx.MyxUtils;
+import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.aim.LauncherImpl;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
@@ -10,9 +10,9 @@ import edu.uci.isr.myx.fw.IMyxRuntime;
 
 public class LauncherComponent extends AbstractMyxSimpleBrick {
 
-    public static final IMyxName INTERFACE_NAME_IN_LAUNCHER = MyxUtils.createName("launcher");
-    public static final IMyxName INTERFACE_NAME_OUT_MYXRUNTIME = MyxUtils.createName("myx-runtime");
-    public static final IMyxName INTERFACE_NAME_OUT_MODELROOT = MyxUtils.createName("model-root");
+    public static final IMyxName INTERFACE_NAME_IN_LAUNCHER = MyxMonitoringUtils.createName("launcher");
+    public static final IMyxName INTERFACE_NAME_OUT_MYXRUNTIME = MyxMonitoringUtils.createName("myx-runtime");
+    public static final IMyxName INTERFACE_NAME_OUT_MODELROOT = MyxMonitoringUtils.createName("model-root");
 
     protected Launcher launcher;
 
@@ -26,8 +26,8 @@ public class LauncherComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        IMyxRuntime myx = (IMyxRuntime) MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MYXRUNTIME);
-        ModelRoot modelRoot = (ModelRoot) MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
+        IMyxRuntime myx = (IMyxRuntime) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MYXRUNTIME);
+        ModelRoot modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
         launcher = new LauncherImpl(myx, modelRoot);
     }
 

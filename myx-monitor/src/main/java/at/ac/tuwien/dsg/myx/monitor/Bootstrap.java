@@ -2,7 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor;
 
 import java.util.Properties;
 
-import at.ac.tuwien.dsg.myx.MyxUtils;
+import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.comp.BootstrapComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.EventManagerComponent;
@@ -19,11 +19,11 @@ import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
 
 public class Bootstrap {
 
-    public static final IMyxName BOOTSTRAP_NAME = MyxUtils.createName("bootstrap-comp");
-    public static final IMyxName EVENTMANAGER_NAME = MyxUtils.createName("event-manager-comp");
-    public static final IMyxName LAUNCHER_NAME = MyxUtils.createName("launcher-comp");
-    public static final IMyxName MODEL_ROOT_NAME = MyxUtils.createName("model-root-comp");
-    public static final IMyxName MYX_RUNTIME_NAME = MyxUtils.createName("myx-runtime-comp");
+    public static final IMyxName BOOTSTRAP_NAME = MyxMonitoringUtils.createName("bootstrap-comp");
+    public static final IMyxName EVENTMANAGER_NAME = MyxMonitoringUtils.createName("event-manager-comp");
+    public static final IMyxName LAUNCHER_NAME = MyxMonitoringUtils.createName("launcher-comp");
+    public static final IMyxName MODEL_ROOT_NAME = MyxMonitoringUtils.createName("model-root-comp");
+    public static final IMyxName MYX_RUNTIME_NAME = MyxMonitoringUtils.createName("myx-runtime-comp");
 
     protected IMyxRuntime myx;
 
@@ -76,7 +76,7 @@ public class Bootstrap {
     }
 
     public Bootstrap() {
-        myx = MyxUtils.getDefaultImplementation().createRuntime();
+        myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
     }
 
     public void doBootstrap(Properties bootstrapProps, Properties modelRootProps) {

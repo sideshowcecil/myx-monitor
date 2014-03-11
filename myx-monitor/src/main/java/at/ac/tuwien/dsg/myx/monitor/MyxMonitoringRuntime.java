@@ -3,7 +3,7 @@ package at.ac.tuwien.dsg.myx.monitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.dsg.myx.MyxUtils;
+import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
@@ -97,7 +97,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @return
      */
     private List<IMyxName> getBrickNames(IMyxName[] path, IMyxName brickName) {
-        IMyxContainer container = MyxUtils.resolvePath(mainContainer, path);
+        IMyxContainer container = MyxMonitoringUtils.resolvePath(mainContainer, path);
         if (container == null) {
             throw new MyxInvalidPathException(path);
         }
@@ -112,7 +112,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         } else {
             if (container.getInternalBrick(brickName) == null) {
                 throw new IllegalArgumentException("No brick found with name: " + brickName + " at "
-                        + MyxUtils.pathToString(path));
+                        + MyxMonitoringUtils.pathToString(path));
             }
             bricks.add(brickName);
         }

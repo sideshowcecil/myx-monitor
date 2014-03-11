@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import at.ac.tuwien.dsg.myx.DBLUtils;
-import at.ac.tuwien.dsg.myx.MyxUtils;
+import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Component;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Connector;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Implementation;
@@ -70,7 +70,7 @@ public class LauncherImpl implements Launcher {
     public LauncherImpl(IMyxRuntime myx, ModelRoot modelRoot) {
         this.myx = myx;
         this.modelRoot = modelRoot;
-        containerBrickDescription = MyxUtils.getContainerBrickDescription();
+        containerBrickDescription = MyxMonitoringUtils.getContainerBrickDescription();
     }
 
     @Override
@@ -311,7 +311,7 @@ public class LauncherImpl implements Launcher {
      */
     private void instantiate(String name, IArchStructure structure, IMyxName[] path)
             throws ArchitectureInstantiationException {
-        IMyxName containerName = MyxUtils.createName(name);
+        IMyxName containerName = MyxMonitoringUtils.createName(name);
 
         try {
             myx.addBrick(path, containerName, containerBrickDescription);
@@ -363,7 +363,7 @@ public class LauncherImpl implements Launcher {
      * @throws ArchitectureInstantiationException
      */
     private void instantiate(InstantiationElement element, IMyxName[] path) throws ArchitectureInstantiationException {
-        IMyxName brickName = MyxUtils.createName(element.getId());
+        IMyxName brickName = MyxMonitoringUtils.createName(element.getId());
         // we first validate if the elements type contains a subarchitecture
         if (element.hasSubArchitecture()) {
             SubArchitecture subArch = element.getSubarchitecture();
@@ -382,9 +382,9 @@ public class LauncherImpl implements Launcher {
                 }
                 Tuple<String, Interface> m = subArch.getInterfaceMapping().get(outerIntf);
 
-                IMyxName outerIntfName = MyxUtils.createName(outerIntf.getName());
-                IMyxName innerBrickName = MyxUtils.createName(m.getFst());
-                IMyxName innerIntfName = MyxUtils.createName(m.getSnd().getName());
+                IMyxName outerIntfName = MyxMonitoringUtils.createName(outerIntf.getName());
+                IMyxName innerBrickName = MyxMonitoringUtils.createName(m.getFst());
+                IMyxName innerIntfName = MyxMonitoringUtils.createName(m.getSnd().getName());
                 IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(outerIntf
                         .getImplementationMainClassNames().toArray(new String[0]));
                 myx.addContainerInterface(path, brickName, outerIntfName, intfDesc, outerIntf.getDirection(),
@@ -405,7 +405,7 @@ public class LauncherImpl implements Launcher {
             for (Interface intf : element.getInterfaces()) {
                 IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(intf
                         .getImplementationMainClassNames().toArray(new String[0]));
-                IMyxName intfName = MyxUtils.createName(intf.getName());
+                IMyxName intfName = MyxMonitoringUtils.createName(intf.getName());
                 myx.addInterface(path, brickName, intfName, intfDesc, intf.getDirection());
             }
             // weld the init links
@@ -423,10 +423,10 @@ public class LauncherImpl implements Launcher {
      */
     private void weldLinks(List<Link> links, IMyxName[] path) {
         for (Link link : links) {
-            IMyxName fromBrickName = MyxUtils.createName(link.getFromElement().getId());
-            IMyxName fromInterfaceName = MyxUtils.createName(link.getFromInterface().getName());
-            IMyxName toBrickName = MyxUtils.createName(link.getToElement().getId());
-            IMyxName toInterfaceName = MyxUtils.createName(link.getToInterface().getName());
+            IMyxName fromBrickName = MyxMonitoringUtils.createName(link.getFromElement().getId());
+            IMyxName fromInterfaceName = MyxMonitoringUtils.createName(link.getFromInterface().getName());
+            IMyxName toBrickName = MyxMonitoringUtils.createName(link.getToElement().getId());
+            IMyxName toInterfaceName = MyxMonitoringUtils.createName(link.getToInterface().getName());
             IMyxWeld weld = myx.createWeld(path, fromBrickName, fromInterfaceName, path, toBrickName, toInterfaceName);
             myx.addWeld(weld);
         }
@@ -700,7 +700,7 @@ public class LauncherImpl implements Launcher {
      */
     private void begin(List<InstantiationElement> bricks, IMyxName[] path) {
         for (InstantiationElement brick : bricks) {
-            IMyxName brickName = MyxUtils.createName(brick.getId());
+            IMyxName brickName = MyxMonitoringUtils.createName(brick.getId());
             myx.begin(path, brickName);
         }
     }

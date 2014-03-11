@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
-import at.ac.tuwien.dsg.myx.MyxUtils;
+import at.ac.tuwien.dsg.myx.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRootImpl;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
@@ -8,7 +8,7 @@ import edu.uci.isr.myx.fw.IMyxName;
 
 public class ModelRootComponent extends AbstractMyxSimpleBrick {
 
-    public static final IMyxName INTERFACE_NAME_IN_MODELROOT = MyxUtils.createName("model-root");
+    public static final IMyxName INTERFACE_NAME_IN_MODELROOT = MyxMonitoringUtils.createName("model-root");
     
     protected String xadlFile;
     protected ModelRoot modelRoot;
@@ -23,7 +23,7 @@ public class ModelRootComponent extends AbstractMyxSimpleBrick {
     
     @Override
     public void init() {
-        xadlFile = MyxUtils.getInitProperties(this).getProperty("file");
+        xadlFile = MyxMonitoringUtils.getInitProperties(this).getProperty("file");
         if (xadlFile == null) {
             throw new IllegalArgumentException("File parameter missing for model-root component.");
         }

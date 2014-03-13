@@ -19,7 +19,7 @@ public abstract class Event {
     public Event(Event copyFrom) {
         id = UUID.randomUUID().toString();
         architectureRuntimeId = copyFrom.getArchitectureRuntimeId();
-        timestamp = copyFrom.getTimestamp();
+        timestamp = System.currentTimeMillis();
         eventSourceId = copyFrom.getEventSourceId();
     }
 

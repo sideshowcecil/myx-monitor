@@ -61,14 +61,14 @@ public class Bootstrap {
 
         Properties[] p = new Properties[3];
         p[0] = new Properties();
-        p[0].setProperty("file", xadlFile);
+        p[0].setProperty(MyxProperties.XADL_FILE, xadlFile);
         p[1] = new Properties();
         if (structureName != null) {
-            p[1].setProperty("structure", structureName);
+            p[1].setProperty(MyxProperties.STRUCTURE_NAME, structureName);
         }
         p[2] = new Properties();
         if (architectureInstanceId != null) {
-            p[2].setProperty(MyxRuntimeComponent.PROPERTY_ARCHITECTURE_RUNTIME_ID, architectureInstanceId);
+            p[2].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureInstanceId);
         }
 
         return p;

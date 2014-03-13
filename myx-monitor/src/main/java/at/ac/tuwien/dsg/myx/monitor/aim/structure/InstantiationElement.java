@@ -8,6 +8,8 @@ import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ArchitectureType;
 
 public class InstantiationElement extends ArchitectureElement {
 
+    private final String runtimeId;
+
     private final List<Interface> interfaces = new ArrayList<>();
 
     private final List<Implementation> implementations = new ArrayList<>();
@@ -16,8 +18,13 @@ public class InstantiationElement extends ArchitectureElement {
     private final List<Link> initLinks = new ArrayList<>();
     private final List<Link> beginLinks = new ArrayList<>();
 
-    public InstantiationElement(String id) {
-        super(id);
+    public InstantiationElement(String blueprintId, String runtimeId) {
+        super(blueprintId);
+        this.runtimeId = runtimeId;
+    }
+
+    public String getRuntimeId() {
+        return runtimeId;
     }
 
     public List<Interface> getInterfaces() {
@@ -52,7 +59,7 @@ public class InstantiationElement extends ArchitectureElement {
      */
     public Interface getInterface(String id) {
         for (Interface intf : getInterfaces()) {
-            if (intf.getId() == id) {
+            if (intf.getBlueprintId() == id) {
                 return intf;
             }
         }

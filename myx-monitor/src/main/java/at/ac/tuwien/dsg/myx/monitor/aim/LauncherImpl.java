@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
+import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Component;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Connector;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Implementation;
@@ -21,8 +23,10 @@ import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ArchitectureType;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ComponentType;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ConnectorType;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.InterfaceType;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
+import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
@@ -81,7 +85,7 @@ public class LauncherImpl implements Launcher {
             signatures = new HashMap<>();
             for (ArchitectureType t : types.values()) {
                 for (Signature s : t.getSignatures()) {
-                    signatures.put(s.getId(), s);
+                    signatures.put(s.getBlueprintId(), s);
                 }
             }
         }
@@ -106,7 +110,7 @@ public class LauncherImpl implements Launcher {
                     throw new ArchitectureInstantiationException("Java implementation of type "
                             + t.getDescription().getValue() + " lacks main class name");
                 }
-                types.put(it.getId(), it);
+                types.put(it.getBlueprintId(), it);
             }
         }
         return types;
@@ -135,7 +139,7 @@ public class LauncherImpl implements Launcher {
                 if (t.getSubArchitecture() != null) {
                     ct.setSubArchitecture(getSubArchitecture(t, signatures));
                 }
-                types.put(ct.getId(), ct);
+                types.put(ct.getBlueprintId(), ct);
             }
             for (IConnectorType t : DBLUtils.getConnectorTypes(at)) {
                 ConnectorType ct = new ConnectorType(t.getId());
@@ -151,7 +155,7 @@ public class LauncherImpl implements Launcher {
                 if (t.getSubArchitecture() != null) {
                     ct.setSubArchitecture(getSubArchitecture(t, signatures));
                 }
-                types.put(ct.getId(), ct);
+                types.put(ct.getBlueprintId(), ct);
             }
         }
         return types;
@@ -251,7 +255,7 @@ public class LauncherImpl implements Launcher {
                 String signatureId = DBLUtils.getId(m.getOuterSignature());
                 Signature outer = null;
                 for (Signature s : signatures) {
-                    if (s.getId() == signatureId) {
+                    if (s.getBlueprintId() == signatureId) {
                         outer = s;
                     }
                 }
@@ -281,7 +285,7 @@ public class LauncherImpl implements Launcher {
                 }
 
                 for (Interface i : getInterfaces(DBLUtils.getInterfaces(parent))) {
-                    if (i.getId() == interfaceId) {
+                    if (i.getBlueprintId() == interfaceId) {
                         inner = i;
                     }
                 }
@@ -363,7 +367,7 @@ public class LauncherImpl implements Launcher {
      * @throws ArchitectureInstantiationException
      */
     private void instantiate(InstantiationElement element, IMyxName[] path) throws ArchitectureInstantiationException {
-        IMyxName brickName = MyxMonitoringUtils.createName(element.getId());
+        IMyxName brickName = MyxMonitoringUtils.createName(element.getRuntimeId());
         // we first validate if the elements type contains a subarchitecture
         if (element.hasSubArchitecture()) {
             SubArchitecture subArch = element.getSubarchitecture();
@@ -372,7 +376,7 @@ public class LauncherImpl implements Launcher {
             // add container name
             innerPath.add(brickName);
             // call instantiate for the archstructure for the subarchitecture
-            instantiate(element.getId(), subArch.getArchStructure(), innerPath.toArray(new IMyxName[0]));
+            instantiate(element.getBlueprintId(), subArch.getArchStructure(), innerPath.toArray(new IMyxName[0]));
             // now we have to wire the interface mappings
             for (Interface outerIntf : element.getInterfaces()) {
                 if (outerIntf.getSignature() == null
@@ -392,6 +396,13 @@ public class LauncherImpl implements Launcher {
             }
         } else {
             // add the brick
+            Properties initProps = element.getImplemenationInitProperties();
+            initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID, element.getBlueprintId());
+            if (element instanceof Component) {
+                initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.COMPONENT);
+            } else if (element instanceof Connector) {
+                initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.CONNECTOR);
+            }
             IMyxBrickDescription brickDescription = new MyxJavaClassBrickDescription(
                     element.getImplemenationInitProperties(), element.getImplementationMainClassName());
             try {
@@ -423,9 +434,9 @@ public class LauncherImpl implements Launcher {
      */
     private void weldLinks(List<Link> links, IMyxName[] path) {
         for (Link link : links) {
-            IMyxName fromBrickName = MyxMonitoringUtils.createName(link.getFromElement().getId());
+            IMyxName fromBrickName = MyxMonitoringUtils.createName(link.getFromElement().getRuntimeId());
             IMyxName fromInterfaceName = MyxMonitoringUtils.createName(link.getFromInterface().getName());
-            IMyxName toBrickName = MyxMonitoringUtils.createName(link.getToElement().getId());
+            IMyxName toBrickName = MyxMonitoringUtils.createName(link.getToElement().getRuntimeId());
             IMyxName toInterfaceName = MyxMonitoringUtils.createName(link.getToInterface().getName());
             IMyxWeld weld = myx.createWeld(path, fromBrickName, fromInterfaceName, path, toBrickName, toInterfaceName);
             myx.addWeld(weld);
@@ -447,7 +458,7 @@ public class LauncherImpl implements Launcher {
 
         // add all components
         for (IComponent ic : DBLUtils.getComponents(structure)) {
-            Component c = new Component(ic.getId());
+            Component c = new Component(ic.getId(), IdGenerator.generateRuntimeInstantiationId(ic.getId()));
             c.setDescription(ic.getDescription().getValue());
             try {
                 c.getImplementations().addAll(getImplementations(DBLUtils.getJavaImplementations(ic)));
@@ -470,7 +481,7 @@ public class LauncherImpl implements Launcher {
         }
         // add all connectors
         for (IConnector ic : DBLUtils.getConnectors(structure)) {
-            Connector c = new Connector(ic.getId());
+            Connector c = new Connector(ic.getId(), IdGenerator.generateRuntimeInstantiationId(ic.getId()));
             c.setDescription(ic.getDescription().getValue());
             try {
                 c.getImplementations().addAll(getImplementations(DBLUtils.getJavaImplementations(ic)));
@@ -700,7 +711,7 @@ public class LauncherImpl implements Launcher {
      */
     private void begin(List<InstantiationElement> bricks, IMyxName[] path) {
         for (InstantiationElement brick : bricks) {
-            IMyxName brickName = MyxMonitoringUtils.createName(brick.getId());
+            IMyxName brickName = MyxMonitoringUtils.createName(brick.getRuntimeId());
             myx.begin(path, brickName);
         }
     }
@@ -735,7 +746,9 @@ public class LauncherImpl implements Launcher {
         public String toString() {
             String EOL = System.getProperty("line.separator");
             StringBuffer sb = new StringBuffer();
-            sb.append("[").append(element.getId()).append("] ").append(element.getDescription());
+            sb.append("[").append(element.getBlueprintId());
+            sb.append(", ").append(element.getRuntimeId()).append("] ");
+            sb.append(element.getDescription());
             sb.append(" <- ").append(getDescriptions(dependents)).append(EOL);
             sb.append(" - init:  ").append(getDescriptionsOfLinks(element.getInitLinks())).append(EOL);
             sb.append(" - begin: ").append(getDescriptionsOfLinks(element.getBeginLinks())).append(EOL);

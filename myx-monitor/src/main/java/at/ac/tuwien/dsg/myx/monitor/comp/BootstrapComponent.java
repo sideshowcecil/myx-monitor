@@ -3,6 +3,7 @@ package at.ac.tuwien.dsg.myx.monitor.comp;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.aim.ArchitectureInstantiationException;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
@@ -32,7 +33,7 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
         launcher = (Launcher) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
         modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
 
-        String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty("structure");
+        String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty(MyxProperties.STRUCTURE_NAME);
         if (structureDescription == null) {
             structureDescription = "main";
         }

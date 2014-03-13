@@ -2,6 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
@@ -40,11 +41,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.addBrick(path, brickName, brickDescription);
 
         // TODO send event
-        XADLEvent e = new XADLEvent(architectureRuntimeId, brickName.getName(), XADLEventType.ADD);
+        Properties initProperties = brickDescription.getInitParams();
+        XADLEvent e = new XADLEvent(architectureRuntimeId, brickName.getName(), initProperties.getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID), XADLEventType.ADD);
         e.setEventSourceId(this.getClass().getName());
-        e.setXadlElementType(XADLElementType.COMPONENT); // TODO: how can we know
-                                                         // if it is really a
-                                                         // component
+        e.setXadlElementType((XADLElementType)initProperties.get(MyxProperties.ARCHITECTURE_BRICK_TYPE));
         eventManager.handle(e);
     }
     

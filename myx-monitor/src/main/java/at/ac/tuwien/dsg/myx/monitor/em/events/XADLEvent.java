@@ -2,26 +2,33 @@ package at.ac.tuwien.dsg.myx.monitor.em.events;
 
 public class XADLEvent extends Event {
 
-    private final String xadlElementId;
+    private final String xadlRuntimeId;
+    private final String xadlBlueprintId;
     private final XADLEventType xadlEventType;
 
     private XADLElementType xadlElementType;
 
-    public XADLEvent(String archInstanceId, String xadlElementId, XADLEventType xadlEventType) {
+    public XADLEvent(String archInstanceId, String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType) {
         super(archInstanceId);
-        this.xadlElementId = xadlElementId;
+        this.xadlRuntimeId = xadlRuntimeId;
+        this.xadlBlueprintId = xadlElementId;
         this.xadlEventType = xadlEventType;
     }
 
     public XADLEvent(XADLEvent copyFrom) {
         super(copyFrom);
-        xadlEventType = copyFrom.getXadlEventType();
-        xadlElementId = copyFrom.getXadlElementId();
+        xadlRuntimeId = copyFrom.getXadlRuntimeId();
+        xadlBlueprintId = copyFrom.getXadlBlueprintId();
         xadlElementType = copyFrom.getXadlElementType();
+        xadlEventType = copyFrom.getXadlEventType();
     }
 
-    public String getXadlElementId() {
-        return xadlElementId;
+    public String getXadlRuntimeId() {
+        return xadlRuntimeId;
+    }
+
+    public String getXadlBlueprintId() {
+        return xadlBlueprintId;
     }
 
     public XADLEventType getXadlEventType() {
@@ -38,8 +45,9 @@ public class XADLEvent extends Event {
 
     @Override
     public String toString() {
-        return "XADLEvent [base=[" + super.toString() + "], xadlEventType=" + getXadlEventType() + ", xadlElementId="
-                + getXadlElementId() + ", xadlElementType=" + getXadlElementType() + "]";
+        return "XADLEvent [base=[" + super.toString() + "], xadlRuntimeId=" + getXadlRuntimeId() + ", xadlBlueprintId="
+                + getXadlBlueprintId() + ", xadlElementType=" + getXadlElementType() + ", xadlEventType="
+                + getXadlEventType() + "]";
     }
 
 }

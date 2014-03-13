@@ -2,15 +2,15 @@ package at.ac.tuwien.dsg.myx.monitor.aim.structure;
 
 public class ArchitectureElement {
 
-    private final String id;
+    private final String blueprintId;
     private String description;
-    
-    public ArchitectureElement(String id) {
-        this.id = id;
+
+    public ArchitectureElement(String blueprintId) {
+        this.blueprintId = blueprintId;
     }
 
-    public String getId() {
-        return id;
+    public String getBlueprintId() {
+        return blueprintId;
     }
 
     public String getDescription() {
@@ -20,9 +20,9 @@ public class ArchitectureElement {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     @Override
     public String toString() {
-        return "[" + getId() + "] " + getDescription();
+        return "[" + getBlueprintId() + "] " + getDescription();
     }
 }

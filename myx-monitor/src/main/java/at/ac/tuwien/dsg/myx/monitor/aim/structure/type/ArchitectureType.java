@@ -14,8 +14,8 @@ public class ArchitectureType extends ArchitectureElement {
     private final List<Signature> signatures = new ArrayList<>();
     private SubArchitecture subArchitecture;
 
-    public ArchitectureType(String id) {
-        super(id);
+    public ArchitectureType(String blueprintId) {
+        super(blueprintId);
     }
 
     public List<Implementation> getImplementations() {

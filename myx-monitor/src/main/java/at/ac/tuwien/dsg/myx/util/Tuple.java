@@ -56,4 +56,18 @@ public final class Tuple<X, Y> {
     public Y getSnd() {
         return snd;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Tuple<?, ?>) {
+            Tuple<?, ?> t = (Tuple<?, ?>) obj;
+            return getFst().equals(t.getFst()) && getSnd().equals(t.getSnd());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getFst().hashCode() + getSnd().hashCode();
+    }
 }

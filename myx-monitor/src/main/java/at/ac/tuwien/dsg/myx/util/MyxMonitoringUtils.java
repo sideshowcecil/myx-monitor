@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.monitor.MyxMonitoringImplementation;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxContainer;
@@ -12,29 +13,46 @@ import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
 /**
- * This class is an extension of {@link MyxUtils} which
- * provides the {@link MyxMonitoringImplementation} as the and additional
- * implementation.
+ * This class is an extension of {@link MyxUtils} which provides the
+ * {@link MyxMonitoringImplementation} as the and additional implementation.
  * 
  * @author bernd.rathmanner
  * 
  */
 public final class MyxMonitoringUtils {
-    
+
     private static IMyxImplementation currentImplementation;
+    private static EventManager currentEventManager = new EventManagerImpl();
 
     private MyxMonitoringUtils() {
     }
-    
+
+    /**
+     * Initialize the current {@link MyxMonitoringImplementation}.
+     * @param architecturRuntimeId
+     * @param eventManager
+     */
     public static void initMontioringImplementation(String architecturRuntimeId, EventManager eventManager) {
         currentImplementation = new MyxMonitoringImplementation(architecturRuntimeId, eventManager);
     }
 
+    /**
+     * Get the current {@link MyxMonitoringImplementation}.
+     * @return
+     */
     public static IMyxImplementation getMonitoringImplementation() {
         if (currentImplementation == null) {
             throw new NullPointerException("MyxMonitoringImplementation has not been initialized!");
         }
         return currentImplementation;
+    }
+
+    /**
+     * Get the current {@link EventManager}.
+     * @return
+     */
+    public static EventManager getEventManager() {
+        return currentEventManager;
     }
 
     public static IMyxImplementation getDefaultImplementation() {

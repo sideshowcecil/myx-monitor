@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import at.ac.tuwien.dsg.myx.fw.MyxJavaClassInitPropertiesInterfaceDescription;
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Component;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Connector;
@@ -414,8 +415,11 @@ public class LauncherImpl implements Launcher {
             }
             // add the interfaces
             for (Interface intf : element.getInterfaces()) {
-                IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(intf
-                        .getImplementationMainClassNames().toArray(new String[0]));
+                Properties intfInitProps = new Properties();
+                intfInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, intf.getType().getBlueprintId());
+                
+                IMyxInterfaceDescription intfDesc = new MyxJavaClassInitPropertiesInterfaceDescription(intf
+                        .getImplementationMainClassNames().toArray(new String[0]), intfInitProps);
                 IMyxName intfName = MyxMonitoringUtils.createName(intf.getName());
                 myx.addInterface(path, brickName, intfName, intfDesc, intf.getDirection());
             }

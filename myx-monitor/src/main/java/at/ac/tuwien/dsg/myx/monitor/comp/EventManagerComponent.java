@@ -1,7 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
@@ -9,7 +8,7 @@ import edu.uci.isr.myx.fw.IMyxName;
 public class EventManagerComponent extends AbstractMyxSimpleBrick {
 
     public static final IMyxName INTERFACE_NAME_IN_EVENTMANAGER = MyxMonitoringUtils.createName("event-manager");
-    
+
     protected EventManager eventManager;
 
     @Override
@@ -19,10 +18,10 @@ public class EventManagerComponent extends AbstractMyxSimpleBrick {
         }
         return null;
     }
-    
+
     @Override
     public void init() {
-        eventManager = new EventManagerImpl();
+        eventManager = MyxMonitoringUtils.getEventManager();
     }
 
 }

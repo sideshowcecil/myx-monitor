@@ -1,5 +1,10 @@
 package at.ac.tuwien.dsg.myx.util;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -48,5 +53,47 @@ public final class IdGenerator {
      */
     public static String generateRuntimeInstantiationId(String blueprintId) {
         return blueprintId + "-" + ++counter;
+    }
+
+    /**
+     * Get the id of the host which should be the same for each invocation.
+     * 
+     * @return the id of the host
+     * @throws UnknownHostException if the id could not be obtained
+     */
+    public static String getHostId() throws UnknownHostException {        
+        // we first try to generate the host id from the machines hostname
+        try {
+            return UUID.nameUUIDFromBytes(InetAddress.getLocalHost().getHostName().getBytes()).toString();
+        } catch (UnknownHostException e) {
+        }
+
+        // if we cannot use the hostname we try to get the id from a mac address
+        try {
+            for (NetworkInterface networkInterface : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (networkInterface == null || networkInterface.isLoopback() || networkInterface.isVirtual()) {
+                    continue;
+                }
+                byte[] mac = networkInterface.getHardwareAddress();
+                if (mac == null || mac.length == 0)
+                    continue;
+
+                StringBuilder sb = new StringBuilder();
+                int zeroFieldCount = 0;
+                for (int i = 0; i < mac.length; i++) {
+                    if (mac[i] == 0)
+                        zeroFieldCount++;
+                    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                }
+
+                if (zeroFieldCount > 4)
+                    continue;
+
+                return UUID.nameUUIDFromBytes(sb.toString().getBytes()).toString();
+            }
+        } catch (SocketException e) {
+        }
+
+        throw new UnknownHostException("Could not obtain host id");
     }
 }

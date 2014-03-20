@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.fw.IMyxInitPropertiesInterfaceDescription;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
@@ -58,7 +59,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                     .getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID);
             // send event
             XADLEvent e = new XADLEvent(architectureRuntimeId, runtimeId, blueprintId, XADLEventType.ADD);
-            e.setEventSourceId(this.getClass().getName());
+            setEventSource(e);
             e.setXadlElementType((XADLElementType) initProperties.get(MyxProperties.ARCHITECTURE_BRICK_TYPE));
             eventManager.handle(e);
 
@@ -103,7 +104,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             XADLLinkEvent e = new XADLLinkEvent(architectureRuntimeId, requiredBrickName, requiredInterfaceName,
                     requiredInterfaceType, providedBrickName, providedInterfaceName, providedInterfaceType,
                     XADLEventType.ADD);
-            e.setEventSourceId(this.getClass().getName());
+            setEventSource(e);
             eventManager.handle(e);
         }
     }
@@ -116,7 +117,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             // send event
             String runtimeId = b.getName();
             XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, runtimeId, XADLRuntimeEventType.BEGIN);
-            e.setEventSourceId(this.getClass().getName());
+            setEventSource(e);
             eventManager.handle(e);
         }
     }
@@ -129,7 +130,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             // send event
             String runtimeId = b.getName();
             XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, runtimeId, XADLRuntimeEventType.END);
-            e.setEventSourceId(this.getClass().getName());
+            setEventSource(e);
             eventManager.handle(e);
         }
     }
@@ -162,6 +163,15 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             bricks.add(brickName);
         }
         return bricks;
+    }
+
+    /**
+     * Set the event source of an {@link Event}.
+     * 
+     * @param e
+     */
+    private void setEventSource(Event e) {
+        e.setEventSourceId(this.getClass().getName());
     }
 
 }

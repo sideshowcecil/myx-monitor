@@ -6,13 +6,14 @@ public class XADLHostPropertyEvent extends XADLHostEvent {
 
     private Properties hostProperties;
 
-    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId) {
-        super(architectureRuntimeId, hostId);
+    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId, XADLEventType xadlEventType) {
+        super(architectureRuntimeId, hostId, xadlEventType);
         hostProperties = new Properties();
     }
 
-    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId, Properties hostProperties) {
-        this(architectureRuntimeId, hostId);
+    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId, XADLEventType xadlEventType,
+            Properties hostProperties) {
+        this(architectureRuntimeId, hostId, xadlEventType);
         this.hostProperties = hostProperties;
     }
 

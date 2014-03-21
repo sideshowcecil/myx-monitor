@@ -58,10 +58,10 @@ public final class IdGenerator {
     /**
      * Get the id of the host which should be the same for each invocation.
      * 
-     * @return the id of the host
-     * @throws UnknownHostException if the id could not be obtained
+     * @return the id of the host or <code>null</code> if it could not be
+     *         obtained.
      */
-    public static String getHostId() throws UnknownHostException {        
+    public static String getHostId() {
         // we first try to generate the host id from the machines hostname
         try {
             return UUID.nameUUIDFromBytes(InetAddress.getLocalHost().getHostName().getBytes()).toString();
@@ -94,6 +94,7 @@ public final class IdGenerator {
         } catch (SocketException e) {
         }
 
-        throw new UnknownHostException("Could not obtain host id");
+        // the id could not be obtained
+        return null;
     }
 }

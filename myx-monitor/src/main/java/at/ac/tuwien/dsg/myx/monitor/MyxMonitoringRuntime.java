@@ -12,6 +12,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEventType;
@@ -33,18 +34,56 @@ import edu.uci.isr.myx.fw.MyxInvalidPathException;
 public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
     protected String architectureRuntimeId;
+    protected String hostId;
     protected EventManager eventManager;
 
     /**
-     * This map is currently not used, but can be used if we need the blueprint
-     * id on XADLLinkEvents or XADLRuntimeEvents.
+     * This map is used to reference the runtime id to the blueprint id.
      */
     protected Map<String, String> runtime2blueprint = new HashMap<>();
+    /**
+     * This map is used to reference the runtime id to the element type.
+     */
+    protected Map<String, XADLElementType> runtime2elemntType = new HashMap<>();
+    /**
+     * This map is used to keep track of the added interfaces.
+     */
     protected Map<Tuple<String, String>, String> interfaces = new HashMap<>();
 
-    public MyxMonitoringRuntime(String architectureRuntimeId, EventManager eventManager) {
+    public MyxMonitoringRuntime(String architectureRuntimeId, String hostId, EventManager eventManager) {
         this.architectureRuntimeId = architectureRuntimeId;
+        this.hostId = hostId;
         this.eventManager = eventManager;
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                List<IMyxName> bricks = MyxMonitoringRuntime.this.getBrickNames(null, null);
+                // send runtime events
+                for (IMyxName brick : bricks) {
+                    for (IMyxName b : getBrickNames(null, brick)) {
+                        String runtimeId = b.getName();
+                        // send event
+                        dispatchXADLRuntimeEvent(runtimeId, XADLRuntimeEventType.END);
+                    }
+                }
+                // send xadl- and hosting events
+                for (IMyxName brick : bricks) {
+                    for (IMyxName b : getBrickNames(null, brick)) {
+                        String runtimeId = b.getName();
+                        XADLElementType elementType = runtime2elemntType.get(runtimeId);
+                        // send events
+                        if (elementType == XADLElementType.COMPONENT) {
+                            dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
+                        } else {
+                            dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+                        }
+                        dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
+                                elementType);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -57,14 +96,20 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                 && initProperties.containsKey(MyxProperties.ARCHITECTURE_BRICK_TYPE)) {
             String runtimeId = brickName.getName(), blueprintId = initProperties
                     .getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID);
+            XADLElementType elementType = (XADLElementType) initProperties.get(MyxProperties.ARCHITECTURE_BRICK_TYPE);
             // send event
-            XADLEvent e = new XADLEvent(architectureRuntimeId, runtimeId, blueprintId, XADLEventType.ADD);
-            setEventSource(e);
-            e.setXadlElementType((XADLElementType) initProperties.get(MyxProperties.ARCHITECTURE_BRICK_TYPE));
-            eventManager.handle(e);
+            dispatchXADLEvent(runtimeId, blueprintId, XADLEventType.ADD, elementType);
 
-            // save the id
+            // save the id and type
             runtime2blueprint.put(runtimeId, blueprintId);
+            runtime2elemntType.put(runtimeId, elementType);
+
+            // send the hosting event
+            if (elementType == XADLElementType.COMPONENT) {
+                dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.ADD);
+            } else {
+                dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.ADD);
+            }
         }
     }
 
@@ -101,11 +146,8 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             String requiredInterfaceType = interfaces.get(requiredBrickIntf), providedInterfaceType = interfaces
                     .get(providedBrickIntf);
             // send event
-            XADLLinkEvent e = new XADLLinkEvent(architectureRuntimeId, requiredBrickName, requiredInterfaceName,
-                    requiredInterfaceType, providedBrickName, providedInterfaceName, providedInterfaceType,
-                    XADLEventType.ADD);
-            setEventSource(e);
-            eventManager.handle(e);
+            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceName, requiredInterfaceType, providedBrickName,
+                    providedInterfaceName, providedInterfaceType, XADLEventType.ADD);
         }
     }
 
@@ -115,10 +157,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         for (IMyxName b : getBrickNames(path, brickName)) {
             // send event
-            String runtimeId = b.getName();
-            XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, runtimeId, XADLRuntimeEventType.BEGIN);
-            setEventSource(e);
-            eventManager.handle(e);
+            dispatchXADLRuntimeEvent(b.getName(), XADLRuntimeEventType.BEGIN);
         }
     }
 
@@ -128,15 +167,92 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         for (IMyxName b : getBrickNames(path, brickName)) {
             // send event
-            String runtimeId = b.getName();
-            XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, runtimeId, XADLRuntimeEventType.END);
-            setEventSource(e);
-            eventManager.handle(e);
+            dispatchXADLRuntimeEvent(b.getName(), XADLRuntimeEventType.END);
         }
     }
 
     /**
-     * Get all bricks that get instantiated by the lifecycle method.
+     * Dispatch a {@link XADLEvent}.
+     * 
+     * @param xadlRuntimeId
+     * @param xadlElementId
+     * @param xadlEventType
+     * @param xadlElementType
+     */
+    private void dispatchXADLEvent(String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType,
+            XADLElementType xadlElementType) {
+        XADLEvent e = new XADLEvent(architectureRuntimeId, xadlRuntimeId, xadlElementId, xadlEventType);
+        e.setXadlElementType(xadlElementType);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLLinkEvent}.
+     * 
+     * @param xadlSourceRuntimeId
+     * @param xadlSourceInterfaceName
+     * @param xadlSourceInterfaceType
+     * @param xadlDestinationRuntimeId
+     * @param xadlDestinationElementInterfaceName
+     * @param xadlDestinationInterfaceType
+     * @param xadlEventType
+     */
+    private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceName,
+            String xadlSourceInterfaceType, String xadlDestinationRuntimeId,
+            String xadlDestinationElementInterfaceName, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
+        XADLLinkEvent e = new XADLLinkEvent(architectureRuntimeId, xadlSourceRuntimeId, xadlSourceInterfaceName,
+                xadlSourceInterfaceType, xadlDestinationRuntimeId, xadlDestinationElementInterfaceName,
+                xadlDestinationInterfaceType, xadlEventType);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLRuntimeEvent}.
+     * 
+     * @param xadlRuntimeId
+     * @param xadlRuntimeType
+     */
+    private void dispatchXADLRuntimeEvent(String xadlRuntimeId, XADLRuntimeEventType xadlRuntimeType) {
+        XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, xadlRuntimeId, xadlRuntimeType);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLHostingEvent} for a component.
+     * 
+     * @param runtimeId
+     * @param xadlEventType
+     */
+    private void dispatchXADLHostingEventForComponent(String runtimeId, XADLEventType xadlEventType) {
+        XADLHostingEvent e = new XADLHostingEvent(architectureRuntimeId, hostId, xadlEventType);
+        e.getHostedComponentIds().add(runtimeId);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLHostingEvent} for a connector.
+     * 
+     * @param runtimeId
+     * @param xadlEventType
+     */
+    private void dispatchXADLHostingEventForConnector(String runtimeId, XADLEventType xadlEventType) {
+        XADLHostingEvent e = new XADLHostingEvent(architectureRuntimeId, hostId, xadlEventType);
+        e.getHostedConnectorIds().add(runtimeId);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link Event}.
+     * 
+     * @param e
+     */
+    private void dispatchEvent(Event e) {
+        e.setEventSourceId(this.getClass().getName());
+        eventManager.handle(e);
+    }
+
+    /**
+     * Get all bricks that get used by the lifecycle method.
      * 
      * @param path
      * @param brickName
@@ -163,15 +279,6 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             bricks.add(brickName);
         }
         return bricks;
-    }
-
-    /**
-     * Set the event source of an {@link Event}.
-     * 
-     * @param e
-     */
-    private void setEventSource(Event e) {
-        e.setEventSourceId(this.getClass().getName());
     }
 
 }

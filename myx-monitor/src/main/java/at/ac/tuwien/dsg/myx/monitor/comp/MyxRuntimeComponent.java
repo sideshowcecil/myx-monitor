@@ -27,10 +27,11 @@ public class MyxRuntimeComponent extends AbstractMyxSimpleBrick {
     public void init() {
         String archRuntimeId = MyxMonitoringUtils.getInitProperties(this).getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID,
                 IdGenerator.generateArchitectureRuntimeId());
+        String hostId = IdGenerator.getHostId();
         EventManager eventManager = (EventManager) MyxMonitoringUtils.getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_EVENTMANAGER);
 
-        MyxMonitoringUtils.initMontioringImplementation(archRuntimeId, eventManager);
+        MyxMonitoringUtils.initMontioringImplementation(archRuntimeId, hostId, eventManager);
         runtime = MyxMonitoringUtils.getMonitoringImplementation().createRuntime();
     }
 

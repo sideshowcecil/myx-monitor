@@ -36,10 +36,11 @@ public final class MyxMonitoringUtils {
      * Initialize the current {@link MyxMonitoringImplementation}.
      * 
      * @param architecturRuntimeId
+     * @param hostId
      * @param eventManager
      */
-    public static void initMontioringImplementation(String architecturRuntimeId, EventManager eventManager) {
-        currentImplementation = new MyxMonitoringImplementation(architecturRuntimeId, eventManager);
+    public static void initMontioringImplementation(String architecturRuntimeId, String hostId, EventManager eventManager) {
+        currentImplementation = new MyxMonitoringImplementation(architecturRuntimeId, hostId, eventManager);
     }
 
     /**

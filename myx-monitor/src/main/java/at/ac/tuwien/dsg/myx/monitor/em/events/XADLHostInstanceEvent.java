@@ -4,8 +4,8 @@ public class XADLHostInstanceEvent extends XADLHostEvent {
 
     private String description;
 
-    public XADLHostInstanceEvent(String archInstanceId, String hostId) {
-        super(archInstanceId, hostId);
+    public XADLHostInstanceEvent(String architectureRuntimeId, String hostId) {
+        super(architectureRuntimeId, hostId);
     }
 
     public XADLHostInstanceEvent(XADLHostInstanceEvent copyFrom) {

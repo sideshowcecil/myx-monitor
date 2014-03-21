@@ -12,10 +12,10 @@ public class XADLLinkEvent extends Event {
 
     // TODO do we need a blueprint id here?
 
-    public XADLLinkEvent(String archInstanceId, String xadlSourceRuntimeId, String xadlSourceInterfaceName,
+    public XADLLinkEvent(String architectureRuntimeId, String xadlSourceRuntimeId, String xadlSourceInterfaceName,
             String xadlSourceInterfaceType, String xadlDestinationRuntimeId,
             String xadlDestinationElementInterfaceName, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
-        super(archInstanceId);
+        super(architectureRuntimeId);
         this.xadlSourceRuntimeId = xadlSourceRuntimeId;
         this.xadlSourceInterfaceName = xadlSourceInterfaceName;
         this.xadlSourceInterfaceType = xadlSourceInterfaceType;

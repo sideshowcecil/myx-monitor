@@ -6,8 +6,8 @@ public class XADLHostPropertyEvent extends XADLHostEvent {
 
     private Properties hostProperties;
 
-    public XADLHostPropertyEvent(String archInstanceId, String hostId) {
-        super(archInstanceId, hostId);
+    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId) {
+        super(architectureRuntimeId, hostId);
         hostProperties = new Properties();
     }
 

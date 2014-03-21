@@ -10,9 +10,9 @@ public abstract class Event {
 
     private String eventSourceId;
 
-    public Event(String archInstanceId) {
+    public Event(String architectureRuntimeId) {
         id = UUID.randomUUID().toString();
-        this.architectureRuntimeId = archInstanceId;
+        this.architectureRuntimeId = architectureRuntimeId;
         timestamp = System.currentTimeMillis();
     }
 

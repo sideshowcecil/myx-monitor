@@ -4,8 +4,8 @@ public abstract class XADLHostEvent extends Event {
 
     private final String hostId;
 
-    public XADLHostEvent(String archInstanceId, String hostId) {
-        super(archInstanceId);
+    public XADLHostEvent(String architectureRuntimeId, String hostId) {
+        super(architectureRuntimeId);
         this.hostId = hostId;
     }
 

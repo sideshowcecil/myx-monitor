@@ -7,8 +7,8 @@ public class XADLRuntimeEvent extends Event {
     
     // TODO do we need a blueprint id here?
 
-    public XADLRuntimeEvent(String archInstanceId, String xadlRuntimeId, XADLRuntimeEventType xadlRuntimeType) {
-        super(archInstanceId);
+    public XADLRuntimeEvent(String architectureRuntimeId, String xadlRuntimeId, XADLRuntimeEventType xadlRuntimeType) {
+        super(architectureRuntimeId);
         this.xadlRuntimeId = xadlRuntimeId;
         this.xadlRuntimeType = xadlRuntimeType;
     }

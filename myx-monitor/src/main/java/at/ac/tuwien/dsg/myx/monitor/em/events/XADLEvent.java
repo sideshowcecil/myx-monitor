@@ -8,8 +8,8 @@ public class XADLEvent extends Event {
 
     private XADLElementType xadlElementType;
 
-    public XADLEvent(String archInstanceId, String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType) {
-        super(archInstanceId);
+    public XADLEvent(String architectureRuntimeId, String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType) {
+        super(architectureRuntimeId);
         this.xadlRuntimeId = xadlRuntimeId;
         this.xadlBlueprintId = xadlElementId;
         this.xadlEventType = xadlEventType;

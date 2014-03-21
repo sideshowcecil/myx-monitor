@@ -41,4 +41,11 @@ public class XADLHostingEvent extends XADLHostEvent {
     public List<String> getHostedSubHostIds() {
         return hostedSubHostIds;
     }
+
+    @Override
+    public String toString() {
+        return "XADLHostingEvent [base=[" + super.toString() + "], hostedComponentIds=" + getHostedComponentIds()
+                + ", hostedConnectorIds=" + getHostedConnectorIds() + ", hostedGroupIds=" + getHostedGroupIds()
+                + ", hostedSubHostIds=" + getHostedSubHostIds() + "]";
+    }
 }

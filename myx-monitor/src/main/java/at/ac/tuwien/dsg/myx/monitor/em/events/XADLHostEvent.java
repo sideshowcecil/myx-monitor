@@ -17,4 +17,9 @@ public abstract class XADLHostEvent extends Event {
     public String getHostId() {
         return hostId;
     }
+
+    @Override
+    public String toString() {
+        return "XADLHostEvent [base=[" + super.toString() + "], hostId=" + getHostId() + "]";
+    }
 }

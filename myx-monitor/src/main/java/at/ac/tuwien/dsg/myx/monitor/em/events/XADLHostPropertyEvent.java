@@ -11,8 +11,8 @@ public class XADLHostPropertyEvent extends XADLHostEvent {
         hostProperties = new Properties();
     }
 
-    public XADLHostPropertyEvent(String archInstanceId, String hostId, Properties hostProperties) {
-        this(archInstanceId, hostId);
+    public XADLHostPropertyEvent(String architectureRuntimeId, String hostId, Properties hostProperties) {
+        this(architectureRuntimeId, hostId);
         this.hostProperties = hostProperties;
     }
 
@@ -27,5 +27,10 @@ public class XADLHostPropertyEvent extends XADLHostEvent {
 
     public void setHostProperties(Properties hostProperties) {
         this.hostProperties = hostProperties;
+    }
+
+    @Override
+    public String toString() {
+        return "XADLHostPropertyEvent [base=[" + super.toString() + "], hostProperties=" + getHostProperties() + "]";
     }
 }

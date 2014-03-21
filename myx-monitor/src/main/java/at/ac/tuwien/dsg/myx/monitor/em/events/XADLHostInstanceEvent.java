@@ -20,4 +20,9 @@ public class XADLHostInstanceEvent extends XADLHostEvent {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "XADLHostInstanceEvent [base=[" + super.toString() + "], description=" + getDescription() + "]";
+    }
+
 }

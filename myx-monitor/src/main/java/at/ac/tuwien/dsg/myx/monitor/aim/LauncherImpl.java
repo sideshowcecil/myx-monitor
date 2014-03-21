@@ -66,8 +66,6 @@ public class LauncherImpl implements Launcher {
     protected IMyxRuntime myx;
     protected ModelRoot modelRoot;
 
-    protected IMyxBrickDescription containerBrickDescription;
-
     protected Map<String, InterfaceType> interfaceTypes;
     protected Map<String, ArchitectureType> types;
     protected Map<String, Signature> signatures;
@@ -75,7 +73,6 @@ public class LauncherImpl implements Launcher {
     public LauncherImpl(IMyxRuntime myx, ModelRoot modelRoot) {
         this.myx = myx;
         this.modelRoot = modelRoot;
-        containerBrickDescription = MyxMonitoringUtils.getContainerBrickDescription();
     }
 
     @Override
@@ -317,6 +314,7 @@ public class LauncherImpl implements Launcher {
     private void instantiate(String name, IArchStructure structure, IMyxName[] path)
             throws ArchitectureInstantiationException {
         IMyxName containerName = MyxMonitoringUtils.createName(name);
+        IMyxBrickDescription containerBrickDescription = MyxMonitoringUtils.getContainerBrickDescription();
 
         try {
             myx.addBrick(path, containerName, containerBrickDescription);
@@ -417,7 +415,7 @@ public class LauncherImpl implements Launcher {
             for (Interface intf : element.getInterfaces()) {
                 Properties intfInitProps = new Properties();
                 intfInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, intf.getType().getBlueprintId());
-                
+
                 IMyxInterfaceDescription intfDesc = new MyxJavaClassInitPropertiesInterfaceDescription(intf
                         .getImplementationMainClassNames().toArray(new String[0]), intfInitProps);
                 IMyxName intfName = MyxMonitoringUtils.createName(intf.getName());

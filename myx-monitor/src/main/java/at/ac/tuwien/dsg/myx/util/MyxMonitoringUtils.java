@@ -10,6 +10,8 @@ import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxContainer;
 import edu.uci.isr.myx.fw.IMyxImplementation;
 import edu.uci.isr.myx.fw.IMyxName;
+import edu.uci.isr.myx.fw.MyxContainer;
+import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
 import edu.uci.isr.myx.fw.MyxUtils;
 
 /**
@@ -24,11 +26,15 @@ public final class MyxMonitoringUtils {
     private static IMyxImplementation currentImplementation;
     private static EventManager currentEventManager = new EventManagerImpl();
 
+    protected static final IMyxBrickDescription CONTAINER_BRICK_DESCRIPTION = new MyxJavaClassBrickDescription(
+            new Properties(), MyxContainer.class.getName());
+
     private MyxMonitoringUtils() {
     }
 
     /**
      * Initialize the current {@link MyxMonitoringImplementation}.
+     * 
      * @param architecturRuntimeId
      * @param eventManager
      */
@@ -38,6 +44,7 @@ public final class MyxMonitoringUtils {
 
     /**
      * Get the current {@link MyxMonitoringImplementation}.
+     * 
      * @return
      */
     public static IMyxImplementation getMonitoringImplementation() {
@@ -49,6 +56,7 @@ public final class MyxMonitoringUtils {
 
     /**
      * Get the current {@link EventManager}.
+     * 
      * @return
      */
     public static EventManager getEventManager() {
@@ -64,7 +72,7 @@ public final class MyxMonitoringUtils {
     }
 
     public static IMyxBrickDescription getContainerBrickDescription() {
-        return MyxUtils.getContainerBrickDescription();
+        return CONTAINER_BRICK_DESCRIPTION;
     }
 
     public static IMyxName getName(IMyxBrick brick) {

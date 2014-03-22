@@ -33,10 +33,8 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
         launcher = (Launcher) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
         modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
 
-        String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty(MyxProperties.STRUCTURE_NAME);
-        if (structureDescription == null) {
-            structureDescription = "main";
-        }
+        String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty(
+                MyxProperties.STRUCTURE_NAME, MyxProperties.DEFAULT_STRUCTURE_NAME);
 
         IArchStructure archStructure = null;
 
@@ -48,7 +46,7 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
                 break;
             }
         }
-        if (archStructures.size() == 0) {
+        if (archStructures.isEmpty()) {
             throw new RuntimeException("Architecture has no structures to instantiate");
         }
         if (archStructure == null) {

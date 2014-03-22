@@ -47,17 +47,16 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
             }
         }
         if (archStructures.isEmpty()) {
-            throw new RuntimeException("Architecture has no structures to instantiate");
+            throw new RuntimeException("Architecture has no structures to instantiate!");
         }
         if (archStructure == null) {
             archStructure = archStructures.get(0);
         }
 
-        // TODO instantiate via launcher
         try {
             launcher.instantiate(ARCHITECTURE_NAME, archStructure);
         } catch (ArchitectureInstantiationException e) {
-            // TODO Auto-generated catch block
+            System.err.println("Architecture could not be instantiated! See error below:");
             e.printStackTrace();
             System.exit(-1);
         }

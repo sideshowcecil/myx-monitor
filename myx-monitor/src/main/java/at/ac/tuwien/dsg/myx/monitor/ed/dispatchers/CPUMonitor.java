@@ -6,7 +6,6 @@ import com.sun.management.OperatingSystemMXBean;
 
 import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 @SuppressWarnings("restriction")
@@ -37,20 +36,11 @@ public class CPUMonitor extends EventDispatcher {
 
             // sleep for some time
             try {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(15 * 1000);
             } catch (InterruptedException e) {
                 return;
             }
         }
-    }
-
-    /**
-     * Initialize a {@link XADLHostPropertyEvent}.
-     * 
-     * @return
-     */
-    private XADLHostPropertyEvent initHostPropertyEvent() {
-        return new XADLHostPropertyEvent(getArchitectureRuntimeId(), getHostId(), XADLEventType.UPDATE);
     }
 
 }

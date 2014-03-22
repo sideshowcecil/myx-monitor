@@ -2,6 +2,8 @@ package at.ac.tuwien.dsg.myx.monitor.ed;
 
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 public abstract class EventDispatcher implements Runnable {
 
@@ -33,6 +35,15 @@ public abstract class EventDispatcher implements Runnable {
             event.setEventSourceId(this.getClass().getName());
             eventManager.handle(event);
         }
+    }
+
+    /**
+     * Initialize a {@link XADLHostPropertyEvent}.
+     * 
+     * @return
+     */
+    protected XADLHostPropertyEvent initHostPropertyEvent() {
+        return new XADLHostPropertyEvent(getArchitectureRuntimeId(), getHostId(), XADLEventType.UPDATE);
     }
 
 }

@@ -1,5 +1,7 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
+import java.util.Properties;
+
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
@@ -25,9 +27,13 @@ public class MyxRuntimeComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        String archRuntimeId = MyxMonitoringUtils.getInitProperties(this).getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID,
+        Properties initProperties = MyxMonitoringUtils.getInitProperties(this);
+        
+        String archRuntimeId = initProperties.getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID,
                 IdGenerator.generateArchitectureRuntimeId());
-        String hostId = IdGenerator.getHostId();
+        String hostId = initProperties.getProperty(MyxProperties.ARCHITECTURE_HOST_ID,
+                IdGenerator.getHostId());
+        
         EventManager eventManager = (EventManager) MyxMonitoringUtils.getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_EVENTMANAGER);
 

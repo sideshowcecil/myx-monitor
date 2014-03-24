@@ -114,6 +114,27 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     }
 
     @Override
+    public void removeBrick(IMyxName[] path, IMyxName brickName) {
+        super.removeBrick(path, brickName);
+
+        String runtimeId = brickName.getName();
+        if (runtime2blueprint.containsKey(runtimeId)) {
+            String blueprintId = runtime2blueprint.get(runtimeId);
+            XADLElementType elementType = runtime2elemntType.get(runtimeId);
+
+            // send event
+            dispatchXADLEvent(runtimeId, blueprintId, XADLEventType.REMOVE, elementType);
+
+            // send the hosting event
+            if (elementType == XADLElementType.COMPONENT) {
+                dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
+            } else {
+                dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+            }
+        }
+    }
+
+    @Override
     public void addInterface(IMyxName[] path, IMyxName brickName, IMyxName interfaceName,
             IMyxInterfaceDescription interfaceDescription, EMyxInterfaceDirection interfaceDirection) {
         super.addInterface(path, brickName, interfaceName, interfaceDescription, interfaceDirection);
@@ -131,24 +152,30 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     }
 
     @Override
+    public void removeInterface(IMyxName[] path, IMyxName brickName, IMyxName interfaceName) {
+        super.removeInterface(path, brickName, interfaceName);
+
+        Tuple<String, String> brickIntf = new Tuple<>();
+        brickIntf.setFst(brickName.getName());
+        brickIntf.setSnd(interfaceName.getName());
+        if (interfaces.containsKey(brickIntf)) {
+            // remove the interface 
+            interfaces.remove(brickIntf);
+        }
+    }
+
+    @Override
     public void addWeld(IMyxWeld weld) {
         super.addWeld(weld);
 
-        String requiredBrickName = weld.getRequiredBrickName().getName(), requiredInterfaceName = weld
-                .getRequiredInterfaceName().getName();
-        String providedBrickName = weld.getProvidedBrickName().getName(), providedInterfaceName = weld
-                .getProvidedInterfaceName().getName();
+        dispatchXADLLinkEvent(weld, XADLEventType.ADD);
+    }
 
-        Tuple<String, String> requiredBrickIntf = new Tuple<>(requiredBrickName, requiredInterfaceName);
-        Tuple<String, String> providedBrickIntf = new Tuple<>(providedBrickName, providedInterfaceName);
+    @Override
+    public void removeWeld(IMyxWeld weld) {
+        super.removeWeld(weld);
 
-        if (interfaces.containsKey(requiredBrickIntf) && interfaces.containsKey(providedBrickIntf)) {
-            String requiredInterfaceType = interfaces.get(requiredBrickIntf), providedInterfaceType = interfaces
-                    .get(providedBrickIntf);
-            // send event
-            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceName, requiredInterfaceType, providedBrickName,
-                    providedInterfaceName, providedInterfaceType, XADLEventType.ADD);
-        }
+        dispatchXADLLinkEvent(weld, XADLEventType.REMOVE);
     }
 
     @Override
@@ -184,6 +211,30 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         XADLEvent e = new XADLEvent(architectureRuntimeId, xadlRuntimeId, xadlElementId, xadlEventType);
         e.setXadlElementType(xadlElementType);
         dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLLinkEvent} of a {@link IMyxWeld}.
+     * 
+     * @param weld
+     * @param xadlEventType
+     */
+    private void dispatchXADLLinkEvent(IMyxWeld weld, XADLEventType xadlEventType) {
+        String requiredBrickName = weld.getRequiredBrickName().getName(), requiredInterfaceName = weld
+                .getRequiredInterfaceName().getName();
+        String providedBrickName = weld.getProvidedBrickName().getName(), providedInterfaceName = weld
+                .getProvidedInterfaceName().getName();
+
+        Tuple<String, String> requiredBrickIntf = new Tuple<>(requiredBrickName, requiredInterfaceName);
+        Tuple<String, String> providedBrickIntf = new Tuple<>(providedBrickName, providedInterfaceName);
+
+        if (interfaces.containsKey(requiredBrickIntf) && interfaces.containsKey(providedBrickIntf)) {
+            String requiredInterfaceType = interfaces.get(requiredBrickIntf), providedInterfaceType = interfaces
+                    .get(providedBrickIntf);
+            // send event
+            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceName, requiredInterfaceType, providedBrickName,
+                    providedInterfaceName, providedInterfaceType, xadlEventType);
+        }
     }
 
     /**

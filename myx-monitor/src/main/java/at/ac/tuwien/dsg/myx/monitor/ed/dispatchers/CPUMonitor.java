@@ -6,6 +6,7 @@ import com.sun.management.OperatingSystemMXBean;
 
 import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 @SuppressWarnings("restriction")
@@ -23,10 +24,10 @@ public class CPUMonitor extends EventDispatcher {
             // create event and set properties
             XADLHostPropertyEvent cpuLoadEvent = initHostPropertyEvent();
             if (osb.getSystemCpuLoad() >= 0) {
-                cpuLoadEvent.getHostProperties().put("system-cpu-load", osb.getSystemCpuLoad()); // TODO extract key
+                cpuLoadEvent.getHostProperties().put(XADLHostProperties.CPU_SYSTEM_LOAD, osb.getSystemCpuLoad());
             }
             if (osb.getProcessCpuLoad() >= 0) {
-                cpuLoadEvent.getHostProperties().put("process-cpu-load", osb.getProcessCpuLoad()); // TODO extract key
+                cpuLoadEvent.getHostProperties().put(XADLHostProperties.CPU_PROCESS_LOAD, osb.getProcessCpuLoad());
             }
 
             // dispatch the event

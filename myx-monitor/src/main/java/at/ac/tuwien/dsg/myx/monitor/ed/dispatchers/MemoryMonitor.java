@@ -5,6 +5,7 @@ import java.lang.management.MemoryMXBean;
 
 import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 public class MemoryMonitor extends EventDispatcher {
@@ -20,17 +21,16 @@ public class MemoryMonitor extends EventDispatcher {
         while (true) {
             // create event and set properties
             XADLHostPropertyEvent memoryEvent = initHostPropertyEvent();
-            memoryEvent.getHostProperties().put("heap-memory-used", mb.getHeapMemoryUsage().getUsed()); // TODO extract key
-            memoryEvent.getHostProperties().put("heap-memory-commited", mb.getHeapMemoryUsage().getCommitted()); // TODO extract key
+            memoryEvent.getHostProperties().put(XADLHostProperties.MEMORY_HEAP_USED, mb.getHeapMemoryUsage().getUsed());
             if (mb.getHeapMemoryUsage().getMax() != -1) {
-                memoryEvent.getHostProperties().put("heap-memory-free",
-                        mb.getHeapMemoryUsage().getMax() - mb.getHeapMemoryUsage().getCommitted()); // TODO extract key
+                memoryEvent.getHostProperties().put(XADLHostProperties.MEMORY_HEAP_FREE,
+                        mb.getHeapMemoryUsage().getMax() - mb.getHeapMemoryUsage().getUsed());
             }
-            memoryEvent.getHostProperties().put("non-heap-memory-used", mb.getNonHeapMemoryUsage().getUsed()); // TODO extract key
-            memoryEvent.getHostProperties().put("non-heap-memory-commited", mb.getNonHeapMemoryUsage().getCommitted()); // TODO extract key
+            memoryEvent.getHostProperties().put(XADLHostProperties.MEMORY_NON_HEAP_USED,
+                    mb.getNonHeapMemoryUsage().getUsed());
             if (mb.getNonHeapMemoryUsage().getMax() != -1) {
-                memoryEvent.getHostProperties().put("non-heap-memory-free",
-                        mb.getNonHeapMemoryUsage().getMax() - mb.getNonHeapMemoryUsage().getCommitted()); // TODO extract key
+                memoryEvent.getHostProperties().put(XADLHostProperties.MEMORY_NON_HEAP_FREE,
+                        mb.getNonHeapMemoryUsage().getMax() - mb.getNonHeapMemoryUsage().getUsed());
             }
 
             // dispatch the event

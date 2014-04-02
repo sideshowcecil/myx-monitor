@@ -34,7 +34,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/edu.uci.isr.myx.fw"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pubsub"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MyxSimpleLunarLander"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

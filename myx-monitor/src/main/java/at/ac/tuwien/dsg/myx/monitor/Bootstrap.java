@@ -24,7 +24,7 @@ import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
 public class Bootstrap {
 
     public static final IMyxName BOOTSTRAP_NAME = MyxMonitoringUtils.createName("bootstrap-comp");
-    public static final IMyxName EVENT_DISPATCHER_NAME = MyxMonitoringUtils.createName("event-dispatcher");
+    public static final IMyxName EVENT_DISPATCHER_NAME = MyxMonitoringUtils.createName("event-dispatcher-comp");
     public static final IMyxName EVENT_MANAGER_NAME = MyxMonitoringUtils.createName("event-manager-comp");
     public static final IMyxName LAUNCHER_NAME = MyxMonitoringUtils.createName("launcher-comp");
     public static final IMyxName MODEL_ROOT_NAME = MyxMonitoringUtils.createName("model-root-comp");

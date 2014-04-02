@@ -8,24 +8,26 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.ISubscriber;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxRuntime;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
-import edu.uci.isr.myx.fw.MyxUtils;
 
-public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick implements ISubscriber<E> {
+public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements ISubscriber<E> {
 
     private static Logger logger = LoggerFactory.getLogger(SubscriberEndpoint.class);
 
-    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
-    public static final IMyxName IN_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
+    public static final IMyxName IN_ISUBSCRIBER = MyxNames.ISUBSCRIBER;
+    public static final IMyxName OUT_IDISPATCHER = MyxNames.IDISPATCHER;
+    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
 
     protected IDispatcher<E> dispatcher;
+    protected IMyxRuntimeAdapter myxAdapter;
 
     protected Endpoint<E> endpoint;
     protected List<Topic> topics = null;
@@ -36,10 +38,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
     private boolean shutdown = false;
 
     @Override
-    public Object getServiceObject(IMyxName arg0) {
-        // if no interfaces are going in, always return null
-        // in this case, we have an interface coming in
-        if (arg0.equals(IN_ISUBSCRIBER)) {
+    public Object getServiceObject(IMyxName interfaceName) {
+        if (interfaceName.equals(IN_ISUBSCRIBER)) {
             return this;
         }
         return null;
@@ -60,9 +60,12 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
                     // if we do not get topics name we assume the endpoint died
                     if (topics != null) {
                         // connect to MessageDistributor
-                        MyxRuntime.getInstance().wireEndpoint(SubscriberEndpoint.this);
+                        myxAdapter.wireSubscriberEndpoint(SubscriberEndpoint.this);
+                        logger.info("Topics received, fully connected");
+                        return;
                     }
                 }
+                myxAdapter.shutdownSubscriberEndpoint(SubscriberEndpoint.this);
             }
         };
     }
@@ -70,12 +73,13 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
     @SuppressWarnings("unchecked")
     @Override
     public void begin() {
-        try {
-            // connect interfaces
-            dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
-        } catch (IllegalArgumentException ex) {
-            System.err.println(ex.getMessage());
-            return;
+        dispatcher = (IDispatcher<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
+        if (dispatcher == null) {
+            throw new RuntimeException("Interface " + OUT_IDISPATCHER + " returned null");
+        }
+        myxAdapter = (IMyxRuntimeAdapter) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
+        if (myxAdapter == null) {
+            throw new RuntimeException("Interface " + OUT_MYX_ADAPTER + " returned null");
         }
         executor.execute(runnable);
     }
@@ -95,7 +99,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
                     endpoint.send(message);
                 } catch (IOException e) {
                     // shutdown the endpoint
-                    MyxRuntime.getInstance().shutdownEndpoint(this);
+                    myxAdapter.shutdownSubscriberEndpoint(this);
                     shutdown = true;
                 }
             }
@@ -109,9 +113,11 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxSimpleBrick imple
      * @return
      */
     private boolean matches(String topic) {
-        for (Topic t : topics) {
-            if (t.matches(topic)) {
-                return true;
+        if (topics != null) {
+            for (Topic t : topics) {
+                if (t.matches(topic)) {
+                    return true;
+                }
             }
         }
         return false;

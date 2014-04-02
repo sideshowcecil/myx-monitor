@@ -8,28 +8,30 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
-import edu.uci.isr.myx.fw.MyxUtils;
 
-public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements IDispatcher<E> {
+public abstract class Dispatcher<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements IDispatcher<E> {
 
     private static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
-    public static final IMyxName IN_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
+    public static final IMyxName IN_IDISPATCHER = MyxNames.IDISPATCHER;
+    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
 
     private ExecutorService executor;
     private Runnable runnable;
 
+    protected IMyxRuntimeAdapter myxAdapter;
+
     private Queue<Endpoint<E>> queue = new ConcurrentLinkedQueue<>();
 
     @Override
-    public Object getServiceObject(IMyxName arg0) {
-        // if no interfaces are going in, always return null
-        // in this case, we have an interface coming in
-        if (arg0.equals(IN_IDISPATCHER)) {
+    public Object getServiceObject(IMyxName interfaceName) {
+        if (interfaceName.equals(IN_IDISPATCHER)) {
             return this;
         }
         return null;
@@ -57,6 +59,10 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     @Override
     public void begin() {
+        myxAdapter = (IMyxRuntimeAdapter) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
+        if (myxAdapter == null) {
+            throw new RuntimeException("Interface " + OUT_MYX_ADAPTER + " returned null");
+        }
         executor.execute(runnable);
     }
 

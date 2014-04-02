@@ -7,23 +7,26 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.ISubscriber;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.AbstractMyxSimpleBrick;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxRuntime;
+import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
 import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxUtils;
 
-public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
+public abstract class PublisherEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick {
 
     private static Logger logger = LoggerFactory.getLogger(PublisherEndpoint.class);
 
     public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
     public static final IMyxName OUT_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
+    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
 
     protected IDispatcher<E> dispatcher;
     protected ISubscriber<E> subscriber;
+    protected IMyxRuntimeAdapter myxAdapter;
 
     protected Endpoint<E> endpoint;
 
@@ -31,7 +34,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
     private Runnable runnable;
 
     @Override
-    public Object getServiceObject(@SuppressWarnings("unused") IMyxName arg0) {
+    public Object getServiceObject(@SuppressWarnings("unused") IMyxName interfaceName) {
         return null;
     }
 
@@ -44,7 +47,7 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                 logger.info("Getting endpoint from dispatcher");
                 endpoint = dispatcher.getNextEndpoint();
                 if (endpoint != null) {
-                    logger.debug("Waiting for messages");
+                    logger.info("Waiting for messages");
                     try {
                         while (true) {
                             // wait for a message and send it to the subscriber
@@ -53,10 +56,10 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
                     } catch (IOException e) {
 
                     }
-                    logger.debug("All messages received");
+                    logger.info("All messages received");
                     endpoint.close();
                 }
-                MyxRuntime.getInstance().shutdownEndpoint(PublisherEndpoint.this);
+                myxAdapter.shutdownPublisherEndpoint(PublisherEndpoint.this);
             }
         };
     }
@@ -64,13 +67,17 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxSimpleBrick {
     @SuppressWarnings("unchecked")
     @Override
     public void begin() {
-        try {
-            // connect interfaces
-            dispatcher = (IDispatcher<E>) getFirstRequiredServiceObject(OUT_IDISPATCHER);
-            subscriber = (ISubscriber<E>) getFirstRequiredServiceObject(OUT_ISUBSCRIBER);
-        } catch (IllegalArgumentException ex) {
-            System.err.println(ex.getMessage());
-            return;
+        dispatcher = (IDispatcher<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
+        if (dispatcher == null) {
+            throw new RuntimeException("Interface " + OUT_IDISPATCHER + " returned null");
+        }
+        subscriber = (ISubscriber<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
+        if (subscriber == null) {
+            throw new RuntimeException("Interface " + OUT_ISUBSCRIBER + " returned null");
+        }
+        myxAdapter = (IMyxRuntimeAdapter) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
+        if (myxAdapter == null) {
+            throw new RuntimeException("Interface " + OUT_MYX_ADAPTER + " returned null");
         }
         executor.execute(runnable);
     }

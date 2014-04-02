@@ -1,12 +1,10 @@
 package at.ac.tuwien.dsg.pubsub.middleware.arch.component;
 
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxRuntime;
-
 public abstract class PublisherDispatcher<E> extends Dispatcher<E> {
 
     @Override
     public void createEndpoint() {
-        MyxRuntime.getInstance().createPublisherEndpoint(getPublisherEndpointClass(), this);
+        myxAdapter.createPublisherEndpoint(getPublisherEndpointClass(), this);
     }
 
     /**

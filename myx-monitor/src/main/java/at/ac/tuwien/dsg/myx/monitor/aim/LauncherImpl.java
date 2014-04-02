@@ -393,7 +393,8 @@ public class LauncherImpl implements Launcher {
                 myx.addContainerInterface(path, brickName, outerIntfName, intfDesc, outerIntf.getDirection(),
                         innerBrickName, innerIntfName);
             }
-        } else {
+        } else if (element.hasImplementation()) {
+            // we can only instantiate the element if it has an implementation
             // add the brick
             Properties initProps = element.getImplemenationInitProperties();
             initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID, element.getBlueprintId());
@@ -713,8 +714,11 @@ public class LauncherImpl implements Launcher {
      */
     private void begin(List<InstantiationElement> bricks, IMyxName[] path) {
         for (InstantiationElement brick : bricks) {
-            IMyxName brickName = MyxMonitoringUtils.createName(brick.getRuntimeId());
-            myx.begin(path, brickName);
+            // we can only instantiate the element if it has an implementation
+            if (brick.hasImplementation()) {
+                IMyxName brickName = MyxMonitoringUtils.createName(brick.getRuntimeId());
+                myx.begin(path, brickName);
+            }
         }
     }
 

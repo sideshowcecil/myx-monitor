@@ -99,6 +99,15 @@ public class InstantiationElement extends ArchitectureElement {
     }
 
     /**
+     * Return if the object contains an implementation.
+     * 
+     * @return
+     */
+    public boolean hasImplementation() {
+        return getImplementationMainClassName() != null;
+    }
+
+    /**
      * Return the subarchitecture of the object.
      * 
      * @return

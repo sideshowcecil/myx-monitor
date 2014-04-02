@@ -35,6 +35,9 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
     private static final String PUBLISHER_ENDPOINT_BLUEPRINT_ID = "connectorffa83f01-fa73cff6-1ec5f067-25c300d0";
     private static final String SUBSCRIBER_ENDPOINT_BLUEPRINT_ID = "connectorffa83f01-fa731b1e-0ca1cde8-25c3008b";
 
+    private static final String PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE = "interfaceTypeee82474e-1d76-4603-a5ba-fadbcf8b0acb";
+    private static final String SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE = "interfaceType0bcf68ee-6bf6-488c-af3f-105447849d8e";
+
     private static final String DISPATCHER_INTERFACE_TYPE = "interfaceTypefff20c0e-f5675386-d56cf5c7-a26e073b";
     private static final String SUBSCRIBER_INTERFACE_TYPE = "interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d";
     private static final String MYX_ADAPTER_INTERFACE_TYPE = "interfaceTypefff20c0e-f569edef-56edff1d-a26e0908";
@@ -143,6 +146,11 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, MYX_ADAPTER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);
+        // external interface description
+        Properties virtualExternalInterfaceInitProps = new Properties();
+        virtualExternalInterfaceInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE);
+        MyxJavaClassInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+                new String[0], virtualExternalInterfaceInitProps);
 
         // create name
         IMyxName publisherEndpoint = MyxMonitoringUtils.createName(IdGenerator
@@ -167,6 +175,10 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         getMyxRuntime().addInterface(PATH, publisherEndpoint, MyxNames.IMYX_ADAPTER, myxAdapterDesc,
                 EMyxInterfaceDirection.OUT);
         component2Interfaces.get(publisherEndpoint).add(MyxNames.IMYX_ADAPTER);
+        // external interface
+        getMyxRuntime().addInterface(PATH, publisherEndpoint, MyxNames.VIRTUAL_PUBLISHER_ENDPOINT, virtualExternalInterfaceDesc,
+                EMyxInterfaceDirection.IN);
+        component2Interfaces.get(publisherEndpoint).add(MyxNames.VIRTUAL_PUBLISHER_ENDPOINT);
 
         // init
         getMyxRuntime().init(PATH, publisherEndpoint);
@@ -228,6 +240,11 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, MYX_ADAPTER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);
+        // external interface description
+        Properties virtualExternalInterfaceInitProps = new Properties();
+        virtualExternalInterfaceInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE);
+        MyxJavaClassInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+                new String[0], virtualExternalInterfaceInitProps);
 
         // create name
         IMyxName subscriberEndpoint = MyxMonitoringUtils.createName(IdGenerator
@@ -252,6 +269,10 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         getMyxRuntime().addInterface(PATH, subscriberEndpoint, MyxNames.IMYX_ADAPTER, myxAdapterDesc,
                 EMyxInterfaceDirection.OUT);
         component2Interfaces.get(subscriberEndpoint).add(MyxNames.IMYX_ADAPTER);
+        // external interface
+        getMyxRuntime().addInterface(PATH, subscriberEndpoint, MyxNames.VIRTUAL_SUBSCRIBER_ENDPOINT, virtualExternalInterfaceDesc,
+                EMyxInterfaceDirection.OUT);
+        component2Interfaces.get(subscriberEndpoint).add(MyxNames.VIRTUAL_SUBSCRIBER_ENDPOINT);
 
         // init
         getMyxRuntime().init(PATH, subscriberEndpoint);

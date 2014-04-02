@@ -11,4 +11,6 @@ public interface MyxNames {
     public static IMyxName IDISPATCHER = MyxMonitoringUtils.createName(IDispatcher.class.getName());
     public static IMyxName IMYX_ADAPTER = MyxMonitoringUtils.createName(IMyxRuntimeAdapter.class.getName());
     public static IMyxName ISUBSCRIBER = MyxMonitoringUtils.createName(ISubscriber.class.getName());
+    public static IMyxName VIRTUAL_PUBLISHER_ENDPOINT = MyxMonitoringUtils.createName("VirtualExternalPublisherEndpoint");
+    public static IMyxName VIRTUAL_SUBSCRIBER_ENDPOINT = MyxMonitoringUtils.createName("VirtualExterbakSubscriberEndpoint");
 }

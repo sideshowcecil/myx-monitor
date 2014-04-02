@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component.socket;
+package at.ac.tuwien.dsg.pubsub.middleware.comp.socket;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.SubscriberEndpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of {@link SubscriberEndpoint} based on the

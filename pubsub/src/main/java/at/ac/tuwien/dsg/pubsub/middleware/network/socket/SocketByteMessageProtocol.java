@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.network.socket;
+package at.ac.tuwien.dsg.pubsub.middleware.network.socket;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
 
 /**
  * Base64 byte protocol specification and the implementation of the

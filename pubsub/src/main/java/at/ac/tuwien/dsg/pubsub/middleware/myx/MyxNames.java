@@ -1,9 +1,9 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.myx;
+package at.ac.tuwien.dsg.pubsub.middleware.myx;
 
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.ISubscriber;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public interface MyxNames {

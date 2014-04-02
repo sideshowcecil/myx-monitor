@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component;
+package at.ac.tuwien.dsg.pubsub.middleware.comp;
 
 public abstract class PublisherDispatcher<E> extends Dispatcher<E> {
 

@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component;
+package at.ac.tuwien.dsg.pubsub.middleware.comp;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.ISubscriber;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements ISubscriber<E> {

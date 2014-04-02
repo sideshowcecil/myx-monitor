@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component;
+package at.ac.tuwien.dsg.pubsub.middleware.comp;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class Dispatcher<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements IDispatcher<E> {

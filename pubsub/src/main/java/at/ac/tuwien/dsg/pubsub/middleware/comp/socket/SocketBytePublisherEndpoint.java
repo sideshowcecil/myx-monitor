@@ -1,6 +1,6 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component.socket;
+package at.ac.tuwien.dsg.pubsub.middleware.comp.socket;
 
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.PublisherEndpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.PublisherEndpoint;
 
 /**
  * Implementation of {@link PublisherEndpoint} based on the

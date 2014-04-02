@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.myx;
+package at.ac.tuwien.dsg.pubsub.middleware.myx;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

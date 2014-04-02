@@ -12,7 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
 
 /**
  * Test class to show how the publisher can be created (real Publisher

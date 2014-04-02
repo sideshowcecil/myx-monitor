@@ -13,7 +13,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
 
 /**
  * Test class to show how the subscriber can be created (real Subscriber

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <instance:xArch xmlns:instance="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd" xmlns:changes="http://www.ics.uci.edu/pub/arch/xArch/changes.xsd" xmlns:hints3="http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd" xmlns:implementation="http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd" xmlns:implementationext="http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd" xmlns:javaimplementation="http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd" xmlns:lookupimplementation="http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd" xmlns:types="http://www.ics.uci.edu/pub/arch/xArch/types.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ics.uci.edu/pub/arch/xArch/variants.xsd http://www.isr.uci.edu/projects/xarchuci/ext/variants.xsd http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/lookupimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd http://www.ics.uci.edu/~zhengy/schema/Implementationext.xsd http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/javaimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/implementation.xsd http://www.ics.uci.edu/pub/arch/xArch/changes.xsd http://www.ics.uci.edu/~zhengy/schema/changes.xsd http://www.ics.uci.edu/pub/arch/xArch/interactions.xsd http://www.ics.uci.edu/~zhengy/schema/interactions.xsd http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd http://www.isr.uci.edu/projects/xarchuci/ext/hints3.xsd http://www.ics.uci.edu/pub/arch/xArch/instance.xsd http://www.isr.uci.edu/projects/xarchuci/core/instance.xsd http://www.ics.uci.edu/pub/arch/xArch/statecharts.xsd http://www.ics.uci.edu/~zhengy/schema/statecharts.xsd http://www.ics.uci.edu/pub/arch/xArch/activitydiagrams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/activitydiagrams.xsd http://www.ics.uci.edu/pub/arch/xArch/types.xsd http://www.isr.uci.edu/projects/xarchuci/ext/types.xsd http://www.ics.uci.edu/pub/arch/xArch/changesets.xsd http://www.isr.uci.edu/projects/xarchuci/ext/changesets.xsd">
     <types:archTypes xsi:type="types:ArchTypes">
-        <types:connectorType xsi:type="implementation:VariantConnectorTypeImpl" types:id="connectorTypefff20c0e-f566a314-b5ba41f3-a26e06c9">
+        <types:connectorType types:id="connectorTypefff20c0e-f566a314-b5ba41f3-a26e06c9" xsi:type="implementation:VariantConnectorTypeImpl">
             <types:description xsi:type="instance:Description">MessageDistributor</types:description>
             <types:signature types:id="signature35725973-afa6-4d99-a0d6-fcfb49be9ecc" xsi:type="implementation:SignatureImpl">
                 <types:description xsi:type="instance:Description">in</types:description>
@@ -21,7 +21,7 @@
             </types:signature>
             <implementation:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MessageDistributor</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.myx.MessageDistributor</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementation:implementation>
             
@@ -60,7 +60,7 @@
             <types:description xsi:type="instance:Description">Dispatcher</types:description>
             <implementation:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IDispatcher</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementation:implementation>
         </types:interfaceType>
@@ -68,7 +68,7 @@
             <types:description xsi:type="instance:Description">PubSubMyxRuntimeAdapter</types:description>
             <implementation:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementation:implementation>
         </types:interfaceType>
@@ -82,7 +82,7 @@
             <types:description xsi:type="instance:Description">Subscriber</types:description>
             <implementation:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.ISubscriber</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementation:implementation>
         </types:interfaceType>
@@ -109,13 +109,13 @@
             <types:interface types:id="interfaceffa83f01-fa78dd8e-bbcf68be-25c30168" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">OUT PubSubMyxRuntimeAdapter</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:interface>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.component.socket.SocketBytePublisherDispatcher</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.comp.socket.SocketBytePublisherDispatcher</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementationext:implementation>
             
@@ -135,13 +135,13 @@
             <types:interface types:id="interfaceffa83f01-fa7911c0-906a82e1-25c3018a" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">OUT PubSubMyxRuntimeAdapter</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:interface>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.component.socket.SocketByteSubscriberDispatcher</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.comp.socket.SocketByteSubscriberDispatcher</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementationext:implementation>
             
@@ -160,7 +160,7 @@
             </types:interface>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.arch.component.MyxRuntimeAdapter</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.comp.MyxRuntimeAdapter</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementationext:implementation>
             
@@ -171,16 +171,16 @@
             <types:interface types:id="interfaceffa80065-dd5737ca-6729f283-18f708cd" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signature35725973-afa6-4d99-a0d6-fcfb49be9ecc" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signature35725973-afa6-4d99-a0d6-fcfb49be9ecc" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:interface>
             <types:interface types:id="interfaceffa80065-dd57417a-a9d24f11-18f708d3" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signature6a9ef065-fbc0-4719-9e00-e511da779d8d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signature6a9ef065-fbc0-4719-9e00-e511da779d8d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:interface>
@@ -1516,7 +1516,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa83d01-fa7811c0-916a82e1-25c3018a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa83d01-fa7811c0-916a82e1-25c3018a" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="11150,10275" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>

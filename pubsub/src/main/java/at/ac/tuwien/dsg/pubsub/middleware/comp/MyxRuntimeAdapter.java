@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component;
+package at.ac.tuwien.dsg.pubsub.middleware.comp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,9 @@ import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces.IMyxRuntimeAdapter;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MessageDistributor;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MessageDistributor;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxWeld;

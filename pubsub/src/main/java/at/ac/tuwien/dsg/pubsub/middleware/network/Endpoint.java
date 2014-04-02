@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.network;
+package at.ac.tuwien.dsg.pubsub.middleware.network;
 
 import java.io.IOException;
 

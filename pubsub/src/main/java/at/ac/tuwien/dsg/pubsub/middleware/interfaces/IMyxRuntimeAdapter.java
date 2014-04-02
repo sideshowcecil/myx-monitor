@@ -1,8 +1,8 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.interfaces;
+package at.ac.tuwien.dsg.pubsub.middleware.interfaces;
 
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.Dispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.PublisherEndpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.SubscriberEndpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.Dispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.PublisherEndpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
 
 public interface IMyxRuntimeAdapter {
     /**

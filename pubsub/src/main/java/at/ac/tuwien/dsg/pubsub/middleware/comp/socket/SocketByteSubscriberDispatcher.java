@@ -1,13 +1,13 @@
-package at.ac.tuwien.dsg.pubsub.middleware.arch.component.socket;
+package at.ac.tuwien.dsg.pubsub.middleware.comp.socket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.component.SubscriberDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.Endpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.arch.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberDispatcher;
+import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of SubscriberListener based on the SocketByteMessageProtocol.

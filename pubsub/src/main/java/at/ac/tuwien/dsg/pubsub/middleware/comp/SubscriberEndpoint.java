@@ -8,23 +8,25 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
-import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements ISubscriber<E> {
+public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSimpleBrick implements ISubscriber<E> {
 
     private static Logger logger = LoggerFactory.getLogger(SubscriberEndpoint.class);
 
-    public static final IMyxName IN_ISUBSCRIBER = MyxNames.ISUBSCRIBER;
-    public static final IMyxName OUT_IDISPATCHER = MyxNames.IDISPATCHER;
-    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
+    public static final IMyxName IN_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
+    public static final IMyxName OUT_IDISPATCHER = MyxInterfaceNames.IDISPATCHER;
+    public static final IMyxName OUT_MYX_ADAPTER = MyxInterfaceNames.IMYX_ADAPTER;
 
     protected IDispatcher<E> dispatcher;
     protected IMyxRuntimeAdapter myxAdapter;
@@ -35,6 +37,7 @@ public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractM
     private ExecutorService executor;
     private Runnable runnable;
 
+    private String connectionIdentifier = null;
     private boolean shutdown = false;
 
     @Override
@@ -54,6 +57,13 @@ public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractM
                 logger.info("Getting endpoint from dispatcher");
                 endpoint = dispatcher.getNextEndpoint();
                 if (endpoint != null) {
+                    // send event that the virtual external interface was
+                    // connected
+                    connectionIdentifier = getExternalConnectionIdentifier();
+                    dispatchExternalLinkConnectedEvent(
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
                     // wait for the topic name
                     logger.info("Waiting for topics");
                     topics = getTopics();
@@ -66,6 +76,14 @@ public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractM
                     }
                 }
                 myxAdapter.shutdownSubscriberEndpoint(SubscriberEndpoint.this);
+                if (connectionIdentifier != null) {
+                    // send event that the virtual external interface was
+                    // disconnected
+                    dispatchExternalLinkDisconnectedEvent(
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
+                }
             }
         };
     }
@@ -98,9 +116,17 @@ public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractM
                 try {
                     endpoint.send(message);
                 } catch (IOException e) {
-                    // shutdown the endpoint
+                    endpoint.close();
                     myxAdapter.shutdownSubscriberEndpoint(this);
                     shutdown = true;
+                    if (connectionIdentifier != null) {
+                        // send event that the virtual external interface was
+                        // disconnected
+                        dispatchExternalLinkDisconnectedEvent(
+                                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                                connectionIdentifier);
+                    }
                 }
             }
         }
@@ -129,5 +155,12 @@ public abstract class SubscriberEndpoint<E> extends edu.uci.isr.myx.fw.AbstractM
      * @return
      */
     public abstract List<Topic> getTopics();
+
+    /**
+     * Get the external connection id of the connected {@link Endpoint}.
+     * 
+     * @return
+     */
+    protected abstract String getExternalConnectionIdentifier();
 
 }

@@ -7,22 +7,23 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
-import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
-import edu.uci.isr.myx.fw.MyxUtils;
 
-public abstract class PublisherEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick {
+public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSimpleBrick {
 
     private static Logger logger = LoggerFactory.getLogger(PublisherEndpoint.class);
 
-    public static final IMyxName OUT_IDISPATCHER = MyxUtils.createName(IDispatcher.class.getName());
-    public static final IMyxName OUT_ISUBSCRIBER = MyxUtils.createName(ISubscriber.class.getName());
-    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
+    public static final IMyxName OUT_IDISPATCHER = MyxInterfaceNames.IDISPATCHER;
+    public static final IMyxName OUT_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
+    public static final IMyxName OUT_MYX_ADAPTER = MyxInterfaceNames.IMYX_ADAPTER;
 
     protected IDispatcher<E> dispatcher;
     protected ISubscriber<E> subscriber;
@@ -47,6 +48,13 @@ public abstract class PublisherEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMy
                 logger.info("Getting endpoint from dispatcher");
                 endpoint = dispatcher.getNextEndpoint();
                 if (endpoint != null) {
+                    // send event that the virtual external interface was
+                    // connected
+                    String connectionIdentifier = getExternalConnectionIdentifier();
+                    dispatchExternalLinkConnectedEvent(
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
                     logger.info("Waiting for messages");
                     try {
                         while (true) {
@@ -57,6 +65,12 @@ public abstract class PublisherEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMy
 
                     }
                     logger.info("All messages received");
+                    // send event that the virtual external interface was
+                    // disconnected
+                    dispatchExternalLinkDisconnectedEvent(
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
                     endpoint.close();
                 }
                 myxAdapter.shutdownPublisherEndpoint(PublisherEndpoint.this);
@@ -86,4 +100,11 @@ public abstract class PublisherEndpoint<E> extends edu.uci.isr.myx.fw.AbstractMy
     public void end() {
         executor.shutdownNow();
     }
+
+    /**
+     * Get the external connection id of the connected {@link Endpoint}.
+     * 
+     * @return
+     */
+    protected abstract String getExternalConnectionIdentifier();
 }

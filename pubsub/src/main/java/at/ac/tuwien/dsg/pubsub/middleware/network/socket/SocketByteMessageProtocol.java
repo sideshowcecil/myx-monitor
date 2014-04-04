@@ -112,4 +112,13 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
         }
     }
 
+    /**
+     * Get the used {@link Socket} object.
+     * 
+     * @return
+     */
+    public Socket getSocket() {
+        return socket;
+    }
+
 }

@@ -1,9 +1,11 @@
 package at.ac.tuwien.dsg.pubsub.middleware.comp.socket;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
@@ -32,6 +34,17 @@ public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
                 return topics;
             }
         } catch (IOException | IllegalArgumentException e) {
+        }
+        return null;
+    }
+
+    @Override
+    protected String getExternalConnectionIdentifier() {
+        if (endpoint instanceof SocketByteMessageProtocol) {
+            Socket s = ((SocketByteMessageProtocol) endpoint).getSocket();
+            // from,to
+            return IdGenerator.generateConnectionIdentifier(s.getLocalAddress().getHostAddress() + ":"
+                    + s.getLocalPort() + "," + s.getInetAddress().getHostAddress() + ":" + s.getPort());
         }
         return null;
     }

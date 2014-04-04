@@ -11,16 +11,17 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
-import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxNames;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public abstract class Dispatcher<E> extends edu.uci.isr.myx.fw.AbstractMyxSimpleBrick implements IDispatcher<E> {
+public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements IDispatcher<E> {
 
     private static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
-    public static final IMyxName IN_IDISPATCHER = MyxNames.IDISPATCHER;
-    public static final IMyxName OUT_MYX_ADAPTER = MyxNames.IMYX_ADAPTER;
+    public static final IMyxName IN_IDISPATCHER = MyxInterfaceNames.IDISPATCHER;
+    public static final IMyxName OUT_MYX_ADAPTER = MyxInterfaceNames.IMYX_ADAPTER;
 
     private ExecutorService executor;
     private Runnable runnable;

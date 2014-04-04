@@ -30,6 +30,7 @@ import edu.uci.isr.myx.fw.MyxBasicRuntime;
 import edu.uci.isr.myx.fw.MyxBrickCreationException;
 import edu.uci.isr.myx.fw.MyxBrickLoadException;
 import edu.uci.isr.myx.fw.MyxInvalidPathException;
+import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
 
 public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
@@ -89,6 +90,23 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     @Override
     public void addBrick(IMyxName[] path, IMyxName brickName, IMyxBrickDescription brickDescription)
             throws MyxBrickLoadException, MyxBrickCreationException {
+        // TODO should we assign the architectureRuntimeId just to the EventManager, thus it could be injected to each event (the base event has to be changed to make this possible)
+        // changes have to be integrated here and in the virtual external simple brick
+        if (brickDescription instanceof MyxJavaClassBrickDescription) {
+            try {
+                Class<?> brickClass = Class.forName(((MyxJavaClassBrickDescription) brickDescription)
+                        .getMainBrickClassName());
+                if (AbstractVirtualExternalMyxSimpleBrick.class.isAssignableFrom(brickClass)) {
+                    // here we have to inject the architectureRuntimeId
+                    if (brickDescription.getInitParams() != null) {
+                        brickDescription.getInitParams().put(MyxProperties.ARCHITECTURE_RUNTIME_ID,
+                                architectureRuntimeId);
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+            }
+        }
+
         super.addBrick(path, brickName, brickDescription);
 
         Properties initProperties = brickDescription.getInitParams();
@@ -159,7 +177,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         brickIntf.setFst(brickName.getName());
         brickIntf.setSnd(interfaceName.getName());
         if (interfaces.containsKey(brickIntf)) {
-            // remove the interface 
+            // remove the interface
             interfaces.remove(brickIntf);
         }
     }

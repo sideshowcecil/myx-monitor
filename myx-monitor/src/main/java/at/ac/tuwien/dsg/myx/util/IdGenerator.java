@@ -97,4 +97,15 @@ public final class IdGenerator {
         // the id could not be obtained
         return null;
     }
+
+    /**
+     * Generate an id from the given connection identifier. This method should
+     * be used to shorten long connection identifieres.
+     * 
+     * @param fullConnectionIdentifier
+     * @return
+     */
+    public static String generateConnectionIdentifier(String fullConnectionIdentifier) {
+        return UUID.nameUUIDFromBytes(fullConnectionIdentifier.getBytes()).toString();
+    }
 }

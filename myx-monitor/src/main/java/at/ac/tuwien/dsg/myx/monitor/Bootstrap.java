@@ -40,7 +40,7 @@ public class Bootstrap {
     private static Properties[] parseArgs(String[] args) {
         String xadlFile = null;
         String structureName = null;
-        String architectureInstanceId = null;
+        String architectureRuntimeId = null;
         List<String> eventDispatcherClasses = new ArrayList<>();
 
         for (int i = 0; i < args.length; i++) {
@@ -50,10 +50,10 @@ public class Bootstrap {
                 }
                 structureName = args[i];
             } else if (args[i].equals("--id")) {
-                if (++i == args.length || architectureInstanceId != null) {
+                if (++i == args.length || architectureRuntimeId != null) {
                     usage();
                 }
-                architectureInstanceId = args[i];
+                architectureRuntimeId = args[i];
             } else if (args[i].equals("--event-dispatcher")) {
                 if (++i == args.length) {
                     usage();
@@ -70,8 +70,8 @@ public class Bootstrap {
             usage();
         }
 
-        if (architectureInstanceId == null) {
-            architectureInstanceId = IdGenerator.generateArchitectureRuntimeId();
+        if (architectureRuntimeId == null) {
+            architectureRuntimeId = IdGenerator.generateArchitectureRuntimeId();
         }
 
         Properties[] p = new Properties[4];
@@ -85,11 +85,11 @@ public class Bootstrap {
         }
 
         p[2] = new Properties();
-        p[2].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureInstanceId);
+        p[2].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
         p[2].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
 
         p[3] = new Properties();
-        p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureInstanceId);
+        p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
         p[3].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
         p[3].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[0]));
 
@@ -99,12 +99,13 @@ public class Bootstrap {
     private static void usage() {
         System.err.println("Usage:");
         System.err.println("  java " + Bootstrap.class.getName()
-                + " file [-s structureName] [--id architectureInstanceId]");
+                + " file [-s structureName] [--id architectureRuntimeId] [--event-dispatcher className]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
         System.err.println("    structureName: the name of the structure to bootstrap");
-        System.err.println("    architectureInstanceId: the architecture instance id");
+        System.err.println("    architectureInstanceId: the architecture runtime id");
+        System.err.println("    className: the event dispatcher class name that should be instantiated");
         System.err.println();
         System.exit(-2);
     }

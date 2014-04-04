@@ -2,12 +2,12 @@ package at.ac.tuwien.dsg.myx.monitor.em.events;
 
 public abstract class XADLHostEvent extends Event {
 
-    private final String hostId;
     private final XADLEventType xadlEventType;
+    
+    private String hostId;
 
-    public XADLHostEvent(String architectureRuntimeId, String hostId, XADLEventType xadlEventType) {
-        super(architectureRuntimeId);
-        this.hostId = hostId;
+    public XADLHostEvent(XADLEventType xadlEventType) {
+        super();
         this.xadlEventType = xadlEventType;
     }
 
@@ -19,6 +19,10 @@ public abstract class XADLHostEvent extends Event {
 
     public String getHostId() {
         return hostId;
+    }
+    
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
     }
 
     public XADLEventType getXadlEventType() {

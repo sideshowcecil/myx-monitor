@@ -10,8 +10,8 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 public class MemoryMonitor extends EventDispatcher {
 
-    public MemoryMonitor(String architectureRuntimeId, String hostId, EventManager eventManager) {
-        super(architectureRuntimeId, hostId, eventManager);
+    public MemoryMonitor(EventManager eventManager) {
+        super(eventManager);
     }
 
     @Override

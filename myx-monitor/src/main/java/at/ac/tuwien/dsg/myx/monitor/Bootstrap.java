@@ -89,8 +89,6 @@ public class Bootstrap {
         p[2].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
 
         p[3] = new Properties();
-        p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
-        p[3].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
         p[3].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[0]));
 
         return p;
@@ -114,7 +112,7 @@ public class Bootstrap {
         myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
     }
 
-    public void doBootstrap(Properties modelRootProps, Properties bootstrapProps, Properties myxProps,
+    public void doBootstrap(Properties modelRootProps, Properties bootstrapProps, Properties eventManagerProps,
             Properties eventDispatcherProps) {
         try {
             // ModelRoot
@@ -130,7 +128,7 @@ public class Bootstrap {
             myx.init(null, MODEL_ROOT_NAME);
 
             // EventManager
-            MyxJavaClassBrickDescription eventManagerDesc = new MyxJavaClassBrickDescription(null,
+            MyxJavaClassBrickDescription eventManagerDesc = new MyxJavaClassBrickDescription(eventManagerProps,
                     EventManagerComponent.class.getName());
             MyxJavaClassInterfaceDescription eventManagerIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { EventManager.class.getName() });
@@ -142,7 +140,7 @@ public class Bootstrap {
             myx.init(null, EVENT_MANAGER_NAME);
 
             // MyxRuntime
-            MyxJavaClassBrickDescription myxRuntimeDesc = new MyxJavaClassBrickDescription(myxProps,
+            MyxJavaClassBrickDescription myxRuntimeDesc = new MyxJavaClassBrickDescription(null,
                     MyxRuntimeComponent.class.getName());
             MyxJavaClassInterfaceDescription myxIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { IMyxRuntime.class.getName() });

@@ -10,9 +10,9 @@ public class XADLExternalLinkEvent extends Event {
 
     // TODO do we need a blueprint id here?
 
-    public XADLExternalLinkEvent(String architectureRuntimeId, String xadlRuntimeId, String xadlInterfaceName,
+    public XADLExternalLinkEvent(String xadlRuntimeId, String xadlInterfaceName,
             String xadlInterfaceType, String xadlExternalConnectionIdentifier, XADLEventType xadlEventType) {
-        super(architectureRuntimeId);
+        super();
         this.xadlRuntimeId = xadlRuntimeId;
         this.xadlInterfaceName = xadlInterfaceName;
         this.xadlInterfaceType = xadlInterfaceType;

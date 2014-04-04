@@ -7,22 +7,10 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 public abstract class EventDispatcher implements Runnable {
 
-    private final String architectureRuntimeId;
-    private final String hostId;
     private final EventManager eventManager;
 
-    public EventDispatcher(String architectureRuntimeId, String hostId, EventManager eventManager) {
-        this.architectureRuntimeId = architectureRuntimeId;
-        this.hostId = hostId;
+    public EventDispatcher(EventManager eventManager) {
         this.eventManager = eventManager;
-    }
-
-    protected String getArchitectureRuntimeId() {
-        return architectureRuntimeId;
-    }
-
-    protected String getHostId() {
-        return hostId;
     }
 
     /**
@@ -43,7 +31,7 @@ public abstract class EventDispatcher implements Runnable {
      * @return
      */
     protected XADLHostPropertyEvent initHostPropertyEvent() {
-        return new XADLHostPropertyEvent(getArchitectureRuntimeId(), getHostId(), XADLEventType.UPDATE);
+        return new XADLHostPropertyEvent(XADLEventType.UPDATE);
     }
 
 }

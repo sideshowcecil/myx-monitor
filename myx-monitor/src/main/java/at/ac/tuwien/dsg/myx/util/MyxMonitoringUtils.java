@@ -24,7 +24,7 @@ import edu.uci.isr.myx.fw.MyxUtils;
 public final class MyxMonitoringUtils {
 
     private static IMyxImplementation currentImplementation;
-    private static EventManager currentEventManager = new EventManagerImpl();
+    private static EventManager currentEventManager;
 
     protected static final IMyxBrickDescription CONTAINER_BRICK_DESCRIPTION = new MyxJavaClassBrickDescription(
             new Properties(), MyxContainer.class.getName());
@@ -35,12 +35,10 @@ public final class MyxMonitoringUtils {
     /**
      * Initialize the current {@link MyxMonitoringImplementation}.
      * 
-     * @param architecturRuntimeId
-     * @param hostId
      * @param eventManager
      */
-    public static void initMontioringImplementation(String architecturRuntimeId, String hostId, EventManager eventManager) {
-        currentImplementation = new MyxMonitoringImplementation(architecturRuntimeId, hostId, eventManager);
+    public static void initMontioringImplementation(EventManager eventManager) {
+        currentImplementation = new MyxMonitoringImplementation(eventManager);
     }
 
     /**
@@ -56,11 +54,24 @@ public final class MyxMonitoringUtils {
     }
 
     /**
+     * Initialize the current {@link EventManager}.
+     * 
+     * @param architectureRuntimeId
+     * @param hostId
+     */
+    public static void initEventManager(String architectureRuntimeId, String hostId) {
+        currentEventManager = new EventManagerImpl(architectureRuntimeId, hostId);
+    }
+
+    /**
      * Get the current {@link EventManager}.
      * 
      * @return
      */
     public static EventManager getEventManager() {
+        if (currentEventManager == null) {
+            throw new NullPointerException("EventManager has not been initialized!");
+        }
         return currentEventManager;
     }
 

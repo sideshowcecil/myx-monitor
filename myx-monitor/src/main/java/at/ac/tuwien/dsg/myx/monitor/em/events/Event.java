@@ -5,14 +5,13 @@ import java.util.UUID;
 public abstract class Event {
 
     private final String id;
-    private final String architectureRuntimeId;
     private final long timestamp;
 
+    private String architectureRuntimeId;
     private String eventSourceId;
 
-    public Event(String architectureRuntimeId) {
+    public Event() {
         id = UUID.randomUUID().toString();
-        this.architectureRuntimeId = architectureRuntimeId;
         timestamp = System.currentTimeMillis();
     }
 
@@ -29,6 +28,10 @@ public abstract class Event {
 
     public String getArchitectureRuntimeId() {
         return architectureRuntimeId;
+    }
+
+    public void setArchitectureRuntimeId(String architectureRuntimeId) {
+        this.architectureRuntimeId = architectureRuntimeId;
     }
 
     public long getTimestamp() {

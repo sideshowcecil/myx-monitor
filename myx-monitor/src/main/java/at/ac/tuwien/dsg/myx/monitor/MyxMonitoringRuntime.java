@@ -30,12 +30,9 @@ import edu.uci.isr.myx.fw.MyxBasicRuntime;
 import edu.uci.isr.myx.fw.MyxBrickCreationException;
 import edu.uci.isr.myx.fw.MyxBrickLoadException;
 import edu.uci.isr.myx.fw.MyxInvalidPathException;
-import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
 
 public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
-    protected String architectureRuntimeId;
-    protected String hostId;
     protected EventManager eventManager;
 
     /**
@@ -51,9 +48,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      */
     protected Map<Tuple<String, String>, String> interfaces = new HashMap<>();
 
-    public MyxMonitoringRuntime(String architectureRuntimeId, String hostId, EventManager eventManager) {
-        this.architectureRuntimeId = architectureRuntimeId;
-        this.hostId = hostId;
+    public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -90,23 +85,6 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     @Override
     public void addBrick(IMyxName[] path, IMyxName brickName, IMyxBrickDescription brickDescription)
             throws MyxBrickLoadException, MyxBrickCreationException {
-        // TODO should we assign the architectureRuntimeId just to the EventManager, thus it could be injected to each event (the base event has to be changed to make this possible)
-        // changes have to be integrated here and in the virtual external simple brick
-        if (brickDescription instanceof MyxJavaClassBrickDescription) {
-            try {
-                Class<?> brickClass = Class.forName(((MyxJavaClassBrickDescription) brickDescription)
-                        .getMainBrickClassName());
-                if (AbstractVirtualExternalMyxSimpleBrick.class.isAssignableFrom(brickClass)) {
-                    // here we have to inject the architectureRuntimeId
-                    if (brickDescription.getInitParams() != null) {
-                        brickDescription.getInitParams().put(MyxProperties.ARCHITECTURE_RUNTIME_ID,
-                                architectureRuntimeId);
-                    }
-                }
-            } catch (ClassNotFoundException e) {
-            }
-        }
-
         super.addBrick(path, brickName, brickDescription);
 
         Properties initProperties = brickDescription.getInitParams();
@@ -226,7 +204,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      */
     private void dispatchXADLEvent(String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType,
             XADLElementType xadlElementType) {
-        XADLEvent e = new XADLEvent(architectureRuntimeId, xadlRuntimeId, xadlElementId, xadlEventType);
+        XADLEvent e = new XADLEvent(xadlRuntimeId, xadlElementId, xadlEventType);
         e.setXadlElementType(xadlElementType);
         dispatchEvent(e);
     }
@@ -269,9 +247,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceName,
             String xadlSourceInterfaceType, String xadlDestinationRuntimeId,
             String xadlDestinationElementInterfaceName, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
-        XADLLinkEvent e = new XADLLinkEvent(architectureRuntimeId, xadlSourceRuntimeId, xadlSourceInterfaceName,
-                xadlSourceInterfaceType, xadlDestinationRuntimeId, xadlDestinationElementInterfaceName,
-                xadlDestinationInterfaceType, xadlEventType);
+        XADLLinkEvent e = new XADLLinkEvent(xadlSourceRuntimeId, xadlSourceInterfaceName, xadlSourceInterfaceType,
+                xadlDestinationRuntimeId, xadlDestinationElementInterfaceName, xadlDestinationInterfaceType,
+                xadlEventType);
         dispatchEvent(e);
     }
 
@@ -282,7 +260,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlRuntimeType
      */
     private void dispatchXADLRuntimeEvent(String xadlRuntimeId, XADLRuntimeEventType xadlRuntimeType) {
-        XADLRuntimeEvent e = new XADLRuntimeEvent(architectureRuntimeId, xadlRuntimeId, xadlRuntimeType);
+        XADLRuntimeEvent e = new XADLRuntimeEvent(xadlRuntimeId, xadlRuntimeType);
         dispatchEvent(e);
     }
 
@@ -293,7 +271,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlEventType
      */
     private void dispatchXADLHostingEventForComponent(String runtimeId, XADLEventType xadlEventType) {
-        XADLHostingEvent e = new XADLHostingEvent(architectureRuntimeId, hostId, xadlEventType);
+        XADLHostingEvent e = new XADLHostingEvent(xadlEventType);
         e.getHostedComponentIds().add(runtimeId);
         dispatchEvent(e);
     }
@@ -305,7 +283,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlEventType
      */
     private void dispatchXADLHostingEventForConnector(String runtimeId, XADLEventType xadlEventType) {
-        XADLHostingEvent e = new XADLHostingEvent(architectureRuntimeId, hostId, xadlEventType);
+        XADLHostingEvent e = new XADLHostingEvent(xadlEventType);
         e.getHostedConnectorIds().add(runtimeId);
         dispatchEvent(e);
     }

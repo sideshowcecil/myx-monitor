@@ -11,7 +11,6 @@ import java.util.concurrent.Executors;
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
@@ -32,16 +31,13 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
     public void init() {
         Properties initProperties = MyxMonitoringUtils.getInitProperties(this);
 
-        String archRuntimeId = initProperties.getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID,
-                IdGenerator.generateArchitectureRuntimeId());
-        String hostId = initProperties.getProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
         EventManager eventManager = (EventManager) MyxMonitoringUtils.getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_EVENTMANAGER);
 
         String[] dispatcherClassNames = (String[]) initProperties.get(MyxProperties.EVENT_DISPATCHER_CLASSES);
 
         executor = Executors.newCachedThreadPool();
-        dispatchers = getDispatchers(dispatcherClassNames, archRuntimeId, hostId, eventManager);
+        dispatchers = getDispatchers(dispatcherClassNames, eventManager);
     }
 
     /**
@@ -52,8 +48,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
      * @param eventManager
      * @param dispatcherClassNames
      */
-    private List<EventDispatcher> getDispatchers(String[] dispatcherClassNames, String archRuntimeId, String hostId,
-            EventManager eventManager) {
+    private List<EventDispatcher> getDispatchers(String[] dispatcherClassNames, EventManager eventManager) {
         List<EventDispatcher> dispatchers = new ArrayList<>();
         if (dispatcherClassNames != null) {
             for (String dispatcherClassName : dispatcherClassNames) {
@@ -65,7 +60,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
                     }
                     Constructor<?> c = eventDispatcherClass.getConstructor(new Class<?>[] { String.class, String.class,
                             EventManager.class });
-                    dispatchers.add((EventDispatcher) c.newInstance(archRuntimeId, hostId, eventManager));
+                    dispatchers.add((EventDispatcher) c.newInstance(eventManager));
                 } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
                         | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     // we ignore non compatible dispatchers

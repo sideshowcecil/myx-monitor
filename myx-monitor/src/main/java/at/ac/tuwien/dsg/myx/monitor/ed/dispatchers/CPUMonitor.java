@@ -12,8 +12,8 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 @SuppressWarnings("restriction")
 public class CPUMonitor extends EventDispatcher {
 
-    public CPUMonitor(String architectureRuntimeId, String hostId, EventManager eventManager) {
-        super(architectureRuntimeId, hostId, eventManager);
+    public CPUMonitor(EventManager eventManager) {
+        super(eventManager);
     }
 
     @Override

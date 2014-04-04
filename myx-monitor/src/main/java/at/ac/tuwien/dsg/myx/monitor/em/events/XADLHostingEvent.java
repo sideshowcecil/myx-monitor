@@ -10,8 +10,8 @@ public class XADLHostingEvent extends XADLHostEvent {
     private final List<String> hostedGroupIds;
     private final List<String> hostedSubHostIds;
 
-    public XADLHostingEvent(String architectureRuntimeId, String hostId, XADLEventType xadlEventType) {
-        super(architectureRuntimeId, hostId, xadlEventType);
+    public XADLHostingEvent(XADLEventType xadlEventType) {
+        super(xadlEventType);
         hostedComponentIds = new ArrayList<>();
         hostedConnectorIds = new ArrayList<>();
         hostedGroupIds = new ArrayList<>();

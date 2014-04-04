@@ -19,6 +19,9 @@
                     <lookupimplementation:name xsi:type="lookupimplementation:LookupName">out</lookupimplementation:name>
                 </implementation:implementation>
             </types:signature>
+            
+            
+            
             <implementation:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.middleware.myx.MessageDistributor</javaimplementation:javaClassName>
@@ -42,18 +45,18 @@
                 <types:direction xsi:type="instance:Direction">out</types:direction>
             </types:signature>
         </types:connectorType>
-        <types:connectorType types:id="connectorType429608e4-1877-4323-964b-48167748edcd" xsi:type="types:ConnectorType">
+        <types:connectorType xsi:type="types:ConnectorType">
             <types:description xsi:type="instance:Description">VirtualIncomingConnector</types:description>
-            <types:signature types:id="Copy of signature74c4c489-fd1e-4363-aadf-09462038b0bc" xsi:type="implementation:SignatureImpl">
+            <types:signature xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">in</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+            </types:signature>
+            <types:signature xsi:type="implementation:SignatureImpl">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
                 <implementation:implementation xsi:type="lookupimplementation:LookupImplementation">
                     <lookupimplementation:name xsi:type="lookupimplementation:LookupName">out</lookupimplementation:name>
                 </implementation:implementation>
-            </types:signature>
-            <types:signature types:id="Copy of signature0f95e211-7c49-4cc2-bd91-1986f164f80a" xsi:type="types:Signature">
-                <types:description xsi:type="instance:Description">in</types:description>
-                <types:direction xsi:type="instance:Direction">in</types:direction>
             </types:signature>
         </types:connectorType>
         <types:interfaceType types:id="interfaceTypefff20c0e-f5675386-d56cf5c7-a26e073b" xsi:type="implementation:InterfaceTypeImpl">
@@ -86,6 +89,14 @@
                 </javaimplementation:mainClass>
             </implementation:implementation>
         </types:interfaceType>
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         

@@ -8,7 +8,7 @@ import at.ac.tuwien.dsg.myx.monitor.aggregator.network.EventSocketByteMessagePro
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 
 /**
  * Implementation of SubscriberListener based on the SocketByteMessageProtocol.

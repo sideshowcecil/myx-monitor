@@ -12,7 +12,7 @@ import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 

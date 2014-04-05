@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.pubsub.middleware.interfaces;
 
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 
 public interface IDispatcher<E> {
     /**

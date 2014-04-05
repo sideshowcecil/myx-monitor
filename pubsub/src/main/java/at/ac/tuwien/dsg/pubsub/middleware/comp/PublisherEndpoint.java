@@ -14,7 +14,7 @@ import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSimpleBrick {

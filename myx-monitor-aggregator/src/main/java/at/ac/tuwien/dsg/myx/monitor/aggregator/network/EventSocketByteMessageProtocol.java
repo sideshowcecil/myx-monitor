@@ -16,7 +16,7 @@ import org.apache.commons.codec.binary.Base64;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 
 /**
  * Base64 byte protocol specification and the implementation of the

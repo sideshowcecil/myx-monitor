@@ -6,8 +6,8 @@ import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of SubscriberListener based on the SocketByteMessageProtocol.

@@ -9,7 +9,7 @@ Export-Package: at.ac.tuwien.dsg.pubsub,
  at.ac.tuwien.dsg.pubsub.middleware.comp,
  at.ac.tuwien.dsg.pubsub.middleware.interfaces,
  at.ac.tuwien.dsg.pubsub.middleware.myx,
- at.ac.tuwien.dsg.pubsub.middleware.network,
+ at.ac.tuwien.dsg.pubsub.network,
  at.ac.tuwien.dsg.pubsub.test
 Require-Bundle: edu.uci.isr.myx.fw;bundle-version="4.1.50"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

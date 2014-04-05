@@ -8,8 +8,8 @@ import at.ac.tuwien.dsg.myx.monitor.aggregator.network.EventSocketByteMessagePro
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.PublisherDispatcher;
-import at.ac.tuwien.dsg.pubsub.middleware.network.Endpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of {@link PublisherDispatcher} based on the

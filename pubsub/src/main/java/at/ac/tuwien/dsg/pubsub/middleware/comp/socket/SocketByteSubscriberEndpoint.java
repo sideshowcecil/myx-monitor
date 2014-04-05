@@ -9,7 +9,7 @@ import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
-import at.ac.tuwien.dsg.pubsub.middleware.network.socket.SocketByteMessageProtocol;
+import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
  * Implementation of {@link SubscriberEndpoint} based on the

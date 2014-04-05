@@ -11,27 +11,26 @@ import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick implements IPublisher<E> {
 
-    public static final IMyxName IN_PUBLISHER = MyxMonitoringUtils.createName("in");
+    public static final IMyxName IN_IPUBLISHER = MyxMonitoringUtils.createName("in");
 
     protected Endpoint<E> endpoint;
 
     @Override
     public Object getServiceObject(IMyxName interfaceName) {
-        if (interfaceName.equals(IN_PUBLISHER)) {
+        if (interfaceName.equals(IN_IPUBLISHER)) {
             return this;
         }
         return null;
     }
+    
+    @Override
+    public void begin() {
+        endpoint = connect();
+    }
 
     @Override
     public void publish(Message<E> message) {
-        // lazy connect
-        if (endpoint == null) {
-            connect();
-        }
         if (endpoint != null) {
-            // we only send the message to the subscriber if the subscribed
-            // topic matches
             try {
                 endpoint.send(message);
             } catch (IOException e) {
@@ -42,9 +41,9 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
     }
 
     /**
-     * Connect to the middleware or similar.
+     * Connect to the middleware or similar and return the endpoint.
      */
-    protected abstract void connect();
+    protected abstract Endpoint<E> connect();
 
     /**
      * Get the external connection id of the connected {@link Endpoint}.

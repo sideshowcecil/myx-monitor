@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 import at.ac.tuwien.dsg.pubsub.publisher.comp.Publisher;
 
@@ -25,12 +26,13 @@ public class SocketBytePublisher extends Publisher<byte[]> {
     }
 
     @Override
-    protected void connect() {
+    protected Endpoint<byte[]> connect() {
         try {
             Socket s = new Socket(host, port);
-            endpoint = new SocketByteMessageProtocol(s);
+            return new SocketByteMessageProtocol(s);
         } catch (IOException e) {
         }
+        return null;
     }
 
     @Override

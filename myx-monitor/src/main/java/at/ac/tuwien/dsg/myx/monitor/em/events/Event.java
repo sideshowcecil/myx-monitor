@@ -1,9 +1,12 @@
 package at.ac.tuwien.dsg.myx.monitor.em.events;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Event {
+public abstract class Event implements Serializable {
 
+    private static final long serialVersionUID = -7750911233567472330L;
+    
     private final String id;
     private final long timestamp;
 

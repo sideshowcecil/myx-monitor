@@ -2,6 +2,8 @@ package at.ac.tuwien.dsg.myx.monitor.em.events;
 
 public class XADLEvent extends Event {
 
+    private static final long serialVersionUID = -3017572596996481L;
+
     private final String xadlRuntimeId;
     private final String xadlBlueprintId;
     private final XADLEventType xadlEventType;

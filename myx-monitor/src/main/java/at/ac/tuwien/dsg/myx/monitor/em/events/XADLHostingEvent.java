@@ -5,6 +5,8 @@ import java.util.List;
 
 public class XADLHostingEvent extends XADLHostEvent {
 
+    private static final long serialVersionUID = -179403849173342073L;
+    
     private final List<String> hostedComponentIds;
     private final List<String> hostedConnectorIds;
     private final List<String> hostedGroupIds;

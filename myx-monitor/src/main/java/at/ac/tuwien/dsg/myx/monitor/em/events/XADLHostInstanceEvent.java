@@ -2,6 +2,8 @@ package at.ac.tuwien.dsg.myx.monitor.em.events;
 
 public class XADLHostInstanceEvent extends XADLHostEvent {
 
+    private static final long serialVersionUID = -9082727013791419926L;
+    
     private String description;
 
     public XADLHostInstanceEvent(XADLEventType xadlEventType) {

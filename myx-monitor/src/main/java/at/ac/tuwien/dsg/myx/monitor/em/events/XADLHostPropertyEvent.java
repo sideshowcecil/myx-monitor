@@ -4,6 +4,8 @@ import java.util.Properties;
 
 public class XADLHostPropertyEvent extends XADLHostEvent {
 
+    private static final long serialVersionUID = -706514787718833282L;
+    
     private Properties hostProperties;
 
     public XADLHostPropertyEvent(XADLEventType xadlEventType) {

@@ -192,7 +192,7 @@
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
                 <implementation:implementation xsi:type="lookupimplementation:LookupImplementation">
-                    <lookupimplementation:name xsi:type="lookupimplementation:LookupName">in</lookupimplementation:name>
+                    <lookupimplementation:name xsi:type="lookupimplementation:LookupName">at.ac.tuwien.dsg.pubsub.publisher.interfaces.IPublisher</lookupimplementation:name>
                 </implementation:implementation>
             </types:signature>
             <types:signature types:id="signature69bd30f2-83a9-472a-ae94-a33d044f4200" xsi:type="types:Signature">

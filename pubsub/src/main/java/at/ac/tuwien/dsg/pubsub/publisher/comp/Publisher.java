@@ -3,15 +3,15 @@ package at.ac.tuwien.dsg.pubsub.publisher.comp;
 import java.io.IOException;
 
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.publisher.interfaces.IPublisher;
+import at.ac.tuwien.dsg.pubsub.publisher.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick implements IPublisher<E> {
 
-    public static final IMyxName IN_IPUBLISHER = MyxMonitoringUtils.createName("in");
+    public static final IMyxName IN_IPUBLISHER = MyxInterfaceNames.IPUBLISHER;
 
     protected Endpoint<E> endpoint;
 
@@ -22,10 +22,13 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
         }
         return null;
     }
-    
+
     @Override
     public void begin() {
         endpoint = connect();
+        if (endpoint != null) {
+            // TODO dispatch event
+        }
     }
 
     @Override

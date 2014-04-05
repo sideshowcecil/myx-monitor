@@ -47,11 +47,11 @@
         </types:connectorType>
         <types:connectorType xsi:type="types:ConnectorType">
             <types:description xsi:type="instance:Description">VirtualIncomingConnector</types:description>
-            <types:signature xsi:type="types:Signature">
+            <types:signature types:id="signatureba2ee6e5-bafd-47fc-8558-f3ed424b6169" xsi:type="types:Signature">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
             </types:signature>
-            <types:signature xsi:type="implementation:SignatureImpl">
+            <types:signature types:id="signatured635432c-2d09-43aa-81e7-71e618928a9a" xsi:type="implementation:SignatureImpl">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
                 <implementation:implementation xsi:type="lookupimplementation:LookupImplementation">

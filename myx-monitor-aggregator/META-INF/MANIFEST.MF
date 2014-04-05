@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: myx-monitor-aggregator
+Bundle-SymbolicName: myx-monitor-aggregator
+Bundle-Version: 1.0.0.qualifier
+Export-Package: at.ac.tuwien.dsg.myx.monitor.aggregator.comp,
+ at.ac.tuwien.dsg.myx.monitor.aggregator.network
+Require-Bundle: edu.uci.isr.myx.fw;bundle-version="4.1.50"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

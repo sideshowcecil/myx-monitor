@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.pubsub.message.Message;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.publisher.interfaces.IPublisher;
 import at.ac.tuwien.dsg.pubsub.publisher.myx.MyxInterfaceNames;
@@ -12,6 +13,8 @@ import edu.uci.isr.myx.fw.IMyxName;
 public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick implements IPublisher<E> {
 
     public static final IMyxName IN_IPUBLISHER = MyxInterfaceNames.IPUBLISHER;
+
+    private String connectionIdentifier;
 
     protected Endpoint<E> endpoint;
 
@@ -27,8 +30,21 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
     public void begin() {
         endpoint = connect();
         if (endpoint != null) {
-            // TODO dispatch event
+            connectionIdentifier = getExternalConnectionIdentifier();
+            dispatchExternalLinkConnectedEvent(
+                    DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                    DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                    connectionIdentifier);
         }
+    }
+
+    @Override
+    public void end() {
+        endpoint.close();
+        dispatchExternalLinkDisconnectedEvent(
+                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                connectionIdentifier);
     }
 
     @Override
@@ -39,6 +55,10 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
             } catch (IOException e) {
                 endpoint.close();
                 endpoint = null;
+                dispatchExternalLinkDisconnectedEvent(
+                        DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                        DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                        connectionIdentifier);
             }
         }
     }

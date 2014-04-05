@@ -7,16 +7,17 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.subscriber.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.subscriber.myx.MyxInterfaceNames;
-import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public abstract class Subscriber<E> extends AbstractMyxSimpleBrick {
+public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBrick {
 
     public static IMyxName OUT_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
 
@@ -55,7 +56,11 @@ public abstract class Subscriber<E> extends AbstractMyxSimpleBrick {
             public void run() {
                 endpoint = connect();
                 if (endpoint != null) {
-                    // TODO dispatch event
+                    String connectionIdentifier = getExternalConnectionIdentifier();
+                    dispatchExternalLinkConnectedEvent(
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
                     try {
                         // send the topics we subscribe to
                         endpoint.send(getTopicsMessage(topicType, topics));
@@ -66,6 +71,10 @@ public abstract class Subscriber<E> extends AbstractMyxSimpleBrick {
                         } while (msg.getType() != Message.Type.CLOSE && msg.getType() != Message.Type.ERROR);
                     } catch (IOException e) {
                     }
+                    dispatchExternalLinkDisconnectedEvent(
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            connectionIdentifier);
                 }
                 System.exit(0);
             }

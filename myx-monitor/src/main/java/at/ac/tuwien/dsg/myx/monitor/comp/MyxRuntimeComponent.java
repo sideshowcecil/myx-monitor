@@ -1,6 +1,5 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
-import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
@@ -23,10 +22,6 @@ public class MyxRuntimeComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        EventManager eventManager = (EventManager) MyxMonitoringUtils.getFirstRequiredServiceObject(this,
-                INTERFACE_NAME_OUT_EVENTMANAGER);
-
-        MyxMonitoringUtils.initMontioringImplementation(eventManager);
         runtime = MyxMonitoringUtils.getMonitoringImplementation().createRuntime();
     }
 

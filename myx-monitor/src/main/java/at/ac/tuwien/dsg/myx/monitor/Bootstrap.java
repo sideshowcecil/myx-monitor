@@ -12,10 +12,13 @@ import at.ac.tuwien.dsg.myx.monitor.comp.LauncherComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.ModelRootComponent;
 import at.ac.tuwien.dsg.myx.monitor.comp.MyxRuntimeComponent;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
+import edu.uci.isr.myx.fw.IMyxBrickDescription;
+import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxRuntime;
 import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
@@ -33,15 +36,43 @@ public class Bootstrap {
     protected IMyxRuntime myx;
 
     public static void main(String[] args) {
-        Properties[] p = parseArgs(args);
-        new Bootstrap().doBootstrap(p[0], p[1], p[2], p[3]);
+        new Bootstrap().run(args);
     }
 
-    private static Properties[] parseArgs(String[] args) {
+    public Bootstrap() {
+        myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
+    }
+
+    /**
+     * Run the application.
+     * 
+     * @param args
+     */
+    public void run(String[] args) {
+        // parse arguments
+        Properties[] p = parseArgs(args);
+
+        // init
+        initEventManager(p[3].getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID),
+                p[3].getProperty(MyxProperties.ARCHITECTURE_HOST_ID), p[3].getProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING));
+        initMyxMonitoringImplementation();
+
+        // bootstrap components
+        doBootstrap(p[0], p[1], p[2]);
+    }
+
+    /**
+     * Parse the command line arguments.
+     * 
+     * @param args
+     * @return
+     */
+    protected static Properties[] parseArgs(String[] args) {
         String xadlFile = null;
         String structureName = null;
         String architectureRuntimeId = null;
         List<String> eventDispatcherClasses = new ArrayList<>();
+        String connectionString = null;
 
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-s")) {
@@ -59,6 +90,11 @@ public class Bootstrap {
                     usage();
                 }
                 eventDispatcherClasses.add(args[i]);
+            } else if (args[i].equals("--event-manager-connection-string")) {
+                if (++i == args.length) {
+                    usage();
+                }
+                connectionString = args[i];
             } else {
                 if (xadlFile != null) {
                     usage();
@@ -85,40 +121,67 @@ public class Bootstrap {
         }
 
         p[2] = new Properties();
-        p[2].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
-        p[2].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
+        p[2].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[0]));
 
         p[3] = new Properties();
-        p[3].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[0]));
+        p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
+        p[3].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
+        p[3].setProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING, connectionString);
 
         return p;
     }
 
-    private static void usage() {
+    /**
+     * Print usage information and exit.
+     */
+    protected static void usage() {
         System.err.println("Usage:");
-        System.err.println("  java " + Bootstrap.class.getName()
-                + " file [-s structureName] [--id architectureRuntimeId] [--event-dispatcher className]");
+        System.err
+                .println("  java "
+                        + Bootstrap.class.getName()
+                        + " file [-s structureName] [--id architectureRuntimeId] [--event-dispatcher className] [--event-manager-connection-string connectionString]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
         System.err.println("    structureName: the name of the structure to bootstrap");
         System.err.println("    architectureInstanceId: the architecture runtime id");
         System.err.println("    className: the event dispatcher class name that should be instantiated");
+        System.err.println("    connectionString: the connection string that should be used to propate events");
         System.err.println();
         System.exit(-2);
     }
 
-    public Bootstrap() {
-        myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
+    /**
+     * Initialize the {@link EventManager} instance.
+     * 
+     * @param architectureRuntimeId
+     * @param hostId
+     * @param connectionString
+     */
+    protected void initEventManager(String architectureRuntimeId, String hostId, String connectionString) {
+        MyxMonitoringUtils.initEventManager(new EventManagerImpl(architectureRuntimeId, hostId, connectionString));
     }
 
-    public void doBootstrap(Properties modelRootProps, Properties bootstrapProps, Properties eventManagerProps,
-            Properties eventDispatcherProps) {
+    /**
+     * Initialize the {@link MyxMonitoringImplementation}.
+     */
+    protected void initMyxMonitoringImplementation() {
+        MyxMonitoringUtils.initMontioringImplementation(MyxMonitoringUtils.getEventManager());
+    }
+
+    /**
+     * Bootstrap all bricks and welds and run the application.
+     * 
+     * @param modelRootProps
+     * @param bootstrapProps
+     * @param eventDispatcherProps
+     */
+    protected void doBootstrap(Properties modelRootProps, Properties bootstrapProps, Properties eventDispatcherProps) {
         try {
             // ModelRoot
-            MyxJavaClassBrickDescription modelRootDesc = new MyxJavaClassBrickDescription(modelRootProps,
+            IMyxBrickDescription modelRootDesc = new MyxJavaClassBrickDescription(modelRootProps,
                     ModelRootComponent.class.getName());
-            MyxJavaClassInterfaceDescription modelRootIfaceDesc = new MyxJavaClassInterfaceDescription(
+            IMyxInterfaceDescription modelRootIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { ModelRoot.class.getName() });
 
             myx.addBrick(null, MODEL_ROOT_NAME, modelRootDesc);
@@ -128,9 +191,9 @@ public class Bootstrap {
             myx.init(null, MODEL_ROOT_NAME);
 
             // EventManager
-            MyxJavaClassBrickDescription eventManagerDesc = new MyxJavaClassBrickDescription(eventManagerProps,
+            IMyxBrickDescription eventManagerDesc = new MyxJavaClassBrickDescription(null,
                     EventManagerComponent.class.getName());
-            MyxJavaClassInterfaceDescription eventManagerIfaceDesc = new MyxJavaClassInterfaceDescription(
+            IMyxInterfaceDescription eventManagerIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { EventManager.class.getName() });
 
             myx.addBrick(null, EVENT_MANAGER_NAME, eventManagerDesc);
@@ -140,9 +203,9 @@ public class Bootstrap {
             myx.init(null, EVENT_MANAGER_NAME);
 
             // MyxRuntime
-            MyxJavaClassBrickDescription myxRuntimeDesc = new MyxJavaClassBrickDescription(null,
+            IMyxBrickDescription myxRuntimeDesc = new MyxJavaClassBrickDescription(null,
                     MyxRuntimeComponent.class.getName());
-            MyxJavaClassInterfaceDescription myxIfaceDesc = new MyxJavaClassInterfaceDescription(
+            IMyxInterfaceDescription myxIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { IMyxRuntime.class.getName() });
 
             myx.addBrick(null, MYX_RUNTIME_NAME, myxRuntimeDesc);
@@ -158,7 +221,7 @@ public class Bootstrap {
             myx.init(null, MYX_RUNTIME_NAME);
 
             // EventDispatcher
-            MyxJavaClassBrickDescription eventDispatcherDesc = new MyxJavaClassBrickDescription(eventDispatcherProps,
+            IMyxBrickDescription eventDispatcherDesc = new MyxJavaClassBrickDescription(eventDispatcherProps,
                     EventDispatcherComponent.class.getName());
 
             myx.addBrick(null, EVENT_DISPATCHER_NAME, eventDispatcherDesc);
@@ -172,9 +235,9 @@ public class Bootstrap {
             myx.init(null, EVENT_DISPATCHER_NAME);
 
             // Launcher
-            MyxJavaClassBrickDescription launcherDesc = new MyxJavaClassBrickDescription(null,
+            IMyxBrickDescription launcherDesc = new MyxJavaClassBrickDescription(null,
                     LauncherComponent.class.getName());
-            MyxJavaClassInterfaceDescription launcherIfaceDesc = new MyxJavaClassInterfaceDescription(
+            IMyxInterfaceDescription launcherIfaceDesc = new MyxJavaClassInterfaceDescription(
                     new String[] { Launcher.class.getName() });
 
             myx.addBrick(null, LAUNCHER_NAME, launcherDesc);
@@ -196,7 +259,7 @@ public class Bootstrap {
             myx.init(null, LAUNCHER_NAME);
 
             // Bootstrap
-            MyxJavaClassBrickDescription bootstrapDesc = new MyxJavaClassBrickDescription(bootstrapProps,
+            IMyxBrickDescription bootstrapDesc = new MyxJavaClassBrickDescription(bootstrapProps,
                     BootstrapComponent.class.getName());
 
             myx.addBrick(null, BOOTSTRAP_NAME, bootstrapDesc);
@@ -221,8 +284,6 @@ public class Bootstrap {
             myx.begin(null, EVENT_DISPATCHER_NAME);
             myx.begin(null, LAUNCHER_NAME);
             myx.begin(null, BOOTSTRAP_NAME);
-
-            // TODO: add weld EventManager -> ModelRoot
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-3);

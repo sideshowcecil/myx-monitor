@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import at.ac.tuwien.dsg.myx.monitor.MyxMonitoringImplementation;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import edu.uci.isr.myx.fw.IMyxBrick;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxContainer;
@@ -56,11 +55,10 @@ public final class MyxMonitoringUtils {
     /**
      * Initialize the current {@link EventManager}.
      * 
-     * @param architectureRuntimeId
-     * @param hostId
+     * @param eventManager
      */
-    public static void initEventManager(String architectureRuntimeId, String hostId) {
-        currentEventManager = new EventManagerImpl(architectureRuntimeId, hostId);
+    public static void initEventManager(EventManager eventManager) {
+        currentEventManager = eventManager;
     }
 
     /**

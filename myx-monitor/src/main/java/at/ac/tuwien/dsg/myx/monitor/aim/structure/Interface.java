@@ -82,6 +82,9 @@ public class Interface extends ArchitectureElement {
         if (!getImplementationMainClassNames().isEmpty()) {
             return getImplementationMainClassNames().get(0);
         }
+        if (getDirection() != null) {
+            return getDirection().name();
+        }
         return null;
     }
 

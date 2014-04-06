@@ -594,7 +594,7 @@ public class LauncherImpl implements Launcher {
                     if (pDirections[i] == EMyxInterfaceDirection.IN) {
                         currInfo.dependents.add(other);
                         otherInfo.dependencies.add(curr);
-                        curr.getInitLinks().add(l);
+                        other.getInitLinks().add(l);
                         break;
                     }
                 } else if (i == 1) {

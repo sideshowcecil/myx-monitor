@@ -61,8 +61,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
                     // connected
                     connectionIdentifier = getExternalConnectionIdentifier();
                     dispatchExternalLinkConnectedEvent(
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                     // wait for the topic name
                     logger.info("Waiting for topics");
@@ -80,8 +80,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
                     // send event that the virtual external interface was
                     // disconnected
                     dispatchExternalLinkDisconnectedEvent(
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                 }
             }
@@ -123,8 +123,8 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
                         // send event that the virtual external interface was
                         // disconnected
                         dispatchExternalLinkDisconnectedEvent(
-                                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
-                                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
+                                DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
+                                DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                                 connectionIdentifier);
                     }
                 }

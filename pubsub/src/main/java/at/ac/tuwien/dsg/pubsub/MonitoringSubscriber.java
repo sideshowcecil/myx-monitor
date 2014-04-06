@@ -12,9 +12,12 @@ import at.ac.tuwien.dsg.pubsub.middleware.myx.EventManagerImpl;
 
 public class MonitoringSubscriber extends Bootstrap {
 
-    public static final String ARCHITECTURE_FILE_NAME = "sub.xml";
+    public static final String ARCHITECTURE_FILE_NAME = "pubsub.xml";
+    public static final String STRUCTURE_NAME = "sub";
 
     public static void main(String[] args) {
+        List<String> realArgs = Arrays.asList(args);
+        
         String architectureFilePath = null;
 
         // check if the architecture file is available in the working directory
@@ -40,7 +43,12 @@ public class MonitoringSubscriber extends Bootstrap {
         if (architectureFilePath != null) {
             adaptedArgs.add(architectureFilePath);
         }
-        adaptedArgs.addAll(Arrays.asList(args));
+        // add the structure name if none was given
+        if (!realArgs.contains("-s")) {
+            adaptedArgs.add("-s");
+            adaptedArgs.add(STRUCTURE_NAME);
+        }
+        adaptedArgs.addAll(realArgs);
 
         // call the myx-monitor bootstrap
         new MonitoringSubscriber().run(adaptedArgs.toArray(new String[0]));

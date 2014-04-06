@@ -1,11 +1,11 @@
-package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
+package at.ac.tuwien.dsg.myx.monitor.aggregator.comp.socket;
 
 import java.net.Socket;
 
-import at.ac.tuwien.dsg.myx.monitor.aggregator.network.EventSocketByteMessageProtocol;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.PublisherEndpoint;
+import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
 
 /**
  * Implementation of {@link PublisherEndpoint} based on the

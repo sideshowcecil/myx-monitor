@@ -1,16 +1,16 @@
-package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
+package at.ac.tuwien.dsg.myx.monitor.aggregator.comp.socket;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.dsg.myx.monitor.aggregator.network.EventSocketByteMessageProtocol;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
+import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 
 /**
@@ -27,13 +27,17 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
         try {
             Message<Event> msg = endpoint.receive();
             if (msg.getType() == Message.Type.TOPIC) {
-                Topic.Type type = Topic.Type.valueOf(msg.getTopic());
-                List<Topic> topics = new ArrayList<>();
-                for (String topic : msg.getTopic()
-                        .split(String.valueOf(EventSocketByteMessageProtocol.TOPIC_SEPERATOR))) {
-                    topics.add(new Topic(topic, type));
+                String[] topicData = msg.getTopic().split(
+                        String.valueOf(EventSocketByteMessageProtocol.TOPIC_TYPE_SEPARATPR));
+                if (topicData.length < 2) {
+                    Topic.Type type = Topic.Type.valueOf(topicData[0]);
+                    List<Topic> topics = new ArrayList<>();
+                    for (String topic : topicData[1].split(String
+                            .valueOf(EventSocketByteMessageProtocol.TOPIC_SEPERATOR))) {
+                        topics.add(new Topic(topic, type));
+                    }
+                    return topics;
                 }
-                return topics;
             }
         } catch (IOException | IllegalArgumentException e) {
         }

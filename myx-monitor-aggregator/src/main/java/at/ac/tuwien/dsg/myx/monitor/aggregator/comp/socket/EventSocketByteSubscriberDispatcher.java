@@ -1,14 +1,14 @@
-package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
+package at.ac.tuwien.dsg.myx.monitor.aggregator.comp.socket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import at.ac.tuwien.dsg.myx.monitor.aggregator.network.EventSocketByteMessageProtocol;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberDispatcher;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
+import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
 
 /**
  * Implementation of SubscriberListener based on the SocketByteMessageProtocol.
@@ -24,10 +24,10 @@ public class EventSocketByteSubscriberDispatcher extends SubscriberDispatcher<Ev
     @Override
     public void init() {
         try {
-            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "6667"));
+            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "9001"));
         } catch (NumberFormatException e) {
             // use default value
-            port = 6667;
+            port = 9001;
         }
         super.init();
     }

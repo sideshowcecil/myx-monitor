@@ -8,7 +8,7 @@ import java.util.List;
 
 import at.ac.tuwien.dsg.myx.monitor.Bootstrap;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.middleware.myx.EventManagerImpl;
+import at.ac.tuwien.dsg.pubsub.em.EventManagerImpl;
 
 public class MonitoringPublisher extends Bootstrap {
 

@@ -22,7 +22,7 @@ public class ModelRootImpl implements ModelRoot {
     }
 
     public ModelRootImpl(String xadlFile) {
-        super();
+        this();
         parse(xadlFile);
     }
 

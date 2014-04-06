@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import edu.uci.isr.xarch.IXArch;
-import edu.uci.isr.xarch.IXArchContext;
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchSerializeException;
@@ -59,11 +58,6 @@ public class ModelRootImpl implements ModelRoot {
     @Override
     public IXArch getArchitectureRoot() {
         return xArchRoot;
-    }
-
-    @Override
-    public IXArchContext createArchitectureContext(String ctxTypeIdentifier) {
-        return xArchImpl.createContext(xArchRoot, ctxTypeIdentifier);
     }
 
 }

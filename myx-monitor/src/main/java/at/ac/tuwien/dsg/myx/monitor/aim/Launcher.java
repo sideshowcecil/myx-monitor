@@ -4,7 +4,7 @@ import edu.uci.isr.xarch.types.IArchStructure;
 
 public interface Launcher {
     /**
-     * Instantiat the given {@link IArchStructure} and run it.
+     * Instantiate the given {@link IArchStructure} and run it.
      * 
      * @param name
      * @param structure

@@ -59,7 +59,7 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
                     try {
                         while (true) {
                             // wait for a message and send it to the subscriber
-                            subscriber.send(endpoint.receive());
+                            subscriber.consume(endpoint.receive());
                         }
                     } catch (IOException e) {
 

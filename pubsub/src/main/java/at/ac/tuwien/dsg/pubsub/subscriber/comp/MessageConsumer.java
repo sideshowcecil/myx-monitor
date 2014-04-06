@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.pubsub.subscriber.comp;
 
-import at.ac.tuwien.dsg.pubsub.subscriber.interfaces.ISubscriber;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.subscriber.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;

@@ -1,7 +1,7 @@
 package at.ac.tuwien.dsg.pubsub.publisher.myx;
 
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
-import at.ac.tuwien.dsg.pubsub.publisher.interfaces.IPublisher;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IPublisher;
 import edu.uci.isr.myx.fw.IMyxName;
 
 /**

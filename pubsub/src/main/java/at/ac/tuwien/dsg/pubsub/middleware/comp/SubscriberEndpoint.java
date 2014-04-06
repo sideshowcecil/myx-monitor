@@ -108,7 +108,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
     }
 
     @Override
-    public void send(Message<E> message) {
+    public void consume(Message<E> message) {
         if (!shutdown) {
             // we only send the message to the subscriber if the subscribed
             // topic matches

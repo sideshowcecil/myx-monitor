@@ -11,9 +11,9 @@ import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
-import at.ac.tuwien.dsg.pubsub.subscriber.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.subscriber.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.IMyxName;
 

@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.pubsub.publisher.interfaces;
+package at.ac.tuwien.dsg.pubsub.middleware.interfaces;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
 

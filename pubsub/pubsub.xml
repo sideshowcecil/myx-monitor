@@ -233,7 +233,7 @@
         <types:component types:id="componentfff20c0e-f568e15a-bc7c102f-a26e07db" xsi:type="implementationext:ComponentImpl">
             <types:description xsi:type="instance:Description">MyxRuntimeAdapter</types:description>
             <types:interface types:id="interfacefff20c0e-f569c1a7-b867d7fe-a26e08fd" xsi:type="types:Interface">
-                <types:description xsi:type="instance:Description">OUT PubSubMyxRuntimeAdapter</types:description>
+                <types:description xsi:type="instance:Description">IN PubSubMyxRuntimeAdapter</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
                 <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>

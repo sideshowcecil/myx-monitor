@@ -40,8 +40,8 @@ public class SocketBytePublisher extends Publisher<byte[]> {
         if (endpoint instanceof SocketByteMessageProtocol) {
             Socket s = ((SocketByteMessageProtocol) endpoint).getSocket();
             // from,to
-            return IdGenerator.generateConnectionIdentifier(s.getInetAddress().getHostAddress() + ":" + s.getPort()
-                    + "," + s.getLocalAddress().getHostAddress() + ":" + s.getLocalPort());
+            return IdGenerator.generateConnectionIdentifier(s.getLocalAddress().getHostAddress() + ":"
+                    + s.getLocalPort() + "," + s.getInetAddress().getHostAddress() + ":" + s.getPort());
         }
         return null;
     }

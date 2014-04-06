@@ -573,7 +573,7 @@ public class LauncherImpl implements Launcher {
                 }
             }
 
-            if ((pServiceTypes[0] != null || pServiceTypes[1] != null) && pServiceTypes[0].equals(pServiceTypes[1])) {
+            if (pServiceTypes[0] != null && pServiceTypes[1] != null && pServiceTypes[0].equals(pServiceTypes[1])) {
                 throw new ArchitectureInstantiationException("Link " + link.getDescription().getValue()
                         + " must have compatible signature service types.");
             }

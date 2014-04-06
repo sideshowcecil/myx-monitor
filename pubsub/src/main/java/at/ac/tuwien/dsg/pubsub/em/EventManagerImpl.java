@@ -50,22 +50,18 @@ public class EventManagerImpl implements EventManager, Runnable {
     @Override
     public void run() {
         if (connectionString != null) {
-            // TODO connect
             URI uri;
             try {
                 uri = new URI(connectionString);
                 Socket s = new Socket(uri.getHost(), uri.getPort());
                 endpoint = new EventSocketByteMessageProtocol(s);
             } catch (URISyntaxException | IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
         }
         try {
             while (true) {
                 Event event = queue.take();
-                // TODO: integrate the event dispatching to the real monitor
-                System.err.println(event);
+                System.err.println(event); // TODO remove
                 if (endpoint != null) {
                     Message<Event> msg = new Message<Event>(EventUtils.getTopic(event), event);
                     try {

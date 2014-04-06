@@ -1,4 +1,4 @@
-package at.ac.tuwien.dsg.myx.monitor.aggregator.network;
+package at.ac.tuwien.dsg.pubsub.network.socket;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +30,7 @@ public final class EventSocketByteMessageProtocol implements Endpoint<Event> {
     public static final char CR = '\r';
     public static final char LF = '\n';
     public static final char SEPARATOR = ';';
+    public static final char TOPIC_TYPE_SEPARATPR = '.';
     public static final char TOPIC_SEPERATOR = ',';
 
     public static final char TOPIC = '#';

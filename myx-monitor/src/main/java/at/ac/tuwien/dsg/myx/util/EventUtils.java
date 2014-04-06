@@ -59,4 +59,15 @@ public final class EventUtils {
         return topic.toString();
     }
 
+    /**
+     * Get the topic pattern to receive all events of these event class and its
+     * subclasses.
+     * 
+     * @param eventClass
+     * @return
+     */
+    public static String getTopicPattern(Class<? extends Event> eventClass) {
+        return getTopic(eventClass) + ".*";
+    }
+
 }

@@ -6,12 +6,18 @@ import java.util.Collection;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchElement;
+import edu.uci.isr.xarch.hostproperty.IElementRef;
+import edu.uci.isr.xarch.hostproperty.IHost;
+import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
+import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
+import edu.uci.isr.xarch.hostproperty.IProperty;
 import edu.uci.isr.xarch.implementation.IImplementation;
 import edu.uci.isr.xarch.implementation.IInterfaceTypeImpl;
 import edu.uci.isr.xarch.implementation.ISignatureImpl;
 import edu.uci.isr.xarch.implementation.IVariantConnectorTypeImpl;
 import edu.uci.isr.xarch.implementationext.IComponentImpl;
 import edu.uci.isr.xarch.implementationext.IConnectorImpl;
+import edu.uci.isr.xarch.instance.IDescription;
 import edu.uci.isr.xarch.instance.IPoint;
 import edu.uci.isr.xarch.instance.IXMLLink;
 import edu.uci.isr.xarch.javaimplementation.IJavaClassFile;
@@ -88,6 +94,16 @@ public final class DBLUtils {
     }
 
     /**
+     * Get the id formatted to be used as a href.
+     * 
+     * @param id
+     * @return
+     */
+    public static String getHref(String id) {
+        return "#" + getId(id);
+    }
+
+    /**
      * Get the description of an {@link IXArchElement}. This method currently
      * supports {@link IComponent} and {@link IConnector}.
      * 
@@ -145,7 +161,7 @@ public final class DBLUtils {
      */
     public static IArchStructure getArchStructure(IXArch root, String id) {
         for (IArchStructure archStruc : getArchStructures(root)) {
-            if (archStruc.getId() == id) {
+            if (archStruc.getId().equals(id)) {
                 return archStruc;
             }
         }
@@ -664,5 +680,98 @@ public final class DBLUtils {
         default:
             return null;
         }
+    }
+
+    /**
+     * Get the {@link IHost} from an {@link IHostedArchStructure} or create on
+     * if none exists.
+     * 
+     * @param archStructure
+     * @param id
+     * @param context
+     * @return
+     */
+    public static IHost getOrCreateHost(IHostedArchStructure archStructure, String id, IHostpropertyContext context) {
+        IHost host = archStructure.getHost(id);
+        if (host == null) {
+            host = context.createHost();
+            host.setId(id);
+            archStructure.addHost(host);
+        }
+        return host;
+    }
+
+    /**
+     * Create a {@link IElementRef} in a {@link IHostpropertyContext}.
+     * 
+     * @param id
+     * @param context
+     * @return
+     */
+    public static IElementRef createElementRef(String id, IHostpropertyContext context) {
+        IElementRef ref = context.createElementRef();
+        IXMLLink link = context.createXMLLink();
+        link.setType("simple");
+        link.setHref(getHref(id));
+        ref.setRef(link);
+        return ref;
+    }
+
+    /**
+     * Create a {@link IDescription} in a {@link IHostpropertyContext}.
+     * 
+     * @param description
+     * @param context
+     * @return
+     */
+    public static IDescription createDescription(String description, IHostpropertyContext context) {
+        IDescription desc = context.createDescription();
+        desc.setValue(description);
+        return desc;
+    }
+
+    /**
+     * Get all {@link IProperty}s in a {@link IHost} instance.
+     * 
+     * @param host
+     * @return
+     */
+    public static Collection<IProperty> getHostProperties(IHost host) {
+        Collection<IProperty> elements = new ArrayList<>();
+        for (Object o : host.getAllHostPropertys()) {
+            if (o instanceof IProperty) {
+                elements.add((IProperty) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Get a specific {@link IProperty} in a {@link IHost} instance.
+     * 
+     * @param host
+     * @param property
+     * @return
+     */
+    public static IProperty getHostProperty(IHost host, String property) {
+        for (IProperty prop : getHostProperties(host)) {
+            if (prop.getName().getValue().equals(property)) {
+                return prop;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Create a {@link IProperty} in a {@link IHostpropertyContext}.
+     * 
+     * @param property
+     * @param context
+     * @return
+     */
+    public static IProperty createHostProperty(String property, IHostpropertyContext context) {
+        IProperty prop = context.createProperty();
+        prop.setName(createDescription(property, context));
+        return prop;
     }
 }

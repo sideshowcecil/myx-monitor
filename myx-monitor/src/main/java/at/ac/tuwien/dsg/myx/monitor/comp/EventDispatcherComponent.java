@@ -58,8 +58,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
                         // we ignore non compatible dispatchers
                         continue;
                     }
-                    Constructor<?> c = eventDispatcherClass.getConstructor(new Class<?>[] { String.class, String.class,
-                            EventManager.class });
+                    Constructor<?> c = eventDispatcherClass.getConstructor(new Class<?>[] { EventManager.class });
                     dispatchers.add((EventDispatcher) c.newInstance(eventManager));
                 } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
                         | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

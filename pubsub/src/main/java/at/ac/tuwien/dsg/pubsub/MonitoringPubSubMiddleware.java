@@ -44,8 +44,8 @@ public class MonitoringPubSubMiddleware extends Bootstrap {
             adaptedArgs.add(architectureFilePath);
         }
         // add the structure name if none was given
-        if (!realArgs.contains("-s")) {
-            adaptedArgs.add("-s");
+        if (!realArgs.contains("-s") && !realArgs.contains("--structure")) {
+            adaptedArgs.add("--structure");
             adaptedArgs.add(STRUCTURE_NAME);
         }
         adaptedArgs.addAll(realArgs);

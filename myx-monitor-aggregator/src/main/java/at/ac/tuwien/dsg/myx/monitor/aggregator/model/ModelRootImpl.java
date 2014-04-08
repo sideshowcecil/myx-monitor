@@ -80,8 +80,9 @@ public class ModelRootImpl implements ModelRoot {
         synchronized (xArchRoot) {
             IArchStructure archStructure = DBLUtils.getArchStructure(xArchRoot, id);
             if (archStructure == null) {
-                archStructure = getTypesContext().createArchStructure();
+                archStructure = getTypesContext().createArchStructureElement();
                 archStructure.setId(id);
+                xArchRoot.addObject(archStructure);
             }
             return archStructure;
         }

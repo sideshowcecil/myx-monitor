@@ -26,7 +26,7 @@ public final class IdGenerator {
      * @param prefix
      * @return
      */
-    private static String generateId(String prefix) {
+    public static String generateId(String prefix) {
         StringBuilder id = new StringBuilder(prefix);
         if (prefix.length() > 0 && !prefix.endsWith("-")) {
             id.append("-");

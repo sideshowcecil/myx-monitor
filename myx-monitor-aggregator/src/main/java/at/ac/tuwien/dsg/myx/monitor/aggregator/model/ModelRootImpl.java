@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
 import edu.uci.isr.xarch.IXArch;
@@ -76,12 +77,18 @@ public class ModelRootImpl implements ModelRoot {
     }
 
     @Override
+    public Collection<IArchStructure> getArchStructures() {
+        return DBLUtils.getArchStructures(xArchRoot);
+    }
+
+    @Override
     public IArchStructure getArchStructure(String id) {
         synchronized (xArchRoot) {
             IArchStructure archStructure = DBLUtils.getArchStructure(xArchRoot, id);
             if (archStructure == null) {
                 archStructure = getTypesContext().createArchStructureElement();
                 archStructure.setId(id);
+                archStructure.setDescription(DBLUtils.createDescription(id, getTypesContext()));
                 xArchRoot.addObject(archStructure);
             }
             return archStructure;

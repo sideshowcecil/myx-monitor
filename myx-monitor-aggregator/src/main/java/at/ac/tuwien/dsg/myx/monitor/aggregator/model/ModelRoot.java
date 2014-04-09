@@ -1,5 +1,7 @@
 package at.ac.tuwien.dsg.myx.monitor.aggregator.model;
 
+import java.util.Collection;
+
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
 import edu.uci.isr.xarch.types.IArchStructure;
@@ -33,6 +35,13 @@ public interface ModelRoot {
      * @return
      */
     public IHostpropertyContext getHostpropertyContext();
+
+    /**
+     * Get all {@link IArchStructure}s.
+     * 
+     * @return
+     */
+    public Collection<IArchStructure> getArchStructures();
 
     /**
      * Get the {@link IArchStructure} with the given id.

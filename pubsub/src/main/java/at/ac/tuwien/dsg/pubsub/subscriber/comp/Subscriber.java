@@ -39,7 +39,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
     public void init() {
         Properties initProps = MyxMonitoringUtils.getInitProperties(this);
 
-        topicType = Topic.Type.valueOf(initProps.getProperty("topicType", "REGEX"));
+        topicType = Topic.Type.valueOf(initProps.getProperty("topicType", "GLOB"));
         for (String key : initProps.stringPropertyNames()) {
             if (key.startsWith("topicName")) {
                 topics.add(initProps.getProperty(key));

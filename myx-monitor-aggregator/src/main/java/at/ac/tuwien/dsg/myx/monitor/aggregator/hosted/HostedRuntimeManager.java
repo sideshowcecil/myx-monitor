@@ -79,9 +79,8 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
      * @param event
      */
     private void process(XADLHostingEvent event) {
-        IHostedArchStructure hostedArchStructure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
-        IHost host = DBLUtils.getOrCreateHost(hostedArchStructure, event.getHostId(),
-                modelRoot.getHostpropertyContext());
+        IHostedArchStructure structure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
+        IHost host = DBLUtils.createHost(structure, event.getHostId(), modelRoot.getHostpropertyContext());
 
         switch (event.getXadlEventType()) {
         case ADD:
@@ -130,9 +129,8 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
      * @param event
      */
     private void process(XADLHostInstanceEvent event) {
-        IHostedArchStructure hostedArchStructure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
-        IHost host = DBLUtils.getOrCreateHost(hostedArchStructure, event.getHostId(),
-                modelRoot.getHostpropertyContext());
+        IHostedArchStructure structure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
+        IHost host = DBLUtils.createHost(structure, event.getHostId(), modelRoot.getHostpropertyContext());
 
         switch (event.getXadlEventType()) {
         case ADD:
@@ -143,7 +141,7 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
             if (host.getAllHostPropertys().isEmpty() && host.getAllHostsComponents().isEmpty()
                     && host.getAllHostsConnectors().isEmpty() && host.getAllHostsGroups().isEmpty()
                     && host.getAllSubhosts().isEmpty()) {
-                hostedArchStructure.removeHost(host);
+                structure.removeHost(host);
             }
             break;
         case UPDATE:
@@ -159,9 +157,8 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
      * @param event
      */
     private void process(XADLHostPropertyEvent event) {
-        IHostedArchStructure hostedArchStructure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
-        IHost host = DBLUtils.getOrCreateHost(hostedArchStructure, event.getHostId(),
-                modelRoot.getHostpropertyContext());
+        IHostedArchStructure structure = modelRoot.getHostedArchStructure(event.getArchitectureRuntimeId());
+        IHost host = DBLUtils.createHost(structure, event.getHostId(), modelRoot.getHostpropertyContext());
 
         switch (event.getXadlEventType()) {
         case ADD:

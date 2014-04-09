@@ -120,7 +120,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         Properties initProps = new Properties();
         initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID,
                 DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_BLUEPRINT_ID);
-        initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.COMPONENT);
+        initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.CONNECTOR);
         MyxJavaClassBrickDescription publisherEndpointDesc = new MyxJavaClassBrickDescription(initProps,
                 publisherEndpointClassName);
 
@@ -131,12 +131,12 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         MyxJavaClassInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IDISPATCHER.getName() }, dispatcherInitProps);
         Properties subscriberInitProps = new Properties();
-        dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
+        subscriberInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.SUBSCRIBER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.ISUBSCRIBER.getName() }, subscriberInitProps);
         Properties myxAdapterInitProps = new Properties();
-        dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
+        myxAdapterInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.MYX_ADAPTER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);
@@ -219,7 +219,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         Properties initProps = new Properties();
         initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID,
                 DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_BLUEPRINT_ID);
-        initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.COMPONENT);
+        initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.CONNECTOR);
         MyxJavaClassBrickDescription subscriberEndpointDesc = new MyxJavaClassBrickDescription(initProps,
                 subscriberEndpointClassName);
 
@@ -230,12 +230,12 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         MyxJavaClassInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IDISPATCHER.getName() }, dispatcherInitProps);
         Properties subscriberInitProps = new Properties();
-        dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
+        subscriberInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.SUBSCRIBER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.ISUBSCRIBER.getName() }, subscriberInitProps);
         Properties myxAdapterInitProps = new Properties();
-        dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
+        myxAdapterInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.MYX_ADAPTER_INTERFACE_TYPE);
         MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);

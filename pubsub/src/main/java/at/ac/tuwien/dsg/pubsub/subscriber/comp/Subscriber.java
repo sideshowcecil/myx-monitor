@@ -47,7 +47,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
         }
         // if no topics are given set the default topic
         if (topics.isEmpty()) {
-            topics.add(".*");
+            topics.add("*");
         }
 
         executor = Executors.newSingleThreadExecutor();

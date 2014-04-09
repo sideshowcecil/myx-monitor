@@ -259,12 +259,20 @@
             <types:interface types:id="interfaceffa80065-46a7c82d-9ccedbd2-eec70388" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceTypeee82474e-1d76-4603-a5ba-fadbcf8b0acb" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signatureba2ee6e5-bafd-47fc-8558-f3ed424b6169" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:interface types:id="interfaceffa80065-46a7c82d-cc5295b1-eec70389" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-37c108ee-b5588e5c-a28303cd" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signatured635432c-2d09-43aa-81e7-71e618928a9a" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:connector>
@@ -273,12 +281,20 @@
             <types:interface types:id="interfaceffa80065-46a85e84-e2316ef6-eec70431" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-37c108ee-b5588e5c-a28303cd" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signature74c4c489-fd1e-4363-aadf-09462038b0bc" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:interface types:id="interfaceffa80065-46a85e84-613e7b1b-eec70432" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType0bcf68ee-6bf6-488c-af3f-105447849d8e" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signature0f95e211-7c49-4cc2-bd91-1986f164f80a" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:connector>
@@ -858,6 +874,57 @@
                         <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                 </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,234,191" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10275,10300,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,234,191" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10825,10250,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 
                 

@@ -277,28 +277,44 @@
             <types:interface types:id="interfaceffa80065-469e958c-6c3eaaf3-eec701d7" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:signature xlink:href="#signatureba2ee6e5-bafd-47fc-8558-f3ed424b6169" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeee82474e-1d76-4603-a5ba-fadbcf8b0acb" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatureba2ee6e5-bafd-47fc-8558-f3ed424b6169" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:interface types:id="interfaceffa80065-469e958c-a953dec2-eec701d8" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:signature xlink:href="#signatured635432c-2d09-43aa-81e7-71e618928a9a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatured635432c-2d09-43aa-81e7-71e618928a9a" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
-            <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:connector>
         <types:connector types:id="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="types:Connector">
             <types:description xsi:type="instance:Description">VirtualSubscriberEntpoint</types:description>
             <types:interface types:id="interfaceffa80065-469f05f9-3df5da35-eec7024e" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:signature xlink:href="#signature74c4c489-fd1e-4363-aadf-09462038b0bc" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signature74c4c489-fd1e-4363-aadf-09462038b0bc" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
             <types:interface types:id="interfaceffa80065-469f0603-b99c48fc-eec7024f" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:signature xlink:href="#signature0f95e211-7c49-4cc2-bd91-1986f164f80a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType0bcf68ee-6bf6-488c-af3f-105447849d8e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signature0f95e211-7c49-4cc2-bd91-1986f164f80a" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+                
             </types:interface>
-            <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:connector>
         <types:link types:id="linkffa83f01-fa795bee-b5b5f1cd-25c30196" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">PublisherEndpoint2MyxRuntimeAdapter</types:description>
@@ -1479,7 +1495,7 @@
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
                     <hints3:target xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
-                        <hints3:value hints3:data="11050,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                        <hints3:value hints3:data="10850,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                     <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
                         <hints3:value hints3:data="255,234,191" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
@@ -1512,7 +1528,7 @@
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
                     <hints3:target xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
-                        <hints3:value hints3:data="10500,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                        <hints3:value hints3:data="10300,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                     <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
                         <hints3:value hints3:data="255,234,191" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
@@ -1642,7 +1658,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#componentffa80065-469e618b-ffc3e92c-eec701b2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#componentffa80065-469e618b-ffc3e92c-eec701b2" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10300,10325,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1651,7 +1667,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#connectorffa80065-469e958c-ce8ea22a-eec701d6" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#connectorffa80065-469e958c-ce8ea22a-eec701d6" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10300,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1660,7 +1676,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-469e958c-a953dec2-eec701d8" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-469e958c-a953dec2-eec701d8" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10500,10375" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1672,7 +1688,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-469e958c-6c3eaaf3-eec701d7" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-469e958c-6c3eaaf3-eec701d7" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10300,10375" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1684,7 +1700,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#connectorffa80065-469f05f9-ad8f987a-eec7024d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#connectorffa80065-469f05f9-ad8f987a-eec7024d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10850,10350,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1693,7 +1709,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-469f05f9-3df5da35-eec7024e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-469f05f9-3df5da35-eec7024e" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10850,10375" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1705,7 +1721,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-469f0603-b99c48fc-eec7024f" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-469f0603-b99c48fc-eec7024f" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="11050,10375" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -2324,7 +2340,7 @@
                 </hints3:hintedElement>
             </hints3:hintedElement>
             <hints3:hintedElement xsi:type="hints3:HintedElement">
-                <hints3:target xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:target xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </hints3:hintedElement>
             
             
@@ -2580,13 +2596,13 @@
                     </changes:copyOfRemovedInterface>
                 </changes:interfaceChange>
             </changes:componentChange>
-            <changes:componentChange changes:id="componentChangeffa80065-469e618b-697798ed-eec701b3" xsi:type="changes:ComponentChange" changes:type="add">
+            <changes:componentChange changes:id="componentChangeffa80065-469e618b-697798ed-eec701b3" changes:type="add" xsi:type="changes:ComponentChange">
                 <changes:description xsi:type="instance:Description">New Component</changes:description>
-                <changes:component xlink:href="#componentffa80065-469e618b-ffc3e92c-eec701b2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:component xlink:href="#componentffa80065-469e618b-ffc3e92c-eec701b2" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:componentChange>
-            <changes:componentChange changes:id="componentChangeffa80065-469e7cfa-e4847760-eec701d5" xsi:type="changes:ComponentChange" changes:type="remove">
+            <changes:componentChange changes:id="componentChangeffa80065-469e7cfa-e4847760-eec701d5" changes:type="remove" xsi:type="changes:ComponentChange">
                 <changes:description xsi:type="instance:Description">Remove Component</changes:description>
-                <changes:component xlink:href="#Copy of componentffa80065-469e618b-ffc3e92c-eec701b2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:component xlink:href="#Copy of componentffa80065-469e618b-ffc3e92c-eec701b2" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <changes:copyOfRemovedComponent types:id="Copy of componentffa80065-469e618b-ffc3e92c-eec701b2" xsi:type="types:Component">
                     <types:description xsi:type="instance:Description">[New Component]</types:description>
                 </changes:copyOfRemovedComponent>

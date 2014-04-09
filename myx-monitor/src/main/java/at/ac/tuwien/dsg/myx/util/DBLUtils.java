@@ -38,6 +38,7 @@ import edu.uci.isr.xarch.types.ILink;
 import edu.uci.isr.xarch.types.ISignature;
 import edu.uci.isr.xarch.types.ISignatureInterfaceMapping;
 import edu.uci.isr.xarch.types.ISubArchitecture;
+import edu.uci.isr.xarch.types.ITypesContext;
 
 /**
  * This class provides convenient methods to handle the shortcomings of the <a
@@ -683,26 +684,37 @@ public final class DBLUtils {
     }
 
     /**
-     * Get the {@link IHost} from an {@link IHostedArchStructure} or create on
-     * if none exists.
+     * Get a {@link IHost} from an {@link IHostedArchStructure} instance.
      * 
-     * @param archStructure
+     * @param structure
+     * @param id
+     * @return
+     */
+    public static IHost getHost(IHostedArchStructure structure, String id) {
+        return structure.getHost(id);
+    }
+
+    /**
+     * Create an {@link IHost} in an {@link IHostedArchStructure} instance. If
+     * the host already exists it is simply returned.
+     * 
+     * @param structure
      * @param id
      * @param context
      * @return
      */
-    public static IHost getOrCreateHost(IHostedArchStructure archStructure, String id, IHostpropertyContext context) {
-        IHost host = archStructure.getHost(id);
+    public static IHost createHost(IHostedArchStructure structure, String id, IHostpropertyContext context) {
+        IHost host = getHost(structure, id);
         if (host == null) {
             host = context.createHost();
             host.setId(id);
-            archStructure.addHost(host);
+            structure.addHost(host);
         }
         return host;
     }
 
     /**
-     * Create a {@link IElementRef} in a {@link IHostpropertyContext}.
+     * Create a {@link IElementRef}.
      * 
      * @param id
      * @param context
@@ -718,7 +730,7 @@ public final class DBLUtils {
     }
 
     /**
-     * Create a {@link IDescription} in a {@link IHostpropertyContext}.
+     * Create a {@link IDescription}.
      * 
      * @param description
      * @param context
@@ -763,7 +775,7 @@ public final class DBLUtils {
     }
 
     /**
-     * Create a {@link IProperty} in a {@link IHostpropertyContext}.
+     * Create a {@link IProperty}.
      * 
      * @param property
      * @param context
@@ -773,5 +785,92 @@ public final class DBLUtils {
         IProperty prop = context.createProperty();
         prop.setName(createDescription(property, context));
         return prop;
+    }
+
+    /**
+     * Create a {@link IDescription}.
+     * 
+     * @param description
+     * @param context
+     * @return
+     */
+    public static IDescription createDescription(String description, ITypesContext context) {
+        IDescription desc = context.createDescription();
+        desc.setValue(description);
+        return desc;
+    }
+
+    /**
+     * Get a {@link IComponent} from a {@link IArchStructure} instance.
+     * 
+     * @param structure
+     * @param id
+     * @return
+     */
+    public static IComponent getComponent(IArchStructure structure, String id) {
+        return structure.getComponent(id);
+    }
+
+    /**
+     * Create a {@link IComponent} in an {@link IArchStructure} instance. If
+     * the component already exists it is simply returned.
+     * 
+     * @param structure
+     * @param id
+     * @param context
+     * @return
+     */
+    public static IComponent createComponent(IArchStructure structure, String id, ITypesContext context) {
+        IComponent comp = getComponent(structure, id);
+        if (comp == null) {
+            comp = context.createComponent();
+            comp.setId(id);
+            structure.addComponent(comp);
+        }
+        return comp;
+    }
+
+    /**
+     * Get a {@link IConnector} from a {@link IArchStructure} instance.
+     * 
+     * @param structure
+     * @param id
+     * @return
+     */
+    public static IConnector getConnector(IArchStructure structure, String id) {
+        return structure.getConnector(id);
+    }
+
+    /**
+     * Create a {@link IConnector} in an {@link IArchStructure} instance. If
+     * the connector already exists it is simply returned.
+     * 
+     * @param structure
+     * @param id
+     * @param context
+     * @return
+     */
+    public static IConnector createConnector(IArchStructure structure, String id, ITypesContext context) {
+        IConnector conn = getConnector(structure, id);
+        if (conn == null) {
+            conn = context.createConnector();
+            conn.setId(id);
+            structure.addConnector(conn);
+        }
+        return conn;
+    }
+
+    /**
+     * Create a {@link IXMLLink} instance.
+     * 
+     * @param destinationId
+     * @param context
+     * @return
+     */
+    public static IXMLLink createXMLLink(String destinationId, ITypesContext context) {
+        IXMLLink link = context.createXMLLink();
+        link.setType("simple");
+        link.setHref(DBLUtils.getHref(destinationId));
+        return link;
     }
 }

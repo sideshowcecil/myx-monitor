@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ import edu.uci.isr.xarch.types.ILink;
 public class XADLRuntimeManager implements ISubscriber<Event> {
 
     private static final Logger logger = LoggerFactory.getLogger(XADLRuntimeManager.class);
+
+    private final Map<IInterface, String> interface2element = new HashMap<>();
 
     /**
      * Mapping of component/connector to the connected link identifiers.
@@ -148,6 +151,7 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
                 if (component != null) {
                     structure.removeComponent(component);
                     removeLinks(structure, event.getXadlRuntimeId());
+                    removeInterface(event.getXadlRuntimeId());
                 } else {
                     logger.warn("Component could not be found");
                 }
@@ -158,6 +162,7 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
                 if (connector != null) {
                     structure.removeConnector(connector);
                     removeLinks(structure, event.getXadlRuntimeId());
+                    removeInterface(event.getXadlRuntimeId());
                 } else {
                     logger.warn("Connector could not be found");
                 }
@@ -221,6 +226,7 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
                 intf.setType(blueprintInterface.getType());
             }
             component.addInterface(intf);
+            interface2element.put(intf, runtimeId);
         }
         return component;
     }
@@ -273,6 +279,7 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
                 intf.setType(blueprintInterface.getType());
             }
             connector.addInterface(intf);
+            interface2element.put(intf, runtimeId);
         }
         return connector;
     }
@@ -297,13 +304,87 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
     }
 
     /**
+     * Remove all interfaces of a component or connector from the internal
+     * structures.
+     * 
+     * @param runtimeId
+     */
+    private void removeInterface(String runtimeId) {
+        List<IInterface> toBeRemoved = new ArrayList<>();
+
+        for (Entry<IInterface, String> entry : interface2element.entrySet()) {
+            if (entry.getValue().equals(runtimeId)) {
+                toBeRemoved.add(entry.getKey());
+            }
+        }
+
+        for (IInterface intf : toBeRemoved) {
+            interface2element.remove(intf);
+        }
+    }
+
+    /**
      * Process a {@link XADLExternalLinkEvent}.
      * 
      * @param event
      */
     private void process(XADLExternalLinkEvent event) {
         IArchStructure structure = modelRoot.getArchStructure(event.getArchitectureRuntimeId());
-        // TODO add linking
+
+        // get the interface
+        IInterface intf = getInterface(structure, event.getXadlRuntimeId(), event.getXadlInterfaceType());
+
+        switch (event.getXadlEventType()) {
+        case ADD:
+            logger.info("Establishing external link on " + event.getXadlRuntimeId() + ": "
+                    + event.getXadlExternalConnectionIdentifier());
+            if (!externalConnections.containsKey(event.getXadlExternalConnectionIdentifier())) {
+                externalConnections.put(event.getXadlExternalConnectionIdentifier(), new ArrayList<IInterface>());
+            }
+            if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
+                for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
+                    ILink link = createLink(event.getXadlRuntimeId(), intf,
+                            event.getXadlExternalConnectionIdentifier(), destination);
+                    if (link != null) {
+                        structure.addLink(link);
+                        Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(),
+                                destination.getId());
+                        saveLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier, link);
+                    } else {
+                        logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                                + event.getXadlExternalConnectionIdentifier()
+                                + "could not be established due to non matching interfaces");
+                    }
+                }
+            }
+            externalConnections.get(event.getXadlExternalConnectionIdentifier()).add(intf);
+            break;
+        case REMOVE:
+            logger.info("Removing external link on " + event.getXadlRuntimeId() + ": "
+                    + event.getXadlExternalConnectionIdentifier());
+            if (externalConnections.containsKey(event.getXadlExternalConnectionIdentifier())) {
+                for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
+                    Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(), destination.getId());
+                    if (links.containsKey(linkIdentifier)) {
+                        structure.removeLink(links.get(linkIdentifier));
+                        removeLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier);
+                    } else {
+                        logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                                + event.getXadlExternalConnectionIdentifier()
+                                + " could not be removed because it does not exist");
+                    }
+                }
+            } else {
+                logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                        + event.getXadlExternalConnectionIdentifier()
+                        + " could not be removed because it does not exist");
+            }
+            break;
+        case UPDATE:
+            break;
+        default:
+            break;
+        }
     }
 
     /**
@@ -401,6 +482,44 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
             for (IInterface intf : DBLUtils.getInterfaces(connector)) {
                 if (interfaceType.equals(DBLUtils.getId(intf.getType()))
                         && DBLUtils.getDirection(intf).equals(direction)) {
+                    matchingInterfaces.add(intf);
+                }
+            }
+            if (matchingInterfaces.size() == 1) {
+                return matchingInterfaces.get(0);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get a {@link IInterface} from a existing {@link IComponent} or
+     * {@link IConnector}. If two interfaces with the same interface type exist
+     * it is the same as no interface exists.
+     * 
+     * @param structure
+     * @param id
+     * @param interfaceType
+     * @return
+     */
+    private IInterface getInterface(IArchStructure structure, String id, String interfaceType) {
+        List<IInterface> matchingInterfaces = new ArrayList<>();
+
+        IComponent component = DBLUtils.getComponent(structure, id);
+        if (component != null) {
+            for (IInterface intf : DBLUtils.getInterfaces(component)) {
+                if (interfaceType.equals(DBLUtils.getId(intf.getType()))) {
+                    matchingInterfaces.add(intf);
+                }
+            }
+            if (matchingInterfaces.size() == 1) {
+                return matchingInterfaces.get(0);
+            }
+        }
+        IConnector connector = DBLUtils.getConnector(structure, id);
+        if (connector != null) {
+            for (IInterface intf : DBLUtils.getInterfaces(connector)) {
+                if (interfaceType.equals(DBLUtils.getId(intf.getType()))) {
                     matchingInterfaces.add(intf);
                 }
             }

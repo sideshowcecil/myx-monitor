@@ -98,6 +98,34 @@
                     <changes:interface xlink:href="#interfaceffa80065-384f9e96-2ca94ec1-a2830955" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-47387590-4d85ec24-eec71984" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-47387590-d67d3c29-eec71985" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-47387586-1aff0c1b-eec71983" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-47388377-9ce142b6-eec719a6" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-47388377-8d29eef6-eec719a7" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-47388377-78553e17-eec719a5" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-4738907b-14d889d2-eec719db" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-4738907b-7df7dac1-eec719dc" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-4738907b-b0c165e9-eec719da" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-47389d1b-ec7eb54d-eec719e8" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-47389d1b-83de3a59-eec719e9" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-47389d1a-930a739b-eec719e2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
             <changes:linkChange changes:id="linkChangeffa80065-38401eeb-f20e39e5-a28304e7" changes:type="add" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">New Link</changes:description>
                 <changes:link xlink:href="#linkffa80065-38401eeb-15b07eff-a28304e6" xlink:type="simple" xsi:type="instance:XMLLink"/>
@@ -133,6 +161,31 @@
                     <statecharts:description xsi:type="instance:Description">[New Statechart]</statecharts:description>
                 </changes:copyOfRemovedStatechart>
             </changes:statechartChange>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         </changes:changes>
     </changes:archChange>
     <types:archStructure types:id="archStructureffa80065-37b436e1-834b315b-a2830203" xsi:type="types:ArchStructure">
@@ -274,7 +327,21 @@
                 
                 
             </types:interface>
+            <types:interface types:id="interfaceffa80065-47387586-1aff0c1b-eec71983" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT Dispatcher</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-37b5a517-018dc50a-a2830260" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:interface types:id="interfaceffa80065-47388377-78553e17-eec719a5" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-384d5cad-f8e8eb92-a28308ef" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
             <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            
+            
+            
+            
         </types:connector>
         <types:connector types:id="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="types:Connector">
             <types:description xsi:type="instance:Description">VirtualSubscriberEndpoint</types:description>
@@ -296,7 +363,21 @@
                 
                 
             </types:interface>
+            <types:interface types:id="interfaceffa80065-4738907b-b0c165e9-eec719da" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT Dispatcher</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-37b5a517-018dc50a-a2830260" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:interface types:id="interfaceffa80065-47389d1a-930a739b-eec719e2" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-384d5cad-f8e8eb92-a28308ef" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
             <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            
+            
+            
+            
         </types:connector>
         <types:link types:id="linkffa80065-38401eeb-15b07eff-a28304e6" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">PublisherDispatcher2MyxRuntimeAdapter</types:description>
@@ -892,6 +973,89 @@
                         <hints3:value hints3:data="10825,10250,200,50" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                 </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-47387586-1aff0c1b-eec71983" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10375,10300" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-47388377-78553e17-eec719a5" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10450,10300" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.875,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-4738907b-b0c165e9-eec719da" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10925,10250" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-47389d1a-930a739b-eec719e2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10850,10250" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.125,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 
                 

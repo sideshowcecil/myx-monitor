@@ -277,7 +277,7 @@
             <types:interface types:id="interfaceffa80065-469e958c-6c3eaaf3-eec701d7" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:type xlink:href="#interfaceTypeee82474e-1d76-4603-a5ba-fadbcf8b0acb" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeee82474e-1d76-4603-a5ba-fadbcf8b0acb" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signatureba2ee6e5-bafd-47fc-8558-f3ed424b6169" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
@@ -286,20 +286,39 @@
             <types:interface types:id="interfaceffa80065-469e958c-a953dec2-eec701d8" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signatured635432c-2d09-43aa-81e7-71e618928a9a" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
                 
             </types:interface>
+            <types:interface types:id="interfaceffa80065-4715452e-edc7e2bf-eec710fc" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT Dispatcher</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypefff20c0e-f5675386-d56cf5c7-a26e073b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:interface>
+            <types:interface types:id="interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
             <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            
+            
+            
+            
+            
+            
+            
+            
+            
         </types:connector>
         <types:connector types:id="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="types:Connector">
             <types:description xsi:type="instance:Description">VirtualSubscriberEntpoint</types:description>
             <types:interface types:id="interfaceffa80065-469f05f9-3df5da35-eec7024e" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">in</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa83f01-faeae925-a33ee5e9-25c3039d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signature74c4c489-fd1e-4363-aadf-09462038b0bc" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
@@ -308,13 +327,32 @@
             <types:interface types:id="interfaceffa80065-469f0603-b99c48fc-eec7024f" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">out</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceType0bcf68ee-6bf6-488c-af3f-105447849d8e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType0bcf68ee-6bf6-488c-af3f-105447849d8e" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:signature xlink:href="#signature0f95e211-7c49-4cc2-bd91-1986f164f80a" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
                 
             </types:interface>
+            <types:interface types:id="interfaceffa80065-4715bdae-1770516e-eec71137" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT Dispatcher</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypefff20c0e-f5675386-d56cf5c7-a26e073b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:interface>
+            <types:interface types:id="interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
             <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            
+            
+            
+            
+            
+            
+            
+            
+            
         </types:connector>
         <types:link types:id="linkffa83f01-fa795bee-b5b5f1cd-25c30196" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">PublisherEndpoint2MyxRuntimeAdapter</types:description>
@@ -1732,6 +1770,270 @@
                         <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                 </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-4715452e-edc7e2bf-eec710fc" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10400,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-4715bdae-1770516e-eec71137" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10950,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10475,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.875,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10875,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.125,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 
                 
@@ -2607,6 +2909,34 @@
                     <types:description xsi:type="instance:Description">[New Component]</types:description>
                 </changes:copyOfRemovedComponent>
             </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-4715452e-73a5f63b-eec710fd" changes:type="update" xsi:type="changes:ComponentChange">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-4715452e-1802766a-eec710fe" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interfaceffa80065-4715452e-edc7e2bf-eec710fc" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-4715bdae-8a6a56e1-eec71138" changes:type="update" xsi:type="changes:ComponentChange">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-4715bdae-dd480ffa-eec71139" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interfaceffa80065-4715bdae-1770516e-eec71137" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-471a9d4d-319bd969-eec712ea" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-471a9d4d-429d847b-eec712ef" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
+            <changes:componentChange changes:id="componentChangeffa80065-471af20b-60c4a1ac-eec71323" xsi:type="changes:ComponentChange" changes:type="update">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-471af20b-24550443-eec71324" xsi:type="changes:InterfaceChange" changes:type="add">
+                    <changes:interface xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
             <changes:linkChange changes:id="linkChangefff20c16-01b852d2-35cd1d03-30300cc2" changes:type="remove" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Remove Link</changes:description>
                 <changes:link xlink:href="#Copy of linkffa80065-dd6c1a03-2e4937b0-18f70a88" xlink:type="simple" xsi:type="instance:XMLLink"/>
@@ -2832,6 +3162,100 @@
                 <changes:description xsi:type="instance:Description">Update Link</changes:description>
                 <changes:link xlink:href="#linkffa80065-31aead9c-e151b9a2-9a5f028c" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             

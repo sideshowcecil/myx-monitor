@@ -84,6 +84,7 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
 
         switch (event.getXadlEventType()) {
         case ADD:
+            logger.info("Adding components/connectors to host " + event.getHostId());
             for (String id : event.getHostedComponentIds()) {
                 IElementRef ref = DBLUtils.createElementRef(id, modelRoot.getHostpropertyContext());
                 elementRefIndex.put(id, ref);
@@ -102,6 +103,7 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
             // subhosts are currently not supported
             break;
         case REMOVE:
+            logger.info("Revoving components/connectors from host " + event.getHostId());
             for (String id : event.getHostedComponentIds()) {
                 IElementRef ref = elementRefIndex.get(id);
                 host.removeHostsComponent(ref);
@@ -134,9 +136,11 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
 
         switch (event.getXadlEventType()) {
         case ADD:
+            logger.info("Adding host " + event.getHostId());
             host.setDescription(DBLUtils.createDescription(event.getDescription(), modelRoot.getHostpropertyContext()));
             break;
         case REMOVE:
+            logger.info("Removing host " + event.getHostId());
             // we only remove the host if it is empty
             if (host.getAllHostPropertys().isEmpty() && host.getAllHostsComponents().isEmpty()
                     && host.getAllHostsConnectors().isEmpty() && host.getAllHostsGroups().isEmpty()
@@ -163,6 +167,7 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
         switch (event.getXadlEventType()) {
         case ADD:
         case UPDATE:
+            logger.info("Adding/Updating hostproperties for host " + event.getHostId());
             Set<String> stringNames = event.getHostProperties().stringPropertyNames();
             Set<Entry<Object, Object>> entryset = event.getHostProperties().entrySet();
             for (Entry<Object, Object> entry : event.getHostProperties().entrySet()) {
@@ -181,6 +186,7 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
             entryset.getClass();
             break;
         case REMOVE:
+            logger.info("Removing hostproperties from host " + event.getHostId());
             for (Entry<Object, Object> entry : event.getHostProperties().entrySet()) {
                 String name = entry.getKey().toString();
 

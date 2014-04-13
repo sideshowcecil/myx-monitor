@@ -58,7 +58,6 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
                 if (endpoint != null) {
                     String connectionIdentifier = getExternalConnectionIdentifier();
                     dispatchExternalLinkConnectedEvent(
-                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                             DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                     try {
@@ -72,7 +71,6 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
                     } catch (IOException e) {
                     }
                     dispatchExternalLinkDisconnectedEvent(
-                            DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                             DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                 }

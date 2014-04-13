@@ -20,9 +20,8 @@ public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxS
      * @param interfaceType
      * @param externalConnectionIdentifier
      */
-    protected void dispatchExternalLinkConnectedEvent(String interfaceName, String interfaceType,
-            String externalConnectionIdentifier) {
-        dispatchExternalLinkEvent(interfaceName, interfaceType, externalConnectionIdentifier, XADLEventType.ADD);
+    protected void dispatchExternalLinkConnectedEvent(String interfaceType, String externalConnectionIdentifier) {
+        dispatchExternalLinkEvent(interfaceType, externalConnectionIdentifier, XADLEventType.ADD);
     }
 
     /**
@@ -32,9 +31,8 @@ public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxS
      * @param interfaceType
      * @param externalConnectionIdentifier
      */
-    protected void dispatchExternalLinkDisconnectedEvent(String interfaceName, String interfaceType,
-            String externalConnectionIdentifier) {
-        dispatchExternalLinkEvent(interfaceName, interfaceType, externalConnectionIdentifier, XADLEventType.REMOVE);
+    protected void dispatchExternalLinkDisconnectedEvent(String interfaceType, String externalConnectionIdentifier) {
+        dispatchExternalLinkEvent(interfaceType, externalConnectionIdentifier, XADLEventType.REMOVE);
     }
 
     /**
@@ -45,12 +43,12 @@ public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxS
      * @param externalConnectionIdentifier
      * @param eventType
      */
-    private void dispatchExternalLinkEvent(String interfaceName, String interfaceType,
-            String externalConnectionIdentifier, XADLEventType eventType) {
+    private void dispatchExternalLinkEvent(String interfaceType, String externalConnectionIdentifier,
+            XADLEventType eventType) {
         String runtimeId = MyxMonitoringUtils.getName(this).getName();
 
-        XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, interfaceName, interfaceType,
-                externalConnectionIdentifier, eventType);
+        XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, interfaceType, externalConnectionIdentifier,
+                eventType);
         e.setEventSourceId(this.getClass().getName());
         eventManager.handle(e);
     }

@@ -52,7 +52,6 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
                     // connected
                     String connectionIdentifier = getExternalConnectionIdentifier();
                     dispatchExternalLinkConnectedEvent(
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                             DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                     logger.info("Waiting for messages");
@@ -68,7 +67,6 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
                     // send event that the virtual external interface was
                     // disconnected
                     dispatchExternalLinkDisconnectedEvent(
-                            DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                             DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                     endpoint.close();

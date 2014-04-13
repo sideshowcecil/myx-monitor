@@ -228,8 +228,8 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             String requiredInterfaceType = interfaces.get(requiredBrickIntf), providedInterfaceType = interfaces
                     .get(providedBrickIntf);
             // send event
-            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceName, requiredInterfaceType, providedBrickName,
-                    providedInterfaceName, providedInterfaceType, xadlEventType);
+            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceType, providedBrickName, providedInterfaceType,
+                    xadlEventType);
         }
     }
 
@@ -244,12 +244,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlDestinationInterfaceType
      * @param xadlEventType
      */
-    private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceName,
-            String xadlSourceInterfaceType, String xadlDestinationRuntimeId,
-            String xadlDestinationElementInterfaceName, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
-        XADLLinkEvent e = new XADLLinkEvent(xadlSourceRuntimeId, xadlSourceInterfaceName, xadlSourceInterfaceType,
-                xadlDestinationRuntimeId, xadlDestinationElementInterfaceName, xadlDestinationInterfaceType,
-                xadlEventType);
+    private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceType,
+            String xadlDestinationRuntimeId, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
+        XADLLinkEvent e = new XADLLinkEvent(xadlSourceRuntimeId, xadlSourceInterfaceType, xadlDestinationRuntimeId,
+                xadlDestinationInterfaceType, xadlEventType);
         dispatchEvent(e);
     }
 

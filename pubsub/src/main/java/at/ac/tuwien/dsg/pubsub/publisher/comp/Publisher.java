@@ -32,7 +32,6 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
         if (endpoint != null) {
             connectionIdentifier = getExternalConnectionIdentifier();
             dispatchExternalLinkConnectedEvent(
-                    DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                     DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                     connectionIdentifier);
         }
@@ -42,7 +41,6 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
     public void end() {
         endpoint.close();
         dispatchExternalLinkDisconnectedEvent(
-                DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                 DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                 connectionIdentifier);
     }
@@ -56,7 +54,6 @@ public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick
                 endpoint.close();
                 endpoint = null;
                 dispatchExternalLinkDisconnectedEvent(
-                        DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_NAME,
                         DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                         connectionIdentifier);
             }

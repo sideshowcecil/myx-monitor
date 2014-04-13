@@ -61,7 +61,6 @@ public class EventManagerImpl implements EventManager, Runnable {
         try {
             while (true) {
                 Event event = queue.take();
-                System.err.println(event); // TODO remove
                 if (endpoint != null) {
                     Message<Event> msg = new Message<Event>(EventUtils.getTopic(event), event);
                     try {

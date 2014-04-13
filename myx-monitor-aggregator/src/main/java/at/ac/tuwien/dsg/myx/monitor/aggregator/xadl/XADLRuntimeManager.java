@@ -600,7 +600,62 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
      * @param event
      */
     private void process(XADLRuntimeEvent event) {
-        // TODO: how to map those events to the structure
+        IArchStructure structure = modelRoot.getArchStructure(event.getArchitectureRuntimeId());
+
+        switch (event.getXadlRuntimeType()) {
+        case BEGIN:
+            logger.info("Setting status of " + event.getXadlRuntimeId() + " to RUNNING");
+            if (!setRuntimeStatus(structure, event.getXadlRuntimeId(), "RUNNING")) {
+                logger.warn("Could not set the status of " + event.getXadlRuntimeId() + " because it does not exist");
+            }
+            break;
+        case END:
+            logger.info("Setting status of " + event.getXadlRuntimeId() + " to NOT RUNNING");
+            if (!setRuntimeStatus(structure, event.getXadlRuntimeId(), "NOT_RUNNING")) {
+                logger.warn("Could not set the status of " + event.getXadlRuntimeId() + " because it does not exist");
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    /**
+     * Set the runtime status of a specific component or connector.
+     * 
+     * @param structure
+     * @param id
+     * @return
+     */
+    private boolean setRuntimeStatus(IArchStructure structure, String id, String status) {
+        IComponent component = DBLUtils.getComponent(structure, id);
+        if (component != null) {
+            String description = getRuntimeDescription(component.getDescription().getValue(), status);
+            component.getDescription().setValue(description);
+            return true;
+        }
+        IConnector connector = DBLUtils.getConnector(structure, id);
+        if (connector != null) {
+            String description = getRuntimeDescription(connector.getDescription().getValue(), status);
+            connector.getDescription().setValue(description);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the description string representing the runtime status.
+     * 
+     * @param description
+     * @param status
+     * @return
+     */
+    private String getRuntimeDescription(String description, String status) {
+        if (description.contains("[")) {
+            description = description.substring(0, description.lastIndexOf("[")).trim();
+        }
+        description += " [" + status + "]";
+        return description;
     }
 
 }

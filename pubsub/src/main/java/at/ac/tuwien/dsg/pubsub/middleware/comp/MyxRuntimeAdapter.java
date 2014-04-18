@@ -17,12 +17,13 @@ import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MessageDistributor;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
+import edu.uci.isr.myx.fw.IMyxBrickDescription;
+import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.IMyxWeld;
 import edu.uci.isr.myx.fw.MyxBrickCreationException;
 import edu.uci.isr.myx.fw.MyxBrickLoadException;
 import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
-import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
 import edu.uci.isr.myx.fw.MyxUtils;
 
 public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter implements IMyxRuntimeAdapter {
@@ -31,10 +32,10 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
 
     public static final IMyxName[] PATH = null;
 
-    private IMyxName messageDistributorRuntimeId = null;
+    protected IMyxName messageDistributorRuntimeId = null;
 
-    private Map<IMyxName, List<IMyxName>> component2Interfaces = new HashMap<>();
-    private Map<IMyxName, List<IMyxWeld>> component2Welds = new HashMap<>();
+    protected Map<IMyxName, List<IMyxName>> component2Interfaces = new HashMap<>();
+    protected Map<IMyxName, List<IMyxWeld>> component2Welds = new HashMap<>();
 
     @Override
     public Object getServiceObject(IMyxName interfaceName) {
@@ -49,7 +50,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
      * 
      * @return
      */
-    private void fetchMessageDistributorRuntimeId() {
+    protected void fetchMessageDistributorRuntimeId() {
         if (messageDistributorRuntimeId == null) {
             synchronized (this) {
                 for (IMyxName brickName : getMyxRuntime().getAllBrickNames(null)) {
@@ -69,7 +70,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
      * 
      * @param brickName
      */
-    private void removeComponent(IMyxName brickName) {
+    protected void removeComponent(IMyxName brickName) {
         synchronized (this) {
             if (component2Interfaces.containsKey(brickName)) {
                 // call the specific myx methods
@@ -121,30 +122,30 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID,
                 DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_BLUEPRINT_ID);
         initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.CONNECTOR);
-        MyxJavaClassBrickDescription publisherEndpointDesc = new MyxJavaClassBrickDescription(initProps,
+        IMyxBrickDescription publisherEndpointDesc = new MyxJavaClassBrickDescription(initProps,
                 publisherEndpointClassName);
 
         // interface descriptions
         Properties dispatcherInitProps = new Properties();
         dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.DISPATCHER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IDISPATCHER.getName() }, dispatcherInitProps);
         Properties subscriberInitProps = new Properties();
         subscriberInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.SUBSCRIBER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.ISUBSCRIBER.getName() }, subscriberInitProps);
         Properties myxAdapterInitProps = new Properties();
         myxAdapterInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.MYX_ADAPTER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);
         // external interface description
         Properties virtualExternalInterfaceInitProps = new Properties();
         virtualExternalInterfaceInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[0], virtualExternalInterfaceInitProps);
 
         // create name
@@ -220,30 +221,30 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
         initProps.put(MyxProperties.ARCHITECTURE_BLUEPRINT_ID,
                 DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_BLUEPRINT_ID);
         initProps.put(MyxProperties.ARCHITECTURE_BRICK_TYPE, XADLElementType.CONNECTOR);
-        MyxJavaClassBrickDescription subscriberEndpointDesc = new MyxJavaClassBrickDescription(initProps,
+        IMyxBrickDescription subscriberEndpointDesc = new MyxJavaClassBrickDescription(initProps,
                 subscriberEndpointClassName);
 
         // interface descriptions
         Properties dispatcherInitProps = new Properties();
         dispatcherInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.DISPATCHER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription dispatcherDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IDISPATCHER.getName() }, dispatcherInitProps);
         Properties subscriberInitProps = new Properties();
         subscriberInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.SUBSCRIBER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription subscriberDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.ISUBSCRIBER.getName() }, subscriberInitProps);
         Properties myxAdapterInitProps = new Properties();
         myxAdapterInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.MYX_ADAPTER_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription myxAdapterDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[] { MyxInterfaceNames.IMYX_ADAPTER.getName() }, myxAdapterInitProps);
         // external interface description
         Properties virtualExternalInterfaceInitProps = new Properties();
         virtualExternalInterfaceInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE,
                 DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE);
-        MyxJavaClassInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
+        IMyxInterfaceDescription virtualExternalInterfaceDesc = new MyxJavaClassInitPropertiesInterfaceDescription(
                 new String[0], virtualExternalInterfaceInitProps);
 
         // create name

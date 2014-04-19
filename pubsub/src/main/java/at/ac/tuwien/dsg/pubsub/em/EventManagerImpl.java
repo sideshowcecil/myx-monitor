@@ -49,7 +49,7 @@ public class EventManagerImpl implements EventManager, Runnable {
 
     @Override
     public void run() {
-        if (connectionString != null) {
+        if (connectionString != null && !connectionString.isEmpty()) {
             URI uri;
             try {
                 uri = new URI(connectionString);

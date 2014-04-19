@@ -10,5 +10,4 @@ Export-Package: at.ac.tuwien.dsg.myx.monitor.aggregator,
  at.ac.tuwien.dsg.myx.monitor.aggregator.model,
  at.ac.tuwien.dsg.myx.monitor.aggregator.myx,
  at.ac.tuwien.dsg.myx.monitor.aggregator.xadl
-Require-Bundle: edu.uci.isr.myx.fw;bundle-version="4.1.50"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

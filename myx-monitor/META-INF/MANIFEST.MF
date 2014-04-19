@@ -37,5 +37,4 @@ Export-Package: at.ac.tuwien.dsg.myx.fw,
  edu.uci.isr.xarch.types,
  edu.uci.isr.xarch.variants,
  edu.uci.isr.xarch.versions
-Require-Bundle: edu.uci.isr.myx.fw;bundle-version="4.1.50"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

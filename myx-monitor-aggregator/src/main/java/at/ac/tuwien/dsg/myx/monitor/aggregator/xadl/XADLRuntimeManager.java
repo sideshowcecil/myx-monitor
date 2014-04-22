@@ -68,15 +68,19 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
     public void consume(Message<Event> message) {
         if (matches(message.getTopic())) {
             logger.info("Consuming event of type " + message.getData().getClass());
-            Event event = message.getData();
-            if (event instanceof XADLEvent) {
-                process((XADLEvent) event);
-            } else if (event instanceof XADLExternalLinkEvent) {
-                process((XADLExternalLinkEvent) event);
-            } else if (event instanceof XADLLinkEvent) {
-                process((XADLLinkEvent) event);
-            } else if (event instanceof XADLRuntimeEvent) {
-                process((XADLRuntimeEvent) event);
+            try {
+                Event event = message.getData();
+                if (event instanceof XADLEvent) {
+                    process((XADLEvent) event);
+                } else if (event instanceof XADLExternalLinkEvent) {
+                    process((XADLExternalLinkEvent) event);
+                } else if (event instanceof XADLLinkEvent) {
+                    process((XADLLinkEvent) event);
+                } else if (event instanceof XADLRuntimeEvent) {
+                    process((XADLRuntimeEvent) event);
+                }
+            } catch (Exception e) {
+                logger.warn("An unexpected error occured", e);
             }
         }
     }
@@ -338,41 +342,53 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
         case ADD:
             logger.info("Establishing external link on " + event.getXadlRuntimeId() + ": "
                     + event.getXadlExternalConnectionIdentifier());
-            if (!externalConnections.containsKey(event.getXadlExternalConnectionIdentifier())) {
-                externalConnections.put(event.getXadlExternalConnectionIdentifier(), new ArrayList<IInterface>());
-            }
-            if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
-                for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
-                    ILink link = createLink(event.getXadlRuntimeId(), intf,
-                            event.getXadlExternalConnectionIdentifier(), destination);
-                    if (link != null) {
-                        structure.addLink(link);
-                        Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(),
-                                destination.getId());
-                        saveLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier, link);
-                    } else {
-                        logger.warn("External link on " + event.getXadlRuntimeId() + ": "
-                                + event.getXadlExternalConnectionIdentifier()
-                                + "could not be established due to non matching interfaces");
+            if (intf != null) {
+                if (!externalConnections.containsKey(event.getXadlExternalConnectionIdentifier())) {
+                    externalConnections.put(event.getXadlExternalConnectionIdentifier(), new ArrayList<IInterface>());
+                } else if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
+                    for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
+                        ILink link = createLink(event.getXadlRuntimeId(), intf,
+                                event.getXadlExternalConnectionIdentifier(), destination);
+                        if (link != null) {
+                            structure.addLink(link);
+                            Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(),
+                                    destination.getId());
+                            saveLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier, link);
+                        } else {
+                            logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                                    + event.getXadlExternalConnectionIdentifier()
+                                    + "could not be established due to non matching interfaces");
+                        }
                     }
                 }
+                externalConnections.get(event.getXadlExternalConnectionIdentifier()).add(intf);
+            } else {
+                logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                        + event.getXadlExternalConnectionIdentifier()
+                        + "could not be established due to non matching interfaces");
             }
-            externalConnections.get(event.getXadlExternalConnectionIdentifier()).add(intf);
             break;
         case REMOVE:
             logger.info("Removing external link on " + event.getXadlRuntimeId() + ": "
                     + event.getXadlExternalConnectionIdentifier());
             if (externalConnections.containsKey(event.getXadlExternalConnectionIdentifier())) {
-                for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
-                    Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(), destination.getId());
-                    if (links.containsKey(linkIdentifier)) {
-                        structure.removeLink(links.get(linkIdentifier));
-                        removeLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier);
-                    } else {
-                        logger.warn("External link on " + event.getXadlRuntimeId() + ": "
-                                + event.getXadlExternalConnectionIdentifier()
-                                + " could not be removed because it does not exist");
+                if (intf != null) {
+                    for (IInterface destination : externalConnections.get(event.getXadlExternalConnectionIdentifier())) {
+                        Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(),
+                                destination.getId());
+                        if (links.containsKey(linkIdentifier)) {
+                            structure.removeLink(links.get(linkIdentifier));
+                            removeLink(event.getXadlRuntimeId(), interface2element.get(intf), linkIdentifier);
+                        } else {
+                            logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                                    + event.getXadlExternalConnectionIdentifier()
+                                    + " could not be removed because it does not exist");
+                        }
                     }
+                } else {
+                    logger.warn("External link on " + event.getXadlRuntimeId() + ": "
+                            + event.getXadlExternalConnectionIdentifier()
+                            + "could not be removed due to non matching interfaces");
                 }
             } else {
                 logger.warn("External link on " + event.getXadlRuntimeId() + ": "

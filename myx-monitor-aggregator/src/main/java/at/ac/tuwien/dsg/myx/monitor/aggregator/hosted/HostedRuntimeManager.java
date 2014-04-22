@@ -45,13 +45,17 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
     public void consume(Message<Event> message) {
         if (matches(message.getTopic())) {
             logger.info("Consuming event of type " + message.getData().getClass());
-            Event event = message.getData();
-            if (event instanceof XADLHostingEvent) {
-                process((XADLHostingEvent) event);
-            } else if (event instanceof XADLHostInstanceEvent) {
-                process((XADLHostInstanceEvent) event);
-            } else if (event instanceof XADLHostPropertyEvent) {
-                process((XADLHostPropertyEvent) event);
+            try {
+                Event event = message.getData();
+                if (event instanceof XADLHostingEvent) {
+                    process((XADLHostingEvent) event);
+                } else if (event instanceof XADLHostInstanceEvent) {
+                    process((XADLHostInstanceEvent) event);
+                } else if (event instanceof XADLHostPropertyEvent) {
+                    process((XADLHostPropertyEvent) event);
+                }
+            } catch (Exception e) {
+                logger.warn("An unexpected error occured", e);
             }
         }
     }
@@ -105,16 +109,22 @@ public class HostedRuntimeManager implements ISubscriber<Event> {
         case REMOVE:
             logger.info("Revoving components/connectors from host " + event.getHostId());
             for (String id : event.getHostedComponentIds()) {
-                IElementRef ref = elementRefIndex.get(id);
-                host.removeHostsComponent(ref);
+                if (elementRefIndex.containsKey(id)) {
+                    IElementRef ref = elementRefIndex.get(id);
+                    host.removeHostsComponent(ref);
+                }
             }
             for (String id : event.getHostedConnectorIds()) {
-                IElementRef ref = elementRefIndex.get(id);
-                host.removeHostsConnector(ref);
+                if (elementRefIndex.containsKey(id)) {
+                    IElementRef ref = elementRefIndex.get(id);
+                    host.removeHostsConnector(ref);
+                }
             }
             for (String id : event.getHostedGroupIds()) {
-                IElementRef ref = elementRefIndex.get(id);
-                host.removeHostsGroup(ref);
+                if (elementRefIndex.containsKey(id)) {
+                    IElementRef ref = elementRefIndex.get(id);
+                    host.removeHostsGroup(ref);
+                }
             }
             // subhosts are currently not supported
             break;

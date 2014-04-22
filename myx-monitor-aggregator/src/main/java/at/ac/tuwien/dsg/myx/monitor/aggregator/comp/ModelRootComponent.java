@@ -8,7 +8,7 @@ import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public class ModelRootComponent extends AbstractMyxSimpleBrick {
+public class ModelRootComponent extends AbstractMyxSimpleBrick implements Runnable {
 
     public static final IMyxName IN_MODEL_ROOT = MyxInterfaceNames.MODEL_ROOT;
 
@@ -32,6 +32,19 @@ public class ModelRootComponent extends AbstractMyxSimpleBrick {
         
         modelRoot = new ModelRootImpl();
         modelRoot.parse(xadlFile);
+        
+        // we ensure that the xadl file is saved on shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(this));
+    }
+    
+    @Override
+    public void end() {
+        modelRoot.save(xadlFile);
+    }
+
+    @Override
+    public void run() {
+        end();
     }
 
 }

@@ -49,18 +49,22 @@ public class ModelRootImpl implements ModelRoot {
 
     @Override
     public void save(String xadlFile) {
-        FileWriter fr = null;
-        try {
-            fr = new FileWriter(new File(xadlFile));
-            fr.write(xArchImpl.serialize(xArchRoot, null));
-            fr.close();
-        } catch (IOException | XArchSerializeException e) {
-            throw new IllegalArgumentException("There was an error while saving the architecture", e);
-        } finally {
-            if (fr != null) {
+        if (xArchRoot != null) {
+            synchronized (xArchRoot) {
+                FileWriter fr = null;
                 try {
+                    fr = new FileWriter(new File(xadlFile));
+                    fr.write(xArchImpl.serialize(xArchRoot, null));
                     fr.close();
-                } catch (IOException e) {
+                } catch (IOException | XArchSerializeException e) {
+                    throw new IllegalArgumentException("There was an error while saving the architecture", e);
+                } finally {
+                    if (fr != null) {
+                        try {
+                            fr.close();
+                        } catch (IOException e) {
+                        }
+                    }
                 }
             }
         }

@@ -300,7 +300,7 @@
             <types:interface types:id="interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
             <types:type xlink:href="#connectorType9a4cb396-e16f-47a0-b19b-54a2b42bfc76" xlink:type="simple" xsi:type="instance:XMLLink"/>
             
@@ -341,7 +341,7 @@
             <types:interface types:id="interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">OUT MyxRuntimeAdapter</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypefff20c0e-f569edef-56edff1d-a26e0908" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
             <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
             
@@ -1795,7 +1795,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10475,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -1807,7 +1807,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10875,10350" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -2923,18 +2923,18 @@
                     <changes:interface xlink:href="#interfaceffa80065-4715bdae-1770516e-eec71137" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
-            <changes:componentChange changes:id="componentChangeffa80065-471a9d4d-319bd969-eec712ea" xsi:type="changes:ComponentChange" changes:type="update">
+            <changes:componentChange changes:id="componentChangeffa80065-471a9d4d-319bd969-eec712ea" changes:type="update" xsi:type="changes:ComponentChange">
                 <changes:description xsi:type="instance:Description">New interface</changes:description>
-                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <changes:interfaceChange changes:id="interfaceChangeffa80065-471a9d4d-429d847b-eec712ef" xsi:type="changes:InterfaceChange" changes:type="add">
-                    <changes:interface xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:component xlink:href="#connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-471a9d4d-429d847b-eec712ef" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interfaceffa80065-471a9d4d-7b3898b2-eec712e9" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
-            <changes:componentChange changes:id="componentChangeffa80065-471af20b-60c4a1ac-eec71323" xsi:type="changes:ComponentChange" changes:type="update">
+            <changes:componentChange changes:id="componentChangeffa80065-471af20b-60c4a1ac-eec71323" changes:type="update" xsi:type="changes:ComponentChange">
                 <changes:description xsi:type="instance:Description">New interface</changes:description>
-                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <changes:interfaceChange changes:id="interfaceChangeffa80065-471af20b-24550443-eec71324" xsi:type="changes:InterfaceChange" changes:type="add">
-                    <changes:interface xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-471af20b-24550443-eec71324" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interfaceffa80065-471af20b-db8644b1-eec71322" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
             <changes:linkChange changes:id="linkChangefff20c16-01b852d2-35cd1d03-30300cc2" changes:type="remove" xsi:type="changes:LinkChange">
@@ -3415,8 +3415,11 @@
             </types:interface>
             <types:type xlink:href="#connectorTypeffa80065-31a76e8b-ddb071fa-9a5f0035" xlink:type="simple" xsi:type="instance:XMLLink"/>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
-                <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
+                <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.publisher.comp.socket.SocketBytePublisher</javaimplementation:javaClassName>
+                    <javainitparams:initializationParameter javainitparams:name="hostname" xsi:type="javainitparams:InitializationParameter" javainitparams:value="localhost"/>
+                    <javainitparams:initializationParameter javainitparams:name="port" xsi:type="javainitparams:InitializationParameter" javainitparams:value="6666"/>
+                    
                 </javaimplementation:mainClass>
             </implementationext:implementation>
         </types:connector>
@@ -3461,8 +3464,11 @@
             </types:interface>
             <types:type xlink:href="#connectorTypeffa80065-3386718b-0458353a-9a5f031c" xlink:type="simple" xsi:type="instance:XMLLink"/>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
-                <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
+                <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.subscriber.comp.socket.SocketByteSubscriber</javaimplementation:javaClassName>
+                    <javainitparams:initializationParameter javainitparams:name="hostname" xsi:type="javainitparams:InitializationParameter" javainitparams:value="localhost"/>
+                    <javainitparams:initializationParameter javainitparams:name="port" xsi:type="javainitparams:InitializationParameter" javainitparams:value="6667"/>
+                    
                 </javaimplementation:mainClass>
             </implementationext:implementation>
         </types:connector>

@@ -5,17 +5,22 @@ public class XADLLinkEvent extends Event {
     private static final long serialVersionUID = -8468106459116728579L;
 
     private final String xadlSourceRuntimeId;
+    private final String xadlSourceBlueprintId;
     private final String xadlSourceInterfaceType;
     private final String xadlDestinationRuntimeId;
+    private final String xadlDestinationBlueprintId;
     private final String xadlDestinationInterfaceType;
     private final XADLEventType xadlEventType;
 
-    public XADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceType, String xadlDestinationRuntimeId,
-            String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
+    public XADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceBlueprintId, String xadlSourceInterfaceType,
+            String xadlDestinationRuntimeId, String xadlDestinationBlueprintId, String xadlDestinationInterfaceType,
+            XADLEventType xadlEventType) {
         super();
         this.xadlSourceRuntimeId = xadlSourceRuntimeId;
+        this.xadlSourceBlueprintId = xadlSourceBlueprintId;
         this.xadlSourceInterfaceType = xadlSourceInterfaceType;
         this.xadlDestinationRuntimeId = xadlDestinationRuntimeId;
+        this.xadlDestinationBlueprintId = xadlDestinationBlueprintId;
         this.xadlDestinationInterfaceType = xadlDestinationInterfaceType;
         this.xadlEventType = xadlEventType;
     }
@@ -23,8 +28,10 @@ public class XADLLinkEvent extends Event {
     public XADLLinkEvent(XADLLinkEvent copyFrom) {
         super(copyFrom);
         xadlSourceRuntimeId = copyFrom.getXadlSourceRuntimeId();
+        xadlSourceBlueprintId = copyFrom.getXadlSourceBlueprintId();
         xadlSourceInterfaceType = copyFrom.getXadlSourceInterfaceType();
         xadlDestinationRuntimeId = copyFrom.getXadlDestinationRuntimeId();
+        xadlDestinationBlueprintId = copyFrom.getXadlDestinationBlueprintId();
         xadlDestinationInterfaceType = copyFrom.getXadlDestinationInterfaceType();
         xadlEventType = copyFrom.getXadlEventType();
     }
@@ -33,12 +40,20 @@ public class XADLLinkEvent extends Event {
         return xadlSourceRuntimeId;
     }
 
+    public String getXadlSourceBlueprintId() {
+        return xadlSourceBlueprintId;
+    }
+
     public String getXadlSourceInterfaceType() {
         return xadlSourceInterfaceType;
     }
 
     public String getXadlDestinationRuntimeId() {
         return xadlDestinationRuntimeId;
+    }
+
+    public String getXadlDestinationBlueprintId() {
+        return xadlDestinationBlueprintId;
     }
 
     public String getXadlDestinationInterfaceType() {
@@ -52,9 +67,10 @@ public class XADLLinkEvent extends Event {
     @Override
     public String toString() {
         return "XADLLinkEvent [base=[" + super.toString() + "], xadlSourceRuntimeId=" + getXadlSourceRuntimeId()
-                + ", xadlSourceInterfaceType=" + getXadlSourceInterfaceType() + ", xadlDestinationRuntimeId="
-                + getXadlDestinationRuntimeId() + ", xadlDestinationInterfaceType=" + getXadlDestinationInterfaceType()
-                + ", xadlEventType=" + getXadlEventType() + "]";
+                + ", xadlSourceBlueprintId=" + getXadlSourceBlueprintId() + ", xadlSourceInterfaceType="
+                + getXadlSourceInterfaceType() + ", xadlDestinationRuntimeId=" + getXadlDestinationRuntimeId()
+                + ", xadlDestinationBlueprintId=" + getXadlDestinationBlueprintId() + ", xadlDestinationInterfaceType="
+                + getXadlDestinationInterfaceType() + ", xadlEventType=" + getXadlEventType() + "]";
     }
 
 }

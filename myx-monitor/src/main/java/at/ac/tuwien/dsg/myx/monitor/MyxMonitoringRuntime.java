@@ -59,8 +59,11 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                 for (IMyxName brick : bricks) {
                     for (IMyxName b : getBrickNames(null, brick)) {
                         String runtimeId = b.getName();
-                        // send event
-                        dispatchXADLRuntimeEvent(runtimeId, XADLRuntimeEventType.END);
+                        if (runtime2blueprint.containsKey(runtimeId)) {
+                            // send event
+                            dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
+                                    XADLRuntimeEventType.END);
+                        }
                     }
                 }
                 // send xadl- and hosting events
@@ -179,8 +182,11 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.begin(path, brickName);
 
         for (IMyxName b : getBrickNames(path, brickName)) {
-            // send event
-            dispatchXADLRuntimeEvent(b.getName(), XADLRuntimeEventType.BEGIN);
+            String runtimeId = b.getName();
+            if (runtime2blueprint.containsKey(runtimeId)) {
+                // send event
+                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLRuntimeEventType.BEGIN);
+            }
         }
     }
 
@@ -189,8 +195,11 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.end(path, brickName);
 
         for (IMyxName b : getBrickNames(path, brickName)) {
-            // send event
-            dispatchXADLRuntimeEvent(b.getName(), XADLRuntimeEventType.END);
+            String runtimeId = b.getName();
+            if (runtime2blueprint.containsKey(runtimeId)) {
+                // send event
+                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLRuntimeEventType.END);
+            }
         }
     }
 
@@ -216,20 +225,24 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlEventType
      */
     private void dispatchXADLLinkEvent(IMyxWeld weld, XADLEventType xadlEventType) {
-        String requiredBrickName = weld.getRequiredBrickName().getName(), requiredInterfaceName = weld
+        String sourceRuntimeId = weld.getRequiredBrickName().getName(), sourceInterfaceName = weld
                 .getRequiredInterfaceName().getName();
-        String providedBrickName = weld.getProvidedBrickName().getName(), providedInterfaceName = weld
+        String destinationRuntimeId = weld.getProvidedBrickName().getName(), destinationInterfaceName = weld
                 .getProvidedInterfaceName().getName();
 
-        Tuple<String, String> requiredBrickIntf = new Tuple<>(requiredBrickName, requiredInterfaceName);
-        Tuple<String, String> providedBrickIntf = new Tuple<>(providedBrickName, providedInterfaceName);
+        Tuple<String, String> sourceIntf = new Tuple<>(sourceRuntimeId, sourceInterfaceName);
+        Tuple<String, String> destinationIntf = new Tuple<>(destinationRuntimeId, destinationInterfaceName);
 
-        if (interfaces.containsKey(requiredBrickIntf) && interfaces.containsKey(providedBrickIntf)) {
-            String requiredInterfaceType = interfaces.get(requiredBrickIntf), providedInterfaceType = interfaces
-                    .get(providedBrickIntf);
-            // send event
-            dispatchXADLLinkEvent(requiredBrickName, requiredInterfaceType, providedBrickName, providedInterfaceType,
-                    xadlEventType);
+        if (runtime2blueprint.containsKey(sourceRuntimeId) && runtime2blueprint.containsKey(destinationRuntimeId)) {
+            String sourceBlueprintId = runtime2blueprint.get(sourceRuntimeId), destinationBlueprintId = runtime2blueprint
+                    .get(destinationRuntimeId);
+            if (interfaces.containsKey(sourceIntf) && interfaces.containsKey(destinationIntf)) {
+                String sourceInterfaceType = interfaces.get(sourceIntf), destinationInterfaceType = interfaces
+                        .get(destinationIntf);
+                // send event
+                dispatchXADLLinkEvent(sourceRuntimeId, sourceBlueprintId, sourceInterfaceType, destinationRuntimeId,
+                        destinationBlueprintId, destinationInterfaceType, xadlEventType);
+            }
         }
     }
 
@@ -237,17 +250,20 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * Dispatch a {@link XADLLinkEvent}.
      * 
      * @param xadlSourceRuntimeId
+     * @param xadlSourceBlueprintId
      * @param xadlSourceInterfaceName
      * @param xadlSourceInterfaceType
      * @param xadlDestinationRuntimeId
+     * @param xadlDestinationBlueprintId
      * @param xadlDestinationElementInterfaceName
      * @param xadlDestinationInterfaceType
      * @param xadlEventType
      */
-    private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceInterfaceType,
-            String xadlDestinationRuntimeId, String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
-        XADLLinkEvent e = new XADLLinkEvent(xadlSourceRuntimeId, xadlSourceInterfaceType, xadlDestinationRuntimeId,
-                xadlDestinationInterfaceType, xadlEventType);
+    private void dispatchXADLLinkEvent(String xadlSourceRuntimeId, String xadlSourceBlueprintId,
+            String xadlSourceInterfaceType, String xadlDestinationRuntimeId, String xadlDestinationBlueprintId,
+            String xadlDestinationInterfaceType, XADLEventType xadlEventType) {
+        XADLLinkEvent e = new XADLLinkEvent(xadlSourceRuntimeId, xadlSourceBlueprintId, xadlSourceInterfaceType,
+                xadlDestinationRuntimeId, xadlDestinationBlueprintId, xadlDestinationInterfaceType, xadlEventType);
         dispatchEvent(e);
     }
 
@@ -257,8 +273,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @param xadlRuntimeId
      * @param xadlRuntimeType
      */
-    private void dispatchXADLRuntimeEvent(String xadlRuntimeId, XADLRuntimeEventType xadlRuntimeType) {
-        XADLRuntimeEvent e = new XADLRuntimeEvent(xadlRuntimeId, xadlRuntimeType);
+    private void dispatchXADLRuntimeEvent(String xadlRuntimeId, String xadlBlueprintId,
+            XADLRuntimeEventType xadlRuntimeType) {
+        XADLRuntimeEvent e = new XADLRuntimeEvent(xadlRuntimeId, xadlBlueprintId, xadlRuntimeType);
         dispatchEvent(e);
     }
 

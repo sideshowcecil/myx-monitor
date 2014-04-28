@@ -58,10 +58,10 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
     public XADLRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         topics = new ArrayList<>();
-        topics.add(new Topic(EventUtils.getTopic(XADLEvent.class)));
-        topics.add(new Topic(EventUtils.getTopic(XADLExternalLinkEvent.class)));
-        topics.add(new Topic(EventUtils.getTopic(XADLLinkEvent.class)));
-        topics.add(new Topic(EventUtils.getTopic(XADLRuntimeEvent.class)));
+        topics.add(new Topic(EventUtils.getTopicPattern(XADLEvent.class)));
+        topics.add(new Topic(EventUtils.getTopicPattern(XADLExternalLinkEvent.class)));
+        topics.add(new Topic(EventUtils.getTopicPattern(XADLLinkEvent.class)));
+        topics.add(new Topic(EventUtils.getTopicPattern(XADLRuntimeEvent.class)));
     }
 
     @Override

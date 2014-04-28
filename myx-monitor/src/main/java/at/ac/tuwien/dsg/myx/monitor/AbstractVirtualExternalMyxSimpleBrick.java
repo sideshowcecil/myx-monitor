@@ -1,5 +1,7 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
+import java.util.Properties;
+
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
@@ -45,11 +47,16 @@ public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxS
      */
     private void dispatchExternalLinkEvent(String interfaceType, String externalConnectionIdentifier,
             XADLEventType eventType) {
-        String runtimeId = MyxMonitoringUtils.getName(this).getName();
+        Properties initProperties = MyxMonitoringUtils.getInitProperties(this);
+        if (initProperties.containsKey(MyxProperties.ARCHITECTURE_BLUEPRINT_ID)) {
+            // we can only send the event if we have a blueprint id
+            String runtimeId = MyxMonitoringUtils.getName(this).getName();
+            String blueprintId = initProperties.getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID);
 
-        XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, interfaceType, externalConnectionIdentifier,
-                eventType);
-        e.setEventSourceId(this.getClass().getName());
-        eventManager.handle(e);
+            XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, blueprintId, interfaceType,
+                    externalConnectionIdentifier, eventType);
+            e.setEventSourceId(this.getClass().getName());
+            eventManager.handle(e);
+        }
     }
 }

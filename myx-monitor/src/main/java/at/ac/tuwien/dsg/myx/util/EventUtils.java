@@ -27,7 +27,21 @@ public final class EventUtils {
      * @return
      */
     public static String getTopic(Event event) {
-        return getTopic(event.getClass());
+        StringBuilder topic = new StringBuilder();
+        topic.append(getTopic(event.getClass()));
+        if (event instanceof XADLEvent) {
+            topic.append(".").append(((XADLEvent) event).getXadlBlueprintId());
+        } else if (event instanceof XADLExternalLinkEvent) {
+            topic.append(".").append(((XADLExternalLinkEvent) event).getXadlBlueprintId());
+        } else if (event instanceof XADLHostEvent) {
+            topic.append(".").append(((XADLHostEvent) event).getHostId());
+        } else if (event instanceof XADLLinkEvent) {
+            topic.append(".").append(((XADLLinkEvent) event).getXadlSourceBlueprintId()).append(".")
+                    .append(((XADLLinkEvent) event).getXadlDestinationBlueprintId());
+        } else if (event instanceof XADLRuntimeEvent) {
+            topic.append(".").append(((XADLRuntimeEvent) event).getXadlBlueprintId());
+        }
+        return topic.toString();
     }
 
     /**

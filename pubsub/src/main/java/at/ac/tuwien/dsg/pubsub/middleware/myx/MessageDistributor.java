@@ -3,7 +3,9 @@ package at.ac.tuwien.dsg.pubsub.middleware.myx;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
@@ -20,30 +22,32 @@ import edu.uci.isr.myx.fw.IMyxName;
  */
 public class MessageDistributor extends EventPumpConnector {
 
-    private List<Tuple<Method, Object[]>> initCalls = new ArrayList<>();
+    private Map<String, List<Tuple<Method, Object[]>>> initCalls = new HashMap<>();
 
     @Override
     public void interfaceConnected(IMyxName interfaceName, Object serviceObject) {
         if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
             if (initCalls.size() > 0) {
                 final Object tso = serviceObject;
-                for (Tuple<Method, Object[]> call : initCalls) {
-                    final Method m = call.getFst();
-                    final Object[] a = call.getSnd();
-                    Runnable r = new Runnable() {
-                        public void run() {
-                            try {
-                                m.invoke(tso, a);
-                            } catch (IllegalAccessException iae) {
-                                iae.printStackTrace();
-                                return;
-                            } catch (InvocationTargetException ite) {
-                                ite.printStackTrace();
-                                return;
+                for (List<Tuple<Method, Object[]>> calls : initCalls.values()) {
+                    for (Tuple<Method, Object[]> call : calls) {
+                        final Method m = call.getFst();
+                        final Object[] a = call.getSnd();
+                        Runnable r = new Runnable() {
+                            public void run() {
+                                try {
+                                    m.invoke(tso, a);
+                                } catch (IllegalAccessException iae) {
+                                    iae.printStackTrace();
+                                    return;
+                                } catch (InvocationTargetException ite) {
+                                    ite.printStackTrace();
+                                    return;
+                                }
                             }
-                        }
-                    };
-                    asyncExecutor.execute(r);
+                        };
+                        asyncExecutor.execute(r);
+                    }
                 }
             }
         }
@@ -58,7 +62,12 @@ public class MessageDistributor extends EventPumpConnector {
             if (object instanceof Message<?>) {
                 Message<?> msg = (Message<?>) object;
                 if (msg.getType() == Type.INIT) {
-                    initCalls.add(new Tuple<Method, Object[]>(method, args));
+                    if (!initCalls.containsKey(msg.getTopic())) {
+                        initCalls.put(msg.getTopic(), new ArrayList<Tuple<Method, Object[]>>());
+                    }
+                    initCalls.get(msg.getTopic()).add(new Tuple<Method, Object[]>(method, args));
+                } else if (msg.getType() == Type.CLOSE) {
+                    initCalls.remove(msg.getTopic());
                 }
             }
         }

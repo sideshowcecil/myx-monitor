@@ -37,34 +37,6 @@ import edu.uci.isr.xarch.IXArchContext;
 public interface IInstancemappingContext extends IXArchContext{
 
 	/**
-	 * Create an IBlueprint object in this namespace.
-	 * @return New IBlueprint object.
-	 */
-	public IBlueprint createBlueprint();
-
-	/**
-	 * Brings an IBlueprint object created in another
-	 * context into this context.
-	 * @param value Object to recontextualize.
-	 * @return <code>value</code> object in this namespace.
-	 */
-	public IBlueprint recontextualizeBlueprint(IBlueprint value);
-
-	/**
-	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
-	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
-	 */
-	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink();
-
-	/**
-	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
-	 * context into this context.
-	 * @param value Object to recontextualize.
-	 * @return <code>value</code> object in this namespace.
-	 */
-	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value);
-
-	/**
 	 * Create an IMappedComponentInstance object in this namespace.
 	 * @return New IMappedComponentInstance object.
 	 */
@@ -100,6 +72,20 @@ public interface IInstancemappingContext extends IXArchContext{
 	 */
 	public IMappedComponentInstance promoteToMappedComponentInstance(
 	edu.uci.isr.xarch.instance.IComponentInstance value);
+
+	/**
+	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
+	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
+	 */
+	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink();
+
+	/**
+	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
+	 * context into this context.
+	 * @param value Object to recontextualize.
+	 * @return <code>value</code> object in this namespace.
+	 */
+	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value);
 
 	/**
 	 * Create an IMappedConnectorInstance object in this namespace.
@@ -181,13 +167,11 @@ public interface IInstancemappingContext extends IXArchContext{
 		"instancemapping", null, null,
 		new XArchPropertyMetadata[]{},
 		new XArchActionMetadata[]{
-			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IBlueprint.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IBlueprint.TYPE_METADATA, IBlueprint.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.CREATE, null, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedComponentInstance.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedComponentInstance.TYPE_METADATA, IMappedComponentInstance.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.instance.IComponentInstance.TYPE_METADATA, IMappedComponentInstance.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.CREATE, null, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedConnectorInstance.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedConnectorInstance.TYPE_METADATA, IMappedConnectorInstance.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.instance.IConnectorInstance.TYPE_METADATA, IMappedConnectorInstance.TYPE_METADATA),

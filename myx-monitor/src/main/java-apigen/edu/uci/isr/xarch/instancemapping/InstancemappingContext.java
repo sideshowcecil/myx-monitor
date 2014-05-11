@@ -71,76 +71,6 @@ public class InstancemappingContext implements IInstancemappingContext {
 		return IInstancemappingContext.TYPE_METADATA;
 	}
 	/**
-	 * Create an IBlueprint object in this namespace.
-	 * @return New IBlueprint object.
-	 */
-	public IBlueprint createBlueprint(){
-		Element elt = createElement(DEFAULT_ELT_NAME);
-		DOMUtils.addXSIType(elt, BlueprintImpl.XSD_TYPE_NSURI, BlueprintImpl.XSD_TYPE_NAME);
-		BlueprintImpl newElt = new BlueprintImpl(elt);
-		newElt.setXArch(this.getXArch());
-		return newElt;
-	}
-
-	/**
-	 * Brings an IBlueprint object created in another
-	 * context into this context.
-	 * @param value Object to recontextualize.
-	 * @return <code>value</code> object in this namespace.
-	 */
-	public IBlueprint recontextualizeBlueprint(IBlueprint value){
-		if(!(value instanceof DOMBased)){
-			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
-		}
-		Element elt = (Element)((DOMBased)value).getDOMNode();
-
-		elt = DOMUtils.cloneAndRename(elt, doc, InstancemappingConstants.NS_URI, elt.getLocalName());
-		//elt = DOMUtils.cloneAndRename(elt, InstancemappingConstants.NS_URI, elt.getTagName());
-
-		//Removed next line because it causes an illegal character DOM exception
-		//elt.setPrefix(null);
-
-		((DOMBased)value).setDOMNode(elt);
-		((IXArchElement)value).setXArch(this.getXArch());
-		return value;
-	}
-
-	/**
-	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
-	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
-	 */
-	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink(){
-		Element elt = createElement(DEFAULT_ELT_NAME);
-		DOMUtils.addXSIType(elt, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NSURI, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NAME);
-		edu.uci.isr.xarch.instance.XMLLinkImpl newElt = new edu.uci.isr.xarch.instance.XMLLinkImpl(elt);
-		newElt.setXArch(this.getXArch());
-		return newElt;
-	}
-
-	/**
-	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
-	 * context into this context.
-	 * @param value Object to recontextualize.
-	 * @return <code>value</code> object in this namespace.
-	 */
-	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value){
-		if(!(value instanceof DOMBased)){
-			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
-		}
-		Element elt = (Element)((DOMBased)value).getDOMNode();
-
-		elt = DOMUtils.cloneAndRename(elt, doc, InstancemappingConstants.NS_URI, elt.getLocalName());
-		//elt = DOMUtils.cloneAndRename(elt, InstancemappingConstants.NS_URI, elt.getTagName());
-
-		//Removed next line because it causes an illegal character DOM exception
-		//elt.setPrefix(null);
-
-		((DOMBased)value).setDOMNode(elt);
-		((IXArchElement)value).setXArch(this.getXArch());
-		return value;
-	}
-
-	/**
 	 * Create an IMappedComponentInstance object in this namespace.
 	 * @return New IMappedComponentInstance object.
 	 */
@@ -221,6 +151,41 @@ public class InstancemappingContext implements IInstancemappingContext {
 		);
 
 		return newElt;
+	}
+
+	/**
+	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
+	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
+	 */
+	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink(){
+		Element elt = createElement(DEFAULT_ELT_NAME);
+		DOMUtils.addXSIType(elt, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NSURI, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NAME);
+		edu.uci.isr.xarch.instance.XMLLinkImpl newElt = new edu.uci.isr.xarch.instance.XMLLinkImpl(elt);
+		newElt.setXArch(this.getXArch());
+		return newElt;
+	}
+
+	/**
+	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
+	 * context into this context.
+	 * @param value Object to recontextualize.
+	 * @return <code>value</code> object in this namespace.
+	 */
+	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value){
+		if(!(value instanceof DOMBased)){
+			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
+		}
+		Element elt = (Element)((DOMBased)value).getDOMNode();
+
+		elt = DOMUtils.cloneAndRename(elt, doc, InstancemappingConstants.NS_URI, elt.getLocalName());
+		//elt = DOMUtils.cloneAndRename(elt, InstancemappingConstants.NS_URI, elt.getTagName());
+
+		//Removed next line because it causes an illegal character DOM exception
+		//elt.setPrefix(null);
+
+		((DOMBased)value).setDOMNode(elt);
+		((IXArchElement)value).setXArch(this.getXArch());
+		return value;
 	}
 
 	/**

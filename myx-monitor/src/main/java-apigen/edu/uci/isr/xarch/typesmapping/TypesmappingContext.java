@@ -154,24 +154,24 @@ public class TypesmappingContext implements ITypesmappingContext {
 	}
 
 	/**
-	 * Create an edu.uci.isr.xarch.instancemapping.IBlueprint object in this namespace.
-	 * @return New edu.uci.isr.xarch.instancemapping.IBlueprint object.
+	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
+	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
 	 */
-	public edu.uci.isr.xarch.instancemapping.IBlueprint createBlueprint(){
+	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink(){
 		Element elt = createElement(DEFAULT_ELT_NAME);
-		DOMUtils.addXSIType(elt, edu.uci.isr.xarch.instancemapping.BlueprintImpl.XSD_TYPE_NSURI, edu.uci.isr.xarch.instancemapping.BlueprintImpl.XSD_TYPE_NAME);
-		edu.uci.isr.xarch.instancemapping.BlueprintImpl newElt = new edu.uci.isr.xarch.instancemapping.BlueprintImpl(elt);
+		DOMUtils.addXSIType(elt, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NSURI, edu.uci.isr.xarch.instance.XMLLinkImpl.XSD_TYPE_NAME);
+		edu.uci.isr.xarch.instance.XMLLinkImpl newElt = new edu.uci.isr.xarch.instance.XMLLinkImpl(elt);
 		newElt.setXArch(this.getXArch());
 		return newElt;
 	}
 
 	/**
-	 * Brings an edu.uci.isr.xarch.instancemapping.IBlueprint object created in another
+	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
 	 * context into this context.
 	 * @param value Object to recontextualize.
 	 * @return <code>value</code> object in this namespace.
 	 */
-	public edu.uci.isr.xarch.instancemapping.IBlueprint recontextualizeBlueprint(edu.uci.isr.xarch.instancemapping.IBlueprint value){
+	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value){
 		if(!(value instanceof DOMBased)){
 			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
 		}

@@ -74,18 +74,18 @@ public interface ITypesmappingContext extends IXArchContext{
 	edu.uci.isr.xarch.types.IComponent value);
 
 	/**
-	 * Create an edu.uci.isr.xarch.instancemapping.IBlueprint object in this namespace.
-	 * @return New edu.uci.isr.xarch.instancemapping.IBlueprint object.
+	 * Create an edu.uci.isr.xarch.instance.IXMLLink object in this namespace.
+	 * @return New edu.uci.isr.xarch.instance.IXMLLink object.
 	 */
-	public edu.uci.isr.xarch.instancemapping.IBlueprint createBlueprint();
+	public edu.uci.isr.xarch.instance.IXMLLink createXMLLink();
 
 	/**
-	 * Brings an edu.uci.isr.xarch.instancemapping.IBlueprint object created in another
+	 * Brings an edu.uci.isr.xarch.instance.IXMLLink object created in another
 	 * context into this context.
 	 * @param value Object to recontextualize.
 	 * @return <code>value</code> object in this namespace.
 	 */
-	public edu.uci.isr.xarch.instancemapping.IBlueprint recontextualizeBlueprint(edu.uci.isr.xarch.instancemapping.IBlueprint value);
+	public edu.uci.isr.xarch.instance.IXMLLink recontextualizeXMLLink(edu.uci.isr.xarch.instance.IXMLLink value);
 
 	/**
 	 * Create an IMappedConnector object in this namespace.
@@ -170,8 +170,8 @@ public interface ITypesmappingContext extends IXArchContext{
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedComponent.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedComponent.TYPE_METADATA, IMappedComponent.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IComponent.TYPE_METADATA, IMappedComponent.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.CREATE, null, edu.uci.isr.xarch.instancemapping.IBlueprint.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, edu.uci.isr.xarch.instancemapping.IBlueprint.TYPE_METADATA, edu.uci.isr.xarch.instancemapping.IBlueprint.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.CREATE, null, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedConnector.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedConnector.TYPE_METADATA, IMappedConnector.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IConnector.TYPE_METADATA, IMappedConnector.TYPE_METADATA),

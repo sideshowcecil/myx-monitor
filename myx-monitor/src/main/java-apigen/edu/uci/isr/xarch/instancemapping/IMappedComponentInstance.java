@@ -38,14 +38,14 @@ public interface IMappedComponentInstance extends edu.uci.isr.xarch.instance.ICo
 		XArchTypeMetadata.XARCH_ELEMENT,
 		"instancemapping", "MappedComponentInstance", edu.uci.isr.xarch.instance.IComponentInstance.TYPE_METADATA,
 		new XArchPropertyMetadata[]{
-			XArchPropertyMetadata.createElement("blueprint", "instancemapping", "Blueprint", 1, 1)},
+			XArchPropertyMetadata.createElement("blueprint", "instance", "XMLLink", 1, 1)},
 		new XArchActionMetadata[]{});
 
 	/**
 	 * Set the blueprint for this MappedComponentInstance.
 	 * @param value new blueprint
 	 */
-	public void setBlueprint(IBlueprint value);
+	public void setBlueprint(edu.uci.isr.xarch.instance.IXMLLink value);
 
 	/**
 	 * Clear the blueprint from this MappedComponentInstance.
@@ -56,7 +56,7 @@ public interface IMappedComponentInstance extends edu.uci.isr.xarch.instance.ICo
 	 * Get the blueprint from this MappedComponentInstance.
 	 * @return blueprint
 	 */
-	public IBlueprint getBlueprint();
+	public edu.uci.isr.xarch.instance.IXMLLink getBlueprint();
 
 	/**
 	 * Determine if this MappedComponentInstance has the given blueprint
@@ -64,7 +64,7 @@ public interface IMappedComponentInstance extends edu.uci.isr.xarch.instance.ICo
 	 * @return <code>true</code> if the blueprints are equivalent,
 	 * <code>false</code> otherwise
 	 */
-	public boolean hasBlueprint(IBlueprint blueprintToCheck);
+	public boolean hasBlueprint(edu.uci.isr.xarch.instance.IXMLLink blueprintToCheck);
 	/**
 	 * Determine if another MappedComponentInstance is equivalent to this one, ignoring
 	 * ID's.

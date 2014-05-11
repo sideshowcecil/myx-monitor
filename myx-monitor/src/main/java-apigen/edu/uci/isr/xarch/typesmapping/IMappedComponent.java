@@ -38,14 +38,14 @@ public interface IMappedComponent extends edu.uci.isr.xarch.types.IComponent, ed
 		XArchTypeMetadata.XARCH_ELEMENT,
 		"typesmapping", "MappedComponent", edu.uci.isr.xarch.types.IComponent.TYPE_METADATA,
 		new XArchPropertyMetadata[]{
-			XArchPropertyMetadata.createElement("blueprint", "instancemapping", "Blueprint", 1, 1)},
+			XArchPropertyMetadata.createElement("blueprint", "instance", "XMLLink", 1, 1)},
 		new XArchActionMetadata[]{});
 
 	/**
 	 * Set the blueprint for this MappedComponent.
 	 * @param value new blueprint
 	 */
-	public void setBlueprint(edu.uci.isr.xarch.instancemapping.IBlueprint value);
+	public void setBlueprint(edu.uci.isr.xarch.instance.IXMLLink value);
 
 	/**
 	 * Clear the blueprint from this MappedComponent.
@@ -56,7 +56,7 @@ public interface IMappedComponent extends edu.uci.isr.xarch.types.IComponent, ed
 	 * Get the blueprint from this MappedComponent.
 	 * @return blueprint
 	 */
-	public edu.uci.isr.xarch.instancemapping.IBlueprint getBlueprint();
+	public edu.uci.isr.xarch.instance.IXMLLink getBlueprint();
 
 	/**
 	 * Determine if this MappedComponent has the given blueprint
@@ -64,7 +64,7 @@ public interface IMappedComponent extends edu.uci.isr.xarch.types.IComponent, ed
 	 * @return <code>true</code> if the blueprints are equivalent,
 	 * <code>false</code> otherwise
 	 */
-	public boolean hasBlueprint(edu.uci.isr.xarch.instancemapping.IBlueprint blueprintToCheck);
+	public boolean hasBlueprint(edu.uci.isr.xarch.instance.IXMLLink blueprintToCheck);
 	/**
 	 * Determine if another MappedComponent is equivalent to this one, ignoring
 	 * ID's.

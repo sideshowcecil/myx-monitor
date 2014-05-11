@@ -30,8 +30,7 @@
         <xsd:complexContent>
             <xsd:extension base="archtypes:Component">
                 <xsd:sequence>
-                    <xsd:element name="blueprint"
-                        type="archinstmap:Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -42,8 +41,7 @@
         <xsd:complexContent>
             <xsd:extension base="archtypes:Connector">
                 <xsd:sequence>
-                    <xsd:element name="blueprint"
-                        type="archinstmap:Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -54,8 +52,7 @@
         <xsd:complexContent>
             <xsd:extension base="archtypes:Interface">
                 <xsd:sequence>
-                    <xsd:element name="blueprint"
-                        type="archinstmap:Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>

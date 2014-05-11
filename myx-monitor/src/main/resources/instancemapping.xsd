@@ -17,20 +17,13 @@
 
         </xsd:documentation>
     </xsd:annotation>
-    
-    <!-- TYPE: Blueprint A link to an existing component/connector/interface. -->
-    <xsd:complexType name="Blueprint">
-        <xsd:sequence>
-            <xsd:element name="blueprint" type="archinst:XMLLink" />
-        </xsd:sequence>
-    </xsd:complexType>
 
     <!--  TYPE: MappedComponentInstance -->
     <xsd:complexType name="MappedComponentInstance">
         <xsd:complexContent>
             <xsd:extension base="archinst:ComponentInstance">
                 <xsd:sequence>
-                    <xsd:element name="blueprint" type="Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -41,7 +34,7 @@
         <xsd:complexContent>
             <xsd:extension base="archinst:ConnectorInstance">
                 <xsd:sequence>
-                    <xsd:element name="blueprint" type="Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -52,7 +45,7 @@
         <xsd:complexContent>
             <xsd:extension base="archinst:InterfaceInstance">
                 <xsd:sequence>
-                    <xsd:element name="blueprint" type="Blueprint" />
+                    <xsd:element name="blueprint" type="archinst:XMLLink" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>

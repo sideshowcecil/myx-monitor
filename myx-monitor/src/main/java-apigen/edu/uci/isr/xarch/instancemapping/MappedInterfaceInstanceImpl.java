@@ -127,12 +127,12 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 		return new XArchInstanceMetadata(XArchUtils.getPackageTitle(elt.getNamespaceURI()));
 	}
 
-	public void setBlueprint(IBlueprint value){
+	public void setBlueprint(edu.uci.isr.xarch.instance.IXMLLink value){
 		if(!(value instanceof DOMBased)){
 			throw new IllegalArgumentException("Cannot handle non-DOM-based xArch entities.");
 		}
 		{
-			IBlueprint oldElt = getBlueprint();
+			edu.uci.isr.xarch.instance.IXMLLink oldElt = getBlueprint();
 			DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
 			
 			IXArch context = getXArch();
@@ -168,7 +168,7 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 	}
 	
 	public void clearBlueprint(){
-		IBlueprint oldElt = getBlueprint();
+		edu.uci.isr.xarch.instance.IXMLLink oldElt = getBlueprint();
 		DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
 		
 		IXArch context = getXArch();
@@ -183,7 +183,7 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 		}
 	}
 	
-	public IBlueprint getBlueprint(){
+	public edu.uci.isr.xarch.instance.IXMLLink getBlueprint(){
 		NodeList nl = DOMUtils.getChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
 		if(nl.getLength() == 0){
 			return null;
@@ -194,22 +194,22 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 			if(de != null){
 				IXArchElement cachedXArchElt = de.getWrapper(el);
 				if(cachedXArchElt != null){
-					return (IBlueprint)cachedXArchElt;
+					return (edu.uci.isr.xarch.instance.IXMLLink)cachedXArchElt;
 				}
 			}
 			
-			Object o = makeDerivedWrapper(el, "Blueprint");
+			Object o = makeDerivedWrapper(el, "XMLLink");
 			if(o != null){
 				try{
 					((edu.uci.isr.xarch.IXArchElement)o).setXArch(getXArch());
 					if(de != null){
 						de.cacheWrapper(el, ((edu.uci.isr.xarch.IXArchElement)o));
 					}
-					return (IBlueprint)o;
+					return (edu.uci.isr.xarch.instance.IXMLLink)o;
 				}
 				catch(Exception e){}
 			}
-			BlueprintImpl eltImpl = new BlueprintImpl(el);
+			edu.uci.isr.xarch.instance.XMLLinkImpl eltImpl = new edu.uci.isr.xarch.instance.XMLLinkImpl(el);
 			eltImpl.setXArch(getXArch());
 			if(de != null){
 				de.cacheWrapper(el, ((edu.uci.isr.xarch.IXArchElement)eltImpl));
@@ -218,9 +218,9 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 		}
 	}
 	
-	public boolean hasBlueprint(IBlueprint value){
-		IBlueprint thisValue = getBlueprint();
-		IBlueprint thatValue = value;
+	public boolean hasBlueprint(edu.uci.isr.xarch.instance.IXMLLink value){
+		edu.uci.isr.xarch.instance.IXMLLink thisValue = getBlueprint();
+		edu.uci.isr.xarch.instance.IXMLLink thatValue = value;
 		
 		if((thisValue == null) && (thatValue == null)){
 			return true;

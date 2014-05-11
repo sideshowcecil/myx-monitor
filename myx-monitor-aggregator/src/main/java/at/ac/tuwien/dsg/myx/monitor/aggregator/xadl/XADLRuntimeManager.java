@@ -29,6 +29,8 @@ import edu.uci.isr.xarch.types.IComponent;
 import edu.uci.isr.xarch.types.IConnector;
 import edu.uci.isr.xarch.types.IInterface;
 import edu.uci.isr.xarch.types.ILink;
+import edu.uci.isr.xarch.typesmapping.IMappedComponent;
+import edu.uci.isr.xarch.typesmapping.IMappedConnector;
 
 public class XADLRuntimeManager implements ISubscriber<Event> {
 
@@ -206,8 +208,10 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
      * @return
      */
     private IComponent createComponentFromBlueprint(String runtimeId, IComponent blueprintComponent) {
-        IComponent component = modelRoot.getTypesContext().createComponent();
+        IMappedComponent component = modelRoot.getTypesMappingContext().createMappedComponent();
         component.setId(runtimeId);
+        component.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintComponent.getId()),
+                modelRoot.getTypesContext()));
         if (blueprintComponent.getDescription() != null) {
             component.setDescription(blueprintComponent.getDescription());
         }
@@ -259,8 +263,10 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
      * @return
      */
     private IConnector createConnectorFromBlueprint(String runtimeId, IConnector blueprintConnector) {
-        IConnector connector = modelRoot.getTypesContext().createConnector();
+        IMappedConnector connector = modelRoot.getTypesMappingContext().createMappedConnector();
         connector.setId(runtimeId);
+        connector.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintConnector.getId()),
+                modelRoot.getTypesContext()));
         if (blueprintConnector.getDescription() != null) {
             connector.setDescription(blueprintConnector.getDescription());
         }
@@ -621,15 +627,11 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
         switch (event.getXadlRuntimeType()) {
         case BEGIN:
             logger.info("Setting status of " + event.getXadlRuntimeId() + " to RUNNING");
-            if (!setRuntimeStatus(structure, event.getXadlRuntimeId(), "RUNNING")) {
-                logger.warn("Could not set the status of " + event.getXadlRuntimeId() + " because it does not exist");
-            }
+            setRuntimeStatus(structure, event.getXadlRuntimeId(), "RUNNING");
             break;
         case END:
             logger.info("Setting status of " + event.getXadlRuntimeId() + " to NOT RUNNING");
-            if (!setRuntimeStatus(structure, event.getXadlRuntimeId(), "NOT_RUNNING")) {
-                logger.warn("Could not set the status of " + event.getXadlRuntimeId() + " because it does not exist");
-            }
+            setRuntimeStatus(structure, event.getXadlRuntimeId(), null);
             break;
         default:
             break;
@@ -641,22 +643,26 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
      * 
      * @param structure
      * @param id
-     * @return
      */
-    private boolean setRuntimeStatus(IArchStructure structure, String id, String status) {
+    private void setRuntimeStatus(IArchStructure structure, String id, String status) {
         IComponent component = DBLUtils.getComponent(structure, id);
+        IConnector connector = DBLUtils.getConnector(structure, id);
+
+        if (component == null && connector == null) {
+            logger.warn("Could not set the status of " + id + " because it does not exist");
+            return;
+        }
+
         if (component != null) {
             String description = getRuntimeDescription(component.getDescription().getValue(), status);
             component.getDescription().setValue(description);
-            return true;
+            return;
         }
-        IConnector connector = DBLUtils.getConnector(structure, id);
         if (connector != null) {
             String description = getRuntimeDescription(connector.getDescription().getValue(), status);
             connector.getDescription().setValue(description);
-            return true;
+            return;
         }
-        return false;
     }
 
     /**
@@ -670,7 +676,9 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
         if (description.contains("[")) {
             description = description.substring(0, description.lastIndexOf("[")).trim();
         }
-        description += " [" + status + "]";
+        if (status != null) {
+            description += " [" + status + "]";
+        }
         return description;
     }
 

@@ -8,6 +8,7 @@ import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchElement;
 import edu.uci.isr.xarch.hostproperty.IElementRef;
 import edu.uci.isr.xarch.hostproperty.IHost;
+import edu.uci.isr.xarch.hostproperty.IHostedArchInstance;
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
 import edu.uci.isr.xarch.hostproperty.IProperty;
@@ -17,7 +18,10 @@ import edu.uci.isr.xarch.implementation.ISignatureImpl;
 import edu.uci.isr.xarch.implementation.IVariantConnectorTypeImpl;
 import edu.uci.isr.xarch.implementationext.IComponentImpl;
 import edu.uci.isr.xarch.implementationext.IConnectorImpl;
+import edu.uci.isr.xarch.instance.IArchInstance;
+import edu.uci.isr.xarch.instance.IComponentInstance;
 import edu.uci.isr.xarch.instance.IDescription;
+import edu.uci.isr.xarch.instance.IInstanceContext;
 import edu.uci.isr.xarch.instance.IPoint;
 import edu.uci.isr.xarch.instance.IXMLLink;
 import edu.uci.isr.xarch.javaimplementation.IJavaClassFile;
@@ -164,6 +168,38 @@ public final class DBLUtils {
         for (IArchStructure archStruc : getArchStructures(root)) {
             if (archStruc.getId().equals(id)) {
                 return archStruc;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get all {@link IArchInstance} elements in an {@link IXArch} instance.
+     * 
+     * @param root
+     * @return
+     */
+    public static Collection<IArchInstance> getArchInstances(IXArch root) {
+        Collection<IArchInstance> elements = new ArrayList<>();
+        for (Object o : root.getAllObjects()) {
+            if (o instanceof IArchInstance) {
+                elements.add((IArchInstance) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Get a specific {@link IArchInstance} element in an {@link IXArch}
+     * instance.
+     * 
+     * @param root
+     * @return
+     */
+    public static IArchInstance getArchInstance(IXArch root, String id) {
+        for (IArchInstance archInst : getArchInstances(root)) {
+            if (archInst.getId().equals(id)) {
+                return archInst;
             }
         }
         return null;
@@ -695,6 +731,17 @@ public final class DBLUtils {
     }
 
     /**
+     * Get a {@link IHost} from an {@link IHostedArchStructure} instance.
+     * 
+     * @param instance
+     * @param id
+     * @return
+     */
+    public static IHost getHost(IHostedArchInstance instance, String id) {
+        return instance.getHost(id);
+    }
+
+    /**
      * Create an {@link IHost} in an {@link IHostedArchStructure} instance. If
      * the host already exists it is simply returned.
      * 
@@ -709,6 +756,25 @@ public final class DBLUtils {
             host = context.createHost();
             host.setId(id);
             structure.addHost(host);
+        }
+        return host;
+    }
+
+    /**
+     * Create an {@link IHost} in an {@link IHostedArchInstance} instance. If
+     * the host already exists it is simply returned.
+     * 
+     * @param instance
+     * @param id
+     * @param context
+     * @return
+     */
+    public static IHost createHost(IHostedArchInstance instance, String id, IHostpropertyContext context) {
+        IHost host = getHost(instance, id);
+        if (host == null) {
+            host = context.createHost();
+            host.setId(id);
+            instance.addHost(host);
         }
         return host;
     }
@@ -801,6 +867,19 @@ public final class DBLUtils {
     }
 
     /**
+     * Create a {@link IDescription}.
+     * 
+     * @param description
+     * @param context
+     * @return
+     */
+    public static IDescription createDescription(String description, IInstanceContext context) {
+        IDescription desc = context.createDescription();
+        desc.setValue(description);
+        return desc;
+    }
+
+    /**
      * Get a {@link IComponent} from a {@link IArchStructure} instance.
      * 
      * @param structure
@@ -809,6 +888,17 @@ public final class DBLUtils {
      */
     public static IComponent getComponent(IArchStructure structure, String id) {
         return structure.getComponent(id);
+    }
+
+    /**
+     * Get a {@link IComponentInstance} from a {@link IArchInstance} instance.
+     * 
+     * @param instance
+     * @param id
+     * @return
+     */
+    public static IComponentInstance getComponentInstance(IArchInstance instance, String id) {
+        return instance.getComponentInstance(id);
     }
 
     /**
@@ -868,6 +958,20 @@ public final class DBLUtils {
      * @return
      */
     public static IXMLLink createXMLLink(String destinationId, ITypesContext context) {
+        IXMLLink link = context.createXMLLink();
+        link.setType("simple");
+        link.setHref(DBLUtils.getHref(destinationId));
+        return link;
+    }
+
+    /**
+     * Create a {@link IXMLLink} instance.
+     * 
+     * @param destinationId
+     * @param context
+     * @return
+     */
+    public static IXMLLink createXMLLink(String destinationId, IInstanceContext context) {
         IXMLLink link = context.createXMLLink();
         link.setType("simple");
         link.setHref(DBLUtils.getHref(destinationId));

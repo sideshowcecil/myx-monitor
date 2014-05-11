@@ -1,0 +1,61 @@
+<xsd:schema xmlns="http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:archinst="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd"
+    targetNamespace="http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd"
+    elementFormDefault="qualified" attributeFormDefault="qualified">
+
+    <!-- Import namespaces used -->
+    <xsd:import namespace="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd"
+        schemaLocation="http://www.isr.uci.edu/projects/xarchuci/core/instance.xsd" />
+
+    <xsd:annotation>
+        <xsd:documentation>
+            xArch Interface Mapping XML Schema 1.0
+
+            Change Log:
+                2014-05-01: Bernd Rathmanner [bernd.rathmanner@student.tuwien.ac.at]:
+                    Initial Development
+
+        </xsd:documentation>
+    </xsd:annotation>
+    
+    <!-- TYPE: Blueprint A link to an existing component/connector/interface. -->
+    <xsd:complexType name="Blueprint">
+        <xsd:sequence>
+            <xsd:element name="blueprint" type="archinst:XMLLink" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!--  TYPE: MappedComponentInstance -->
+    <xsd:complexType name="MappedComponentInstance">
+        <xsd:complexContent>
+            <xsd:extension base="archinst:ComponentInstance">
+                <xsd:sequence>
+                    <xsd:element name="blueprint" type="Blueprint" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!--  TYPE: MappedConnectorInstance -->
+    <xsd:complexType name="MappedConnectorInstance">
+        <xsd:complexContent>
+            <xsd:extension base="archinst:ConnectorInstance">
+                <xsd:sequence>
+                    <xsd:element name="blueprint" type="Blueprint" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!--  TYPE: MappedInterfaceInstance -->
+    <xsd:complexType name="MappedInterfaceInstance">
+        <xsd:complexContent>
+            <xsd:extension base="archinst:InterfaceInstance">
+                <xsd:sequence>
+                    <xsd:element name="blueprint" type="Blueprint" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+</xsd:schema>

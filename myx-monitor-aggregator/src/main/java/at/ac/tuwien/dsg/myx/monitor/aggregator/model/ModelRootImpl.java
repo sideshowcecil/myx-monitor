@@ -13,17 +13,25 @@ import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchSerializeException;
 import edu.uci.isr.xarch.XArchUtils;
+import edu.uci.isr.xarch.hostproperty.IHostedArchInstance;
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
+import edu.uci.isr.xarch.instance.IArchInstance;
+import edu.uci.isr.xarch.instance.IInstanceContext;
+import edu.uci.isr.xarch.instancemapping.IInstancemappingContext;
 import edu.uci.isr.xarch.types.IArchStructure;
 import edu.uci.isr.xarch.types.ITypesContext;
+import edu.uci.isr.xarch.typesmapping.ITypesmappingContext;
 
 public class ModelRootImpl implements ModelRoot {
 
     protected IXArchImplementation xArchImpl;
     protected IXArch xArchRoot;
 
+    protected IInstanceContext instanceContext;
+    protected IInstancemappingContext instanceMappingContext;
     protected ITypesContext typesContext;
+    protected ITypesmappingContext typesMappingContext;
     protected IHostpropertyContext hostpropertyContext;
 
     public ModelRootImpl() {
@@ -40,7 +48,10 @@ public class ModelRootImpl implements ModelRoot {
         try {
             FileReader documentSource = new FileReader(new File(xadlFile));
             xArchRoot = xArchImpl.parse(documentSource);
+            instanceContext = (IInstanceContext) xArchImpl.createContext(xArchRoot, "instance");
+            instanceMappingContext = (IInstancemappingContext) xArchImpl.createContext(xArchRoot, "instancemapping");
             typesContext = (ITypesContext) xArchImpl.createContext(xArchRoot, "types");
+            typesMappingContext = (ITypesmappingContext) xArchImpl.createContext(xArchRoot, "typesmapping");
             hostpropertyContext = (IHostpropertyContext) xArchImpl.createContext(xArchRoot, "hostproperty");
         } catch (XArchParseException | FileNotFoundException e) {
             throw new IllegalArgumentException("There was an error while parsing the given xadl file", e);
@@ -71,8 +82,23 @@ public class ModelRootImpl implements ModelRoot {
     }
 
     @Override
+    public IInstanceContext getInstanceContext() {
+        return instanceContext;
+    }
+
+    @Override
+    public IInstancemappingContext getInstanceMappingContext() {
+        return instanceMappingContext;
+    }
+
+    @Override
     public ITypesContext getTypesContext() {
         return typesContext;
+    }
+
+    @Override
+    public ITypesmappingContext getTypesMappingContext() {
+        return typesMappingContext;
     }
 
     @Override
@@ -107,6 +133,31 @@ public class ModelRootImpl implements ModelRoot {
                 return (IHostedArchStructure) archStructure;
             }
             return getHostpropertyContext().promoteToHostedArchStructure(archStructure);
+        }
+    }
+
+    @Override
+    public IArchInstance getArchInstance(String id) {
+        synchronized (xArchRoot) {
+            IArchInstance archInstance = DBLUtils.getArchInstance(xArchRoot, id);
+            if (archInstance == null) {
+                archInstance = getInstanceContext().createArchInstanceElement();;
+                archInstance.setId(id);
+                archInstance.setDescription(DBLUtils.createDescription(id, getInstanceContext()));
+                xArchRoot.addObject(archInstance);
+            }
+            return archInstance;
+        }
+    }
+
+    @Override
+    public IHostedArchInstance getHostedArchInstance(String id) {
+        synchronized (xArchRoot) {
+            IArchInstance archInstance = getArchInstance(id);
+            if (archInstance instanceof IHostedArchInstance) {
+                return (IHostedArchInstance) archInstance;
+            }
+            return getHostpropertyContext().promoteToHostedArchInstance(archInstance);
         }
     }
 

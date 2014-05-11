@@ -126,11 +126,11 @@
                     <changes:interface xlink:href="#interfaceffa80065-47389d1a-930a739b-eec719e2" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
-            <changes:componentChange changes:id="componentChangeffa80065-75387987-6385b543-f7e30115" xsi:type="changes:ComponentChange" changes:type="update">
+            <changes:componentChange changes:id="componentChangeffa80065-75387987-6385b543-f7e30115" changes:type="update" xsi:type="changes:ComponentChange">
                 <changes:description xsi:type="instance:Description">New interface</changes:description>
-                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <changes:interfaceChange changes:id="interfaceChangeffa80065-75387988-dfbb1809-f7e30116" xsi:type="changes:InterfaceChange" changes:type="add">
-                    <changes:interface xlink:href="#interfaceffa80065-7538797b-d5f4b96c-f7e30114" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:component xlink:href="#connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChangeffa80065-75387988-dfbb1809-f7e30116" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interfaceffa80065-7538797b-d5f4b96c-f7e30114" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
             <changes:linkChange changes:id="linkChangeffa80065-38401eeb-f20e39e5-a28304e7" changes:type="add" xsi:type="changes:LinkChange">
@@ -289,7 +289,7 @@
             </types:interface>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.XADLRuntimeManagerComponent</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.XADLArchStructureRuntimeManagerComponent</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementationext:implementation>
         </types:component>
@@ -307,7 +307,7 @@
             </types:interface>
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javaimplementation:JavaClassFile">
-                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.HostedRuntimeManagerComponent</javaimplementation:javaClassName>
+                    <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.HostedArchStructureRuntimeManagerComponent</javaimplementation:javaClassName>
                 </javaimplementation:mainClass>
             </implementationext:implementation>
         </types:component>
@@ -412,7 +412,7 @@
             <types:interface types:id="interfaceffa80065-7538797b-d5f4b96c-f7e30114" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">OUT ModelRoot</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceTypeffa80065-37c01338-956b2eb8-a28303ca" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceTypeffa80065-37c01338-956b2eb8-a28303ca" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
             <types:type xlink:href="#connectorTypeffa83f01-fa67187c-05f2d833-25c3003d" xlink:type="simple" xsi:type="instance:XMLLink"/>
             
@@ -1069,7 +1069,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffa80065-7538797b-d5f4b96c-f7e30114" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffa80065-7538797b-d5f4b96c-f7e30114" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="11000,10300" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>

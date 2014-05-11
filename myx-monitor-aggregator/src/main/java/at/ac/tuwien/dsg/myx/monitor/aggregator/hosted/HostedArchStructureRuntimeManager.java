@@ -26,16 +26,16 @@ import edu.uci.isr.xarch.hostproperty.IHost;
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IProperty;
 
-public class HostedRuntimeManager implements ISubscriber<Event> {
+public class HostedArchStructureRuntimeManager implements ISubscriber<Event> {
 
-    private static final Logger logger = LoggerFactory.getLogger(HostedRuntimeManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(HostedArchStructureRuntimeManager.class);
 
     private final Map<String, IElementRef> elementRefIndex = new HashMap<>();
 
     private final ModelRoot modelRoot;
     private final List<Topic> topics;
 
-    public HostedRuntimeManager(ModelRoot modelRoot) {
+    public HostedArchStructureRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         topics = new ArrayList<>();
         topics.add(new Topic(EventUtils.getTopicPattern(XADLHostEvent.class)));

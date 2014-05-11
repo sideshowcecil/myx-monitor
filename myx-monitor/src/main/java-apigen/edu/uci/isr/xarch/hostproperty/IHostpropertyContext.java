@@ -74,6 +74,43 @@ public interface IHostpropertyContext extends IXArchContext{
 	edu.uci.isr.xarch.types.IArchStructure value);
 
 	/**
+	 * Create an IHostedArchInstance object in this namespace.
+	 * @return New IHostedArchInstance object.
+	 */
+	public IHostedArchInstance createHostedArchInstance();
+
+	/**
+	 * Brings an IHostedArchInstance object created in another
+	 * context into this context.
+	 * @param value Object to recontextualize.
+	 * @return <code>value</code> object in this namespace.
+	 */
+	public IHostedArchInstance recontextualizeHostedArchInstance(IHostedArchInstance value);
+
+	/**
+	 * Promote an object of type <code>edu.uci.isr.xarch.instance.IArchInstance</code>
+	 * to one of type <code>IHostedArchInstance</code>.  xArch APIs
+	 * are structured in such a way that a regular cast is not possible
+	 * to change interface types, so casting must be done through these
+	 * promotion functions.  If the <code>edu.uci.isr.xarch.instance.IArchInstance</code>
+	 * object wraps a DOM element that is the base type, then the 
+	 * <code>xsi:type</code> of the base element is promoted.  Otherwise, 
+	 * it is left unchanged.
+	 *
+	 * This function also emits an <CODE>XArchEvent</CODE> with type
+	 * PROMOTE_TYPE.  The source for this events is the pre-promoted
+	 * IXArchElement object (should no longer be used), and the
+	 * target is the post-promotion object.  The target name is
+	 * the name of the interface class that was the target of the
+	 * promotion.
+	 * 
+	 * @param value Object to promote.
+	 * @return Promoted object.
+	 */
+	public IHostedArchInstance promoteToHostedArchInstance(
+	edu.uci.isr.xarch.instance.IArchInstance value);
+
+	/**
 	 * Create an IHost object in this namespace.
 	 * @return New IHost object.
 	 */
@@ -152,6 +189,9 @@ public interface IHostpropertyContext extends IXArchContext{
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IHostedArchStructure.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IHostedArchStructure.TYPE_METADATA, IHostedArchStructure.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IArchStructure.TYPE_METADATA, IHostedArchStructure.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IHostedArchInstance.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IHostedArchInstance.TYPE_METADATA, IHostedArchInstance.TYPE_METADATA),
+			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.instance.IArchInstance.TYPE_METADATA, IHostedArchInstance.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IHost.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IHost.TYPE_METADATA, IHost.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, edu.uci.isr.xarch.instance.IDescription.TYPE_METADATA),

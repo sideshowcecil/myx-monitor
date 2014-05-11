@@ -154,6 +154,89 @@ public class HostpropertyContext implements IHostpropertyContext {
 	}
 
 	/**
+	 * Create an IHostedArchInstance object in this namespace.
+	 * @return New IHostedArchInstance object.
+	 */
+	public IHostedArchInstance createHostedArchInstance(){
+		Element elt = createElement(DEFAULT_ELT_NAME);
+		DOMUtils.addXSIType(elt, HostedArchInstanceImpl.XSD_TYPE_NSURI, HostedArchInstanceImpl.XSD_TYPE_NAME);
+		HostedArchInstanceImpl newElt = new HostedArchInstanceImpl(elt);
+		newElt.setXArch(this.getXArch());
+		return newElt;
+	}
+
+	/**
+	 * Brings an IHostedArchInstance object created in another
+	 * context into this context.
+	 * @param value Object to recontextualize.
+	 * @return <code>value</code> object in this namespace.
+	 */
+	public IHostedArchInstance recontextualizeHostedArchInstance(IHostedArchInstance value){
+		if(!(value instanceof DOMBased)){
+			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
+		}
+		Element elt = (Element)((DOMBased)value).getDOMNode();
+
+		elt = DOMUtils.cloneAndRename(elt, doc, HostpropertyConstants.NS_URI, elt.getLocalName());
+		//elt = DOMUtils.cloneAndRename(elt, HostpropertyConstants.NS_URI, elt.getTagName());
+
+		//Removed next line because it causes an illegal character DOM exception
+		//elt.setPrefix(null);
+
+		((DOMBased)value).setDOMNode(elt);
+		((IXArchElement)value).setXArch(this.getXArch());
+		return value;
+	}
+
+	/**
+	 * Promote an object of type <code>edu.uci.isr.xarch.instance.IArchInstance</code>
+	 * to one of type <code>IHostedArchInstance</code>.  xArch APIs
+	 * are structured in such a way that a regular cast is not possible
+	 * to change interface types, so casting must be done through these
+	 * promotion functions.  If the <code>edu.uci.isr.xarch.instance.IArchInstance</code>
+	 * object wraps a DOM element that is the base type, then the 
+	 * <code>xsi:type</code> of the base element is promoted.  Otherwise, 
+	 * it is left unchanged.
+	 *
+	 * This function also emits an <CODE>XArchEvent</CODE> with type
+	 * PROMOTE_TYPE.  The source for this events is the pre-promoted
+	 * IXArchElement object (should no longer be used), and the
+	 * target is the post-promotion object.  The target name is
+	 * the name of the interface class that was the target of the
+	 * promotion.
+	 * 
+	 * @param value Object to promote.
+	 * @return Promoted object.
+	 */
+	public IHostedArchInstance promoteToHostedArchInstance(
+	edu.uci.isr.xarch.instance.IArchInstance value){
+		if(!(value instanceof DOMBased)){
+			throw new IllegalArgumentException("Cannot process non-DOM based xArch entities.");
+		}
+		Element elt = (Element)((DOMBased)value).getDOMNode();
+
+		if(DOMUtils.hasXSIType(elt, 
+			edu.uci.isr.xarch.instance.ArchInstanceImpl.XSD_TYPE_NSURI,
+			edu.uci.isr.xarch.instance.ArchInstanceImpl.XSD_TYPE_NAME)){
+
+				DOMUtils.addXSIType(elt, HostedArchInstanceImpl.XSD_TYPE_NSURI, 
+					HostedArchInstanceImpl.XSD_TYPE_NAME);
+		}
+		HostedArchInstanceImpl newElt = new HostedArchInstanceImpl(elt);
+		newElt.setXArch(this.getXArch());
+
+		xArch.fireXArchEvent(
+			new XArchEvent(value, 
+			XArchEvent.PROMOTE_EVENT,
+			XArchEvent.ELEMENT_CHANGED,
+			IHostedArchInstance.class.getName(), newElt,
+			XArchUtils.getDefaultXArchImplementation().isContainedIn(xArch, newElt))
+		);
+
+		return newElt;
+	}
+
+	/**
 	 * Create an IHost object in this namespace.
 	 * @return New IHost object.
 	 */

@@ -19,18 +19,16 @@
 package edu.uci.isr.xarch.implementationext;
 
 import java.util.Collection;
-
 import edu.uci.isr.xarch.XArchActionMetadata;
 import edu.uci.isr.xarch.XArchTypeMetadata;
 import edu.uci.isr.xarch.XArchPropertyMetadata;
-import edu.uci.isr.xarch.implementation.IImplementation;
 
 /**
  * Interface for accessing objects of the
- * VariantConnectorTypeImpl <code>xsi:type</code> in the
- * implementation namespace.  Extends and
+ * ConnectorImpl <code>xsi:type</code> in the
+ * implementationext namespace.  Extends and
  * inherits the properties of the
- * VariantConnectorType <code>xsi:type</code>.
+ * Connector <code>xsi:type</code>.
  * 
  * @author xArch apigen
  */
@@ -38,16 +36,16 @@ public interface IConnectorImpl extends edu.uci.isr.xarch.types.IConnector, edu.
 
 	public final static XArchTypeMetadata TYPE_METADATA = new XArchTypeMetadata(
 		XArchTypeMetadata.XARCH_ELEMENT,
-		"implementation", "ConnectorImpl", edu.uci.isr.xarch.variants.IVariantConnectorType.TYPE_METADATA,
+		"implementationext", "ConnectorImpl", edu.uci.isr.xarch.types.IConnector.TYPE_METADATA,
 		new XArchPropertyMetadata[]{
-			XArchPropertyMetadata.createElement("implementation", "implementationext", "Implementation", 0, XArchPropertyMetadata.UNBOUNDED)},
+			XArchPropertyMetadata.createElement("implementation", "implementation", "Implementation", 0, XArchPropertyMetadata.UNBOUNDED)},
 		new XArchActionMetadata[]{});
 
 	/**
 	 * Add a implementation to this ConnectorImpl.
 	 * @param newImplementation implementation to add.
 	 */
-	public void addImplementation(IImplementation newImplementation);
+	public void addImplementation(edu.uci.isr.xarch.implementation.IImplementation newImplementation);
 
 	/**
 	 * Add a collection of implementations to this ConnectorImpl.
@@ -65,7 +63,7 @@ public interface IConnectorImpl extends edu.uci.isr.xarch.types.IConnector, edu.
 	 * Matching is done by the <code>isEquivalent(...)</code> function.
 	 * @param implementationToRemove implementation to remove.
 	 */
-	public void removeImplementation(IImplementation implementationToRemove);
+	public void removeImplementation(edu.uci.isr.xarch.implementation.IImplementation implementationToRemove);
 
 	/**
 	 * Remove all the given implementations from this ConnectorImpl.
@@ -85,7 +83,7 @@ public interface IConnectorImpl extends edu.uci.isr.xarch.types.IConnector, edu.
 	 * @return <code>true</code> if this ConnectorImpl contains the given
 	 * implementationToCheck, <code>false</code> otherwise.
 	 */
-	public boolean hasImplementation(IImplementation implementationToCheck);
+	public boolean hasImplementation(edu.uci.isr.xarch.implementation.IImplementation implementationToCheck);
 
 	/**
 	 * Determine if this ConnectorImpl contains the given set of implementations.
@@ -113,7 +111,7 @@ public interface IConnectorImpl extends edu.uci.isr.xarch.types.IConnector, edu.
 	 * ID's.
 	 * @param ConnectorImplToCheck ConnectorImpl to compare to this one.
 	 * @return <code>true</code> if all the child elements of this
-	 * VariantConnectorTypeImpl are equivalent, <code>false</code> otherwise.
+	 * ConnectorImpl are equivalent, <code>false</code> otherwise.
 	 */
 	public boolean isEquivalent(IConnectorImpl ConnectorImplToCheck);
 

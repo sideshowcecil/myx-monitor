@@ -25,68 +25,68 @@ import edu.uci.isr.xarch.XArchPropertyMetadata;
 
 /**
  * Interface for accessing objects of the
- * ComponentImpl <code>xsi:type</code> in the
+ * InterfaceImpl <code>xsi:type</code> in the
  * implementationext namespace.  Extends and
  * inherits the properties of the
- * Component <code>xsi:type</code>.
+ * Interface <code>xsi:type</code>.
  * 
  * @author xArch apigen
  */
-public interface IComponentImpl extends edu.uci.isr.xarch.types.IComponent, edu.uci.isr.xarch.IXArchElement{
+public interface IInterfaceImpl extends edu.uci.isr.xarch.types.IInterface, edu.uci.isr.xarch.IXArchElement{
 
 	public final static XArchTypeMetadata TYPE_METADATA = new XArchTypeMetadata(
 		XArchTypeMetadata.XARCH_ELEMENT,
-		"implementationext", "ComponentImpl", edu.uci.isr.xarch.types.IComponent.TYPE_METADATA,
+		"implementationext", "InterfaceImpl", edu.uci.isr.xarch.types.IInterface.TYPE_METADATA,
 		new XArchPropertyMetadata[]{
 			XArchPropertyMetadata.createElement("implementation", "implementation", "Implementation", 0, XArchPropertyMetadata.UNBOUNDED)},
 		new XArchActionMetadata[]{});
 
 	/**
-	 * Add a implementation to this ComponentImpl.
+	 * Add a implementation to this InterfaceImpl.
 	 * @param newImplementation implementation to add.
 	 */
 	public void addImplementation(edu.uci.isr.xarch.implementation.IImplementation newImplementation);
 
 	/**
-	 * Add a collection of implementations to this ComponentImpl.
+	 * Add a collection of implementations to this InterfaceImpl.
 	 * @param implementations implementations to add.
 	 */
 	public void addImplementations(Collection implementations);
 
 	/**
-	 * Remove all implementations from this ComponentImpl.
+	 * Remove all implementations from this InterfaceImpl.
 	 */
 	public void clearImplementations();
 
 	/**
-	 * Remove the given implementation from this ComponentImpl.
+	 * Remove the given implementation from this InterfaceImpl.
 	 * Matching is done by the <code>isEquivalent(...)</code> function.
 	 * @param implementationToRemove implementation to remove.
 	 */
 	public void removeImplementation(edu.uci.isr.xarch.implementation.IImplementation implementationToRemove);
 
 	/**
-	 * Remove all the given implementations from this ComponentImpl.
+	 * Remove all the given implementations from this InterfaceImpl.
 	 * Matching is done by the <code>isEquivalent(...)</code> function.
 	 * @param implementations implementation to remove.
 	 */
 	public void removeImplementations(Collection implementations);
 
 	/**
-	 * Get all the implementations from this ComponentImpl.
-	 * @return all implementations in this ComponentImpl.
+	 * Get all the implementations from this InterfaceImpl.
+	 * @return all implementations in this InterfaceImpl.
 	 */
 	public Collection getAllImplementations();
 
 	/**
-	 * Determine if this ComponentImpl contains a given implementation.
-	 * @return <code>true</code> if this ComponentImpl contains the given
+	 * Determine if this InterfaceImpl contains a given implementation.
+	 * @return <code>true</code> if this InterfaceImpl contains the given
 	 * implementationToCheck, <code>false</code> otherwise.
 	 */
 	public boolean hasImplementation(edu.uci.isr.xarch.implementation.IImplementation implementationToCheck);
 
 	/**
-	 * Determine if this ComponentImpl contains the given set of implementations.
+	 * Determine if this InterfaceImpl contains the given set of implementations.
 	 * @param implementationsToCheck implementations to check for.
 	 * @return Collection of <code>java.lang.Boolean</code>.  If the i<sup>th</sup>
 	 * element in <code>implementations</code> was found, then the i<sup>th</sup>
@@ -97,22 +97,22 @@ public interface IComponentImpl extends edu.uci.isr.xarch.types.IComponent, edu.
 	public Collection hasImplementations(Collection implementationsToCheck);
 
 	/**
-	 * Determine if this ComponentImpl contains each element in the 
+	 * Determine if this InterfaceImpl contains each element in the 
 	 * given set of implementations.
 	 * @param implementationsToCheck implementations to check for.
 	 * @return <code>true</code> if every element in
-	 * <code>implementations</code> is found in this ComponentImpl,
+	 * <code>implementations</code> is found in this InterfaceImpl,
 	 * <code>false</code> otherwise.
 	 */
 	public boolean hasAllImplementations(Collection implementationsToCheck);
 
 	/**
-	 * Determine if another ComponentImpl is equivalent to this one, ignoring
+	 * Determine if another InterfaceImpl is equivalent to this one, ignoring
 	 * ID's.
-	 * @param ComponentImplToCheck ComponentImpl to compare to this one.
+	 * @param InterfaceImplToCheck InterfaceImpl to compare to this one.
 	 * @return <code>true</code> if all the child elements of this
-	 * ComponentImpl are equivalent, <code>false</code> otherwise.
+	 * InterfaceImpl are equivalent, <code>false</code> otherwise.
 	 */
-	public boolean isEquivalent(IComponentImpl ComponentImplToCheck);
+	public boolean isEquivalent(IInterfaceImpl InterfaceImplToCheck);
 
 }

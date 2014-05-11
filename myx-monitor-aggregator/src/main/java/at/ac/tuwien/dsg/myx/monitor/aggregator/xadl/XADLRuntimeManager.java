@@ -30,9 +30,9 @@ import edu.uci.isr.xarch.types.IConnector;
 import edu.uci.isr.xarch.types.IInterface;
 import edu.uci.isr.xarch.types.ILink;
 
-public class XADLArchStructureRuntimeManager implements ISubscriber<Event> {
+public class XADLRuntimeManager implements ISubscriber<Event> {
 
-    private static final Logger logger = LoggerFactory.getLogger(XADLArchStructureRuntimeManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(XADLRuntimeManager.class);
 
     private final Map<IInterface, String> interface2element = new HashMap<>();
 
@@ -55,7 +55,7 @@ public class XADLArchStructureRuntimeManager implements ISubscriber<Event> {
     private final ModelRoot modelRoot;
     private final List<Topic> topics;
 
-    public XADLArchStructureRuntimeManager(ModelRoot modelRoot) {
+    public XADLRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         topics = new ArrayList<>();
         topics.add(new Topic(EventUtils.getTopicPattern(XADLEvent.class)));

@@ -3417,8 +3417,8 @@
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.publisher.comp.socket.SocketBytePublisher</javaimplementation:javaClassName>
-                    <javainitparams:initializationParameter javainitparams:name="hostname" xsi:type="javainitparams:InitializationParameter" javainitparams:value="localhost"/>
-                    <javainitparams:initializationParameter javainitparams:name="port" xsi:type="javainitparams:InitializationParameter" javainitparams:value="6666"/>
+                    <javainitparams:initializationParameter javainitparams:name="hostname" javainitparams:value="localhost" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="port" javainitparams:value="6666" xsi:type="javainitparams:InitializationParameter"/>
                     
                 </javaimplementation:mainClass>
             </implementationext:implementation>
@@ -3466,8 +3466,12 @@
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.subscriber.comp.socket.SocketByteSubscriber</javaimplementation:javaClassName>
-                    <javainitparams:initializationParameter javainitparams:name="hostname" xsi:type="javainitparams:InitializationParameter" javainitparams:value="localhost"/>
-                    <javainitparams:initializationParameter javainitparams:name="port" xsi:type="javainitparams:InitializationParameter" javainitparams:value="6667"/>
+                    <javainitparams:initializationParameter javainitparams:name="hostname" javainitparams:value="localhost" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="port" javainitparams:value="6667" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="topicName" xsi:type="javainitparams:InitializationParameter" javainitparams:value="*sound*"/>
+                    
+                    
+                    
                     
                 </javaimplementation:mainClass>
             </implementationext:implementation>

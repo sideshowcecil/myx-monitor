@@ -15,8 +15,6 @@ import java.util.UUID;
  */
 public final class IdGenerator {
 
-    private static long counter = 0;
-
     private IdGenerator() {
     }
 
@@ -52,7 +50,7 @@ public final class IdGenerator {
      * @return
      */
     public static String generateRuntimeInstantiationId(String blueprintId) {
-        return blueprintId + "-" + ++counter;
+        return generateId(blueprintId);
     }
 
     /**

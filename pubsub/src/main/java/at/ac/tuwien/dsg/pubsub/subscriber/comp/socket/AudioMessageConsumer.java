@@ -37,13 +37,10 @@ public class AudioMessageConsumer extends MessageConsumer<byte[]> {
             }
             break;
         case CLOSE:
-            if (audioLine != null) {
-                audioLine.stop();
-                audioLine.close();
-            }
         case ERROR:
         default:
-            audioLine = null;
+            end();
+            System.exit(0);
             break;
         }
     }

@@ -2,7 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
 
 import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
-import at.ac.tuwien.dsg.myx.monitor.aggregator.xadl.XADLRuntimeManager;
+import at.ac.tuwien.dsg.myx.monitor.aggregator.xadl.XADLInstanceRuntimeManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
@@ -27,7 +27,7 @@ public class XADLRuntimeManagerComponent extends AbstractMyxSimpleBrick {
     @Override
     public void init() {
         ModelRoot modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
-        xadlRuntimeManager = new XADLRuntimeManager(modelRoot);
+        xadlRuntimeManager = new XADLInstanceRuntimeManager(modelRoot);
     }
 
 }

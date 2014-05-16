@@ -32,9 +32,9 @@ import edu.uci.isr.xarch.types.ILink;
 import edu.uci.isr.xarch.typesmapping.IMappedComponent;
 import edu.uci.isr.xarch.typesmapping.IMappedConnector;
 
-public class XADLRuntimeManager implements ISubscriber<Event> {
+public class XADLStructureRuntimeManager implements ISubscriber<Event> {
 
-    private static final Logger logger = LoggerFactory.getLogger(XADLRuntimeManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(XADLStructureRuntimeManager.class);
 
     private final Map<IInterface, String> interface2element = new HashMap<>();
 
@@ -57,7 +57,7 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
     private final ModelRoot modelRoot;
     private final List<Topic> topics;
 
-    public XADLRuntimeManager(ModelRoot modelRoot) {
+    public XADLStructureRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         topics = new ArrayList<>();
         topics.add(new Topic(EventUtils.getTopicPattern(XADLEvent.class)));
@@ -213,25 +213,30 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
         component.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintComponent.getId()),
                 modelRoot.getTypesContext()));
         if (blueprintComponent.getDescription() != null) {
-            component.setDescription(blueprintComponent.getDescription());
+            component.setDescription(DBLUtils.createDescription(blueprintComponent.getDescription().getValue(),
+                    modelRoot.getTypesContext()));
         }
         if (blueprintComponent.getType() != null) {
-            component.setType(blueprintComponent.getType());
+            component.setType(DBLUtils.createXMLLink(blueprintComponent.getType().getHref(),
+                    modelRoot.getTypesContext()));
         }
         for (IInterface blueprintInterface : DBLUtils.getInterfaces(blueprintComponent)) {
             IInterface intf = modelRoot.getTypesContext().createInterface();
             intf.setId(IdGenerator.generateRuntimeInstantiationId(blueprintInterface.getId()));
             if (blueprintInterface.getDescription() != null) {
-                intf.setDescription(blueprintInterface.getDescription());
+                intf.setDescription(DBLUtils.createDescription(blueprintInterface.getDescription().getValue(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getDirection() != null) {
-                intf.setDirection(blueprintInterface.getDirection());
+                intf.setDirection(DBLUtils.createDirection(blueprintInterface.getDirection().getValue(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getSignature() != null) {
-                intf.setSignature(blueprintInterface.getSignature());
+                intf.setSignature(DBLUtils.createXMLLink(blueprintInterface.getSignature().getHref(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getType() != null) {
-                intf.setType(blueprintInterface.getType());
+                intf.setType(DBLUtils.createXMLLink(blueprintInterface.getType().getHref(), modelRoot.getTypesContext()));
             }
             component.addInterface(intf);
             interface2element.put(intf, runtimeId);
@@ -268,25 +273,30 @@ public class XADLRuntimeManager implements ISubscriber<Event> {
         connector.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintConnector.getId()),
                 modelRoot.getTypesContext()));
         if (blueprintConnector.getDescription() != null) {
-            connector.setDescription(blueprintConnector.getDescription());
+            connector.setDescription(DBLUtils.createDescription(blueprintConnector.getDescription().getValue(),
+                    modelRoot.getTypesContext()));
         }
-        if (blueprintConnector.getDescription() != null) {
-            connector.setType(blueprintConnector.getType());
+        if (blueprintConnector.getType() != null) {
+            connector.setType(DBLUtils.createXMLLink(blueprintConnector.getType().getHref(),
+                    modelRoot.getTypesContext()));
         }
         for (IInterface blueprintInterface : DBLUtils.getInterfaces(blueprintConnector)) {
             IInterface intf = modelRoot.getTypesContext().createInterface();
             intf.setId(IdGenerator.generateRuntimeInstantiationId(blueprintInterface.getId()));
             if (blueprintInterface.getDescription() != null) {
-                intf.setDescription(blueprintInterface.getDescription());
+                intf.setDescription(DBLUtils.createDescription(blueprintInterface.getDescription().getValue(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getDirection() != null) {
-                intf.setDirection(blueprintInterface.getDirection());
+                intf.setDirection(DBLUtils.createDirection(blueprintInterface.getDirection().getValue(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getSignature() != null) {
-                intf.setSignature(blueprintInterface.getSignature());
+                intf.setSignature(DBLUtils.createXMLLink(blueprintInterface.getSignature().getHref(),
+                        modelRoot.getTypesContext()));
             }
             if (blueprintInterface.getType() != null) {
-                intf.setType(blueprintInterface.getType());
+                intf.setType(DBLUtils.createXMLLink(blueprintInterface.getType().getHref(), modelRoot.getTypesContext()));
             }
             connector.addInterface(intf);
             interface2element.put(intf, runtimeId);

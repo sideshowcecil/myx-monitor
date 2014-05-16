@@ -20,10 +20,14 @@ import edu.uci.isr.xarch.implementationext.IComponentImpl;
 import edu.uci.isr.xarch.implementationext.IConnectorImpl;
 import edu.uci.isr.xarch.instance.IArchInstance;
 import edu.uci.isr.xarch.instance.IComponentInstance;
+import edu.uci.isr.xarch.instance.IConnectorInstance;
 import edu.uci.isr.xarch.instance.IDescription;
+import edu.uci.isr.xarch.instance.IDirection;
 import edu.uci.isr.xarch.instance.IInstanceContext;
+import edu.uci.isr.xarch.instance.IInterfaceInstance;
 import edu.uci.isr.xarch.instance.IPoint;
 import edu.uci.isr.xarch.instance.IXMLLink;
+import edu.uci.isr.xarch.instancemapping.IMappedInterfaceInstance;
 import edu.uci.isr.xarch.javaimplementation.IJavaClassFile;
 import edu.uci.isr.xarch.javaimplementation.IJavaClassName;
 import edu.uci.isr.xarch.javaimplementation.IJavaImplementation;
@@ -494,6 +498,106 @@ public final class DBLUtils {
     }
 
     /**
+     * Get the {@link EMyxInterfaceDirection} from an {@link IInterfaceInstance}
+     * .
+     * 
+     * @param intf
+     * @return
+     */
+    public static EMyxInterfaceDirection getDirection(IInterfaceInstance intf) {
+        switch (intf.getDirection().getValue()) {
+        case "in":
+            return EMyxInterfaceDirection.IN;
+        case "out":
+            return EMyxInterfaceDirection.OUT;
+        default:
+            return null;
+        }
+    }
+
+    /**
+     * Get all {@link IInterfaceInstance}s of an {@link IXArchElement}.
+     * 
+     * @param e
+     * @return
+     */
+    public static Collection<IInterfaceInstance> getInterfaceInstances(IXArchElement e) {
+        Collection<IInterfaceInstance> elements = new ArrayList<>();
+        if (e instanceof IComponent) {
+            elements.addAll(getInterfaceInstances((IComponentInstance) e));
+        } else if (e instanceof IConnector) {
+            elements.addAll(getInterfaceInstances((IConnectorInstance) e));
+        }
+        return elements;
+    }
+
+    /**
+     * Get all {@link IInterfaceInstance}s of an {@link IComponentInstance}.
+     * 
+     * @param comp
+     * @return
+     */
+    public static Collection<IInterfaceInstance> getInterfaceInstances(IComponentInstance comp) {
+        Collection<IInterfaceInstance> elements = new ArrayList<>();
+        for (Object o : comp.getAllInterfaceInstances()) {
+            if (o instanceof IInterfaceInstance) {
+                elements.add((IInterfaceInstance) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Get all {@link IInterfaceInstance}s of a {@link IConnectorInstance}.
+     * 
+     * @param conn
+     * @return
+     */
+    public static Collection<IInterfaceInstance> getInterfaceInstances(IConnectorInstance conn) {
+        Collection<IInterfaceInstance> elements = new ArrayList<>();
+        for (Object o : conn.getAllInterfaceInstances()) {
+            if (o instanceof IInterfaceInstance) {
+                elements.add((IInterfaceInstance) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Get all {@link IMappedInterfaceInstance}s of an
+     * {@link IComponentInstance}.
+     * 
+     * @param comp
+     * @return
+     */
+    public static Collection<IMappedInterfaceInstance> getMappedInterfaceInstances(IComponentInstance comp) {
+        Collection<IMappedInterfaceInstance> elements = new ArrayList<>();
+        for (Object o : comp.getAllInterfaceInstances()) {
+            if (o instanceof IMappedInterfaceInstance) {
+                elements.add((IMappedInterfaceInstance) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Get all {@link IMappedInterfaceInstance}s of a {@link IConnectorInstance}
+     * .
+     * 
+     * @param conn
+     * @return
+     */
+    public static Collection<IMappedInterfaceInstance> getMappedInterfaceInstances(IConnectorInstance conn) {
+        Collection<IMappedInterfaceInstance> elements = new ArrayList<>();
+        for (Object o : conn.getAllInterfaceInstances()) {
+            if (o instanceof IMappedInterfaceInstance) {
+                elements.add((IMappedInterfaceInstance) o);
+            }
+        }
+        return elements;
+    }
+
+    /**
      * Get all {@link IImplementation}s of an {@link IConnectorType}.
      * 
      * @param type
@@ -902,8 +1006,8 @@ public final class DBLUtils {
     }
 
     /**
-     * Create a {@link IComponent} in an {@link IArchStructure} instance. If
-     * the component already exists it is simply returned.
+     * Create a {@link IComponent} in an {@link IArchStructure} instance. If the
+     * component already exists it is simply returned.
      * 
      * @param structure
      * @param id
@@ -932,8 +1036,19 @@ public final class DBLUtils {
     }
 
     /**
-     * Create a {@link IConnector} in an {@link IArchStructure} instance. If
-     * the connector already exists it is simply returned.
+     * Get a {@link IConnectorInstance} from a {@link IArchInstance} instance.
+     * 
+     * @param instance
+     * @param id
+     * @return
+     */
+    public static IConnectorInstance getConnectorInstance(IArchInstance instance, String id) {
+        return instance.getConnectorInstance(id);
+    }
+
+    /**
+     * Create a {@link IConnector} in an {@link IArchStructure} instance. If the
+     * connector already exists it is simply returned.
      * 
      * @param structure
      * @param id
@@ -976,5 +1091,31 @@ public final class DBLUtils {
         link.setType("simple");
         link.setHref(DBLUtils.getHref(destinationId));
         return link;
+    }
+
+    /**
+     * Create a {@link IDirection}.
+     * 
+     * @param description
+     * @param context
+     * @return
+     */
+    public static IDirection createDirection(String direction, IInstanceContext context) {
+        IDirection dir = context.createDirection();
+        dir.setValue(direction);
+        return dir;
+    }
+
+    /**
+     * Create a {@link IDirection}.
+     * 
+     * @param description
+     * @param context
+     * @return
+     */
+    public static IDirection createDirection(String direction, ITypesContext context) {
+        IDirection dir = context.createDirection();
+        dir.setValue(direction);
+        return dir;
     }
 }

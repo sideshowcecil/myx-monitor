@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
 
-import at.ac.tuwien.dsg.myx.monitor.aggregator.hosted.HostedRuntimeManager;
+import at.ac.tuwien.dsg.myx.monitor.aggregator.hosted.HostedInstanceRuntimeManager;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
@@ -27,7 +27,7 @@ public class HostedRuntimeManagerComponent extends AbstractMyxSimpleBrick {
     @Override
     public void init() {
         ModelRoot modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
-        hostedRuntimeManager = new HostedRuntimeManager(modelRoot);
+        hostedRuntimeManager = new HostedInstanceRuntimeManager(modelRoot);
     }
 
 }

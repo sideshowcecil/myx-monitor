@@ -124,43 +124,6 @@ public interface ITypesmappingContext extends IXArchContext{
 	public IMappedConnector promoteToMappedConnector(
 	edu.uci.isr.xarch.types.IConnector value);
 
-	/**
-	 * Create an IMappedInterface object in this namespace.
-	 * @return New IMappedInterface object.
-	 */
-	public IMappedInterface createMappedInterface();
-
-	/**
-	 * Brings an IMappedInterface object created in another
-	 * context into this context.
-	 * @param value Object to recontextualize.
-	 * @return <code>value</code> object in this namespace.
-	 */
-	public IMappedInterface recontextualizeMappedInterface(IMappedInterface value);
-
-	/**
-	 * Promote an object of type <code>edu.uci.isr.xarch.types.IInterface</code>
-	 * to one of type <code>IMappedInterface</code>.  xArch APIs
-	 * are structured in such a way that a regular cast is not possible
-	 * to change interface types, so casting must be done through these
-	 * promotion functions.  If the <code>edu.uci.isr.xarch.types.IInterface</code>
-	 * object wraps a DOM element that is the base type, then the 
-	 * <code>xsi:type</code> of the base element is promoted.  Otherwise, 
-	 * it is left unchanged.
-	 *
-	 * This function also emits an <CODE>XArchEvent</CODE> with type
-	 * PROMOTE_TYPE.  The source for this events is the pre-promoted
-	 * IXArchElement object (should no longer be used), and the
-	 * target is the post-promotion object.  The target name is
-	 * the name of the interface class that was the target of the
-	 * promotion.
-	 * 
-	 * @param value Object to promote.
-	 * @return Promoted object.
-	 */
-	public IMappedInterface promoteToMappedInterface(
-	edu.uci.isr.xarch.types.IInterface value);
-
 
 	public final static XArchTypeMetadata TYPE_METADATA = new XArchTypeMetadata(
 		XArchTypeMetadata.XARCH_CONTEXT,
@@ -174,10 +137,7 @@ public interface ITypesmappingContext extends IXArchContext{
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA, edu.uci.isr.xarch.instance.IXMLLink.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedConnector.TYPE_METADATA),
 			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedConnector.TYPE_METADATA, IMappedConnector.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IConnector.TYPE_METADATA, IMappedConnector.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.CREATE, null, IMappedInterface.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.RECONTEXTUALIZE, IMappedInterface.TYPE_METADATA, IMappedInterface.TYPE_METADATA),
-			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IInterface.TYPE_METADATA, IMappedInterface.TYPE_METADATA)});
+			new XArchActionMetadata(XArchActionMetadata.PROMOTE, edu.uci.isr.xarch.types.IConnector.TYPE_METADATA, IMappedConnector.TYPE_METADATA)});
 
 }
 

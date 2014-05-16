@@ -18,7 +18,7 @@
         </xsd:documentation>
     </xsd:annotation>
 
-    <!--  TYPE: MappedComponentInstance -->
+    <!-- TYPE: MappedComponentInstance -->
     <xsd:complexType name="MappedComponentInstance">
         <xsd:complexContent>
             <xsd:extension base="archinst:ComponentInstance">
@@ -29,7 +29,7 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!--  TYPE: MappedConnectorInstance -->
+    <!-- TYPE: MappedConnectorInstance -->
     <xsd:complexType name="MappedConnectorInstance">
         <xsd:complexContent>
             <xsd:extension base="archinst:ConnectorInstance">
@@ -40,12 +40,13 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!--  TYPE: MappedInterfaceInstance -->
+    <!-- TYPE: MappedInterfaceInstance -->
     <xsd:complexType name="MappedInterfaceInstance">
         <xsd:complexContent>
             <xsd:extension base="archinst:InterfaceInstance">
                 <xsd:sequence>
-                    <xsd:element name="blueprint" type="archinst:XMLLink" />
+                    <xsd:element name="type" type="archinst:XMLLink"
+                        minOccurs="0" maxOccurs="1" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>

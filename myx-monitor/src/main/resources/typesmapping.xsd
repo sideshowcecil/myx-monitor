@@ -47,15 +47,4 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!--  TYPE: MappedInterface -->
-    <xsd:complexType name="MappedInterface">
-        <xsd:complexContent>
-            <xsd:extension base="archtypes:Interface">
-                <xsd:sequence>
-                    <xsd:element name="blueprint" type="archinst:XMLLink" />
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
 </xsd:schema>

@@ -35,13 +35,13 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 	public static final String XSD_TYPE_NSURI = InstancemappingConstants.NS_URI;
 	public static final String XSD_TYPE_NAME = "MappedInterfaceInstance";
 
-	/** Tag name for blueprints in this object. */
-	public static final String BLUEPRINT_ELT_NAME = "blueprint";
+	/** Tag name for types in this object. */
+	public static final String TYPE_ELT_NAME = "type";
 
 	
 	private static SequenceOrder seqOrderAppend = new SequenceOrder(
 		new QName[]{
-			new QName(InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME)
+			new QName(InstancemappingConstants.NS_URI, TYPE_ELT_NAME)
 		}
 	);
 	
@@ -127,13 +127,13 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 		return new XArchInstanceMetadata(XArchUtils.getPackageTitle(elt.getNamespaceURI()));
 	}
 
-	public void setBlueprint(edu.uci.isr.xarch.instance.IXMLLink value){
+	public void setType(edu.uci.isr.xarch.instance.IXMLLink value){
 		if(!(value instanceof DOMBased)){
 			throw new IllegalArgumentException("Cannot handle non-DOM-based xArch entities.");
 		}
 		{
-			edu.uci.isr.xarch.instance.IXMLLink oldElt = getBlueprint();
-			DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
+			edu.uci.isr.xarch.instance.IXMLLink oldElt = getType();
+			DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, TYPE_ELT_NAME);
 			
 			IXArch context = getXArch();
 			if(context != null){
@@ -141,13 +141,13 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 					new XArchEvent(this, 
 					XArchEvent.CLEAR_EVENT,
 					XArchEvent.ELEMENT_CHANGED,
-					"blueprint", oldElt,
+					"type", oldElt,
 					XArchUtils.getDefaultXArchImplementation().isContainedIn(xArch, this), true)
 				);
 			}
 		}
 		Element newChildElt = (Element)(((DOMBased)value).getDOMNode());
-		newChildElt = DOMUtils.cloneAndRename(newChildElt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
+		newChildElt = DOMUtils.cloneAndRename(newChildElt, InstancemappingConstants.NS_URI, TYPE_ELT_NAME);
 		((DOMBased)value).setDOMNode(newChildElt);
 		
 		synchronized(DOMUtils.getDOMLock(elt)){
@@ -161,15 +161,15 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 				new XArchEvent(this, 
 				XArchEvent.SET_EVENT,
 				XArchEvent.ELEMENT_CHANGED,
-				"blueprint", value,
+				"type", value,
 				XArchUtils.getDefaultXArchImplementation().isContainedIn(xArch, this))
 			);
 		}
 	}
 	
-	public void clearBlueprint(){
-		edu.uci.isr.xarch.instance.IXMLLink oldElt = getBlueprint();
-		DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
+	public void clearType(){
+		edu.uci.isr.xarch.instance.IXMLLink oldElt = getType();
+		DOMUtils.removeChildren(elt, InstancemappingConstants.NS_URI, TYPE_ELT_NAME);
 		
 		IXArch context = getXArch();
 		if(context != null){
@@ -177,14 +177,14 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 				new XArchEvent(this, 
 				XArchEvent.CLEAR_EVENT,
 				XArchEvent.ELEMENT_CHANGED,
-				"blueprint", oldElt,
+				"type", oldElt,
 				XArchUtils.getDefaultXArchImplementation().isContainedIn(xArch, this))
 			);
 		}
 	}
 	
-	public edu.uci.isr.xarch.instance.IXMLLink getBlueprint(){
-		NodeList nl = DOMUtils.getChildren(elt, InstancemappingConstants.NS_URI, BLUEPRINT_ELT_NAME);
+	public edu.uci.isr.xarch.instance.IXMLLink getType(){
+		NodeList nl = DOMUtils.getChildren(elt, InstancemappingConstants.NS_URI, TYPE_ELT_NAME);
 		if(nl.getLength() == 0){
 			return null;
 		}
@@ -218,8 +218,8 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 		}
 	}
 	
-	public boolean hasBlueprint(edu.uci.isr.xarch.instance.IXMLLink value){
-		edu.uci.isr.xarch.instance.IXMLLink thisValue = getBlueprint();
+	public boolean hasType(edu.uci.isr.xarch.instance.IXMLLink value){
+		edu.uci.isr.xarch.instance.IXMLLink thisValue = getType();
 		edu.uci.isr.xarch.instance.IXMLLink thatValue = value;
 		
 		if((thisValue == null) && (thatValue == null)){
@@ -237,7 +237,7 @@ IMappedInterfaceInstance, edu.uci.isr.xarch.instance.IInterfaceInstance, DOMBase
 	public boolean isEquivalent(IMappedInterfaceInstance c){
 		return
 			super.isEquivalent(c) &&
-			hasBlueprint(c.getBlueprint()) ;
+			hasType(c.getType()) ;
 	}
 
 }

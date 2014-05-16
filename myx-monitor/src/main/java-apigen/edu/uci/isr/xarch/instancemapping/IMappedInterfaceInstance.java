@@ -38,33 +38,33 @@ public interface IMappedInterfaceInstance extends edu.uci.isr.xarch.instance.IIn
 		XArchTypeMetadata.XARCH_ELEMENT,
 		"instancemapping", "MappedInterfaceInstance", edu.uci.isr.xarch.instance.IInterfaceInstance.TYPE_METADATA,
 		new XArchPropertyMetadata[]{
-			XArchPropertyMetadata.createElement("blueprint", "instance", "XMLLink", 1, 1)},
+			XArchPropertyMetadata.createElement("type", "instance", "XMLLink", 0, 1)},
 		new XArchActionMetadata[]{});
 
 	/**
-	 * Set the blueprint for this MappedInterfaceInstance.
-	 * @param value new blueprint
+	 * Set the type for this MappedInterfaceInstance.
+	 * @param value new type
 	 */
-	public void setBlueprint(edu.uci.isr.xarch.instance.IXMLLink value);
+	public void setType(edu.uci.isr.xarch.instance.IXMLLink value);
 
 	/**
-	 * Clear the blueprint from this MappedInterfaceInstance.
+	 * Clear the type from this MappedInterfaceInstance.
 	 */
-	public void clearBlueprint();
+	public void clearType();
 
 	/**
-	 * Get the blueprint from this MappedInterfaceInstance.
-	 * @return blueprint
+	 * Get the type from this MappedInterfaceInstance.
+	 * @return type
 	 */
-	public edu.uci.isr.xarch.instance.IXMLLink getBlueprint();
+	public edu.uci.isr.xarch.instance.IXMLLink getType();
 
 	/**
-	 * Determine if this MappedInterfaceInstance has the given blueprint
-	 * @param blueprintToCheck blueprint to compare
-	 * @return <code>true</code> if the blueprints are equivalent,
+	 * Determine if this MappedInterfaceInstance has the given type
+	 * @param typeToCheck type to compare
+	 * @return <code>true</code> if the types are equivalent,
 	 * <code>false</code> otherwise
 	 */
-	public boolean hasBlueprint(edu.uci.isr.xarch.instance.IXMLLink blueprintToCheck);
+	public boolean hasType(edu.uci.isr.xarch.instance.IXMLLink typeToCheck);
 	/**
 	 * Determine if another MappedInterfaceInstance is equivalent to this one, ignoring
 	 * ID's.

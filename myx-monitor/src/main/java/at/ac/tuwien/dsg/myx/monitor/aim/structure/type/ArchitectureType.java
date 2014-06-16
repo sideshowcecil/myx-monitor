@@ -8,7 +8,7 @@ import at.ac.tuwien.dsg.myx.monitor.aim.structure.Implementation;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.Signature;
 import at.ac.tuwien.dsg.myx.monitor.aim.structure.SubArchitecture;
 
-public class ArchitectureType extends ArchitectureElement {
+public abstract class ArchitectureType extends ArchitectureElement {
 
     private final List<Implementation> implementations = new ArrayList<>();
     private final List<Signature> signatures = new ArrayList<>();

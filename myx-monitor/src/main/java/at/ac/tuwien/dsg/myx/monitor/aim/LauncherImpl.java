@@ -1,7 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.aim;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -371,11 +370,12 @@ public class LauncherImpl implements Launcher {
         if (element.hasSubArchitecture()) {
             SubArchitecture subArch = element.getSubarchitecture();
 
-            List<IMyxName> innerPath = Arrays.asList(path);
+            IMyxName[] innerPath = new IMyxName[path.length + 1];
+            System.arraycopy(path, 0, innerPath, 0, path.length);
             // add container name
-            innerPath.add(brickName);
+            innerPath[path.length] = brickName;
             // call instantiate for the archstructure for the subarchitecture
-            instantiate(element.getBlueprintId(), subArch.getArchStructure(), innerPath.toArray(new IMyxName[0]));
+            instantiate(element.getBlueprintId(), subArch.getArchStructure(), innerPath);
             // now we have to wire the interface mappings
             for (Interface outerIntf : element.getInterfaces()) {
                 if (outerIntf.getSignature() == null

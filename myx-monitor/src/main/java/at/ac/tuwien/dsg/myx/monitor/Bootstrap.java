@@ -1,5 +1,7 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -33,7 +35,7 @@ public class Bootstrap {
     public static final IMyxName MODEL_ROOT_NAME = MyxMonitoringUtils.createName("model-root-comp");
     public static final IMyxName MYX_RUNTIME_NAME = MyxMonitoringUtils.createName("myx-runtime-comp");
 
-    protected IMyxRuntime myx;
+    private IMyxRuntime myx;
 
     public static void main(String[] args) {
         new Bootstrap().run(args);
@@ -54,7 +56,9 @@ public class Bootstrap {
 
         // init
         initEventManager(p[3].getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID),
-                p[3].getProperty(MyxProperties.ARCHITECTURE_HOST_ID), p[3].getProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING));
+                p[3].getProperty(MyxProperties.ARCHITECTURE_HOST_ID),
+                p[3].getProperty(MyxProperties.EVENT_MANAGER_CLASS),
+                p[3].getProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING));
         initMyxMonitoringImplementation();
 
         // bootstrap components
@@ -67,15 +71,16 @@ public class Bootstrap {
      * @param args
      * @return
      */
-    protected static Properties[] parseArgs(String[] args) {
+    protected Properties[] parseArgs(String[] args) {
         String xadlFile = null;
         String structureName = null;
         String architectureRuntimeId = null;
         List<String> eventDispatcherClasses = new ArrayList<>();
+        String eventManagerClass = "";
         String connectionString = "";
 
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-s")  || args[i].equals("--structure")) {
+            if (args[i].equals("-s") || args[i].equals("--structure")) {
                 if (++i == args.length || structureName != null) {
                     usage();
                 }
@@ -85,11 +90,16 @@ public class Bootstrap {
                     usage();
                 }
                 architectureRuntimeId = args[i];
-            } else if (args[i].equals("-e") || args[i].equals("--event-dispatcher")) {
+            } else if (args[i].equals("-d") || args[i].equals("--event-dispatcher")) {
                 if (++i == args.length) {
                     usage();
                 }
                 eventDispatcherClasses.add(args[i]);
+            } else if (args[i].equals("-e") || args[i].equals("--event-manager")) {
+                if (++i == args.length) {
+                    usage();
+                }
+                eventManagerClass = args[i];
             } else if (args[i].equals("-c") || args[i].equals("--event-manager-connection-string")) {
                 if (++i == args.length) {
                     usage();
@@ -126,6 +136,7 @@ public class Bootstrap {
         p[3] = new Properties();
         p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
         p[3].setProperty(MyxProperties.ARCHITECTURE_HOST_ID, IdGenerator.getHostId());
+        p[3].setProperty(MyxProperties.EVENT_MANAGER_CLASS, eventManagerClass);
         p[3].setProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING, connectionString);
 
         return p;
@@ -134,19 +145,20 @@ public class Bootstrap {
     /**
      * Print usage information and exit.
      */
-    protected static void usage() {
+    protected void usage() {
         System.err.println("Usage:");
         System.err
                 .println("  java "
-                        + Bootstrap.class.getName()
-                        + " file [-s|--structure structureName] [-i|--id architectureRuntimeId] [-e|--event-dispatcher className] [-c|--event-manager-connection-string connectionString]");
+                        + this.getClass().getName()
+                        + " file [-s|--structure structureName] [-i|--id architectureRuntimeId] [-d|--event-dispatcher className] [-e|--event-manager className] [-c|--event-manager-connection-string connectionString]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
-        System.err.println("    structureName: the name of the structure to bootstrap");
-        System.err.println("    architectureInstanceId: the architecture runtime id");
-        System.err.println("    className: the event dispatcher class name that should be instantiated");
-        System.err.println("    connectionString: the connection string that should be used to propate events");
+        System.err.println("    -s structureName: the name of the structure to bootstrap");
+        System.err.println("    -i architectureInstanceId: the architecture runtime id");
+        System.err.println("    -d className: the event dispatcher class name that should be instantiated");
+        System.err.println("    -e className: the event manager class name that should be used to propagate events");
+        System.err.println("    -c connectionString: the connection string that should be used to propate events");
         System.err.println();
         System.exit(-2);
     }
@@ -158,8 +170,27 @@ public class Bootstrap {
      * @param hostId
      * @param connectionString
      */
-    protected void initEventManager(String architectureRuntimeId, String hostId, String connectionString) {
-        MyxMonitoringUtils.initEventManager(new EventManagerImpl(architectureRuntimeId, hostId, connectionString));
+    protected void initEventManager(String architectureRuntimeId, String hostId, String eventManagerClassName,
+            String connectionString) {
+        EventManager eventManager = null;
+        if (!eventManagerClassName.isEmpty()) {
+            try {
+                Class<?> eventManagerClass = Class.forName(eventManagerClassName);
+                if (EventManager.class.isAssignableFrom(eventManagerClass)) {
+                    Constructor<?> c = eventManagerClass.getConstructor(new Class<?>[] { String.class, String.class,
+                            String.class });
+                    eventManager = (EventManager) c.newInstance(architectureRuntimeId, hostId, connectionString);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+                    | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                // we ignore non compatible event managers
+            }
+        }
+        if (eventManager == null) {
+            eventManager = new EventManagerImpl(architectureRuntimeId, hostId, connectionString);
+        }
+
+        MyxMonitoringUtils.initEventManager(eventManager);
     }
 
     /**

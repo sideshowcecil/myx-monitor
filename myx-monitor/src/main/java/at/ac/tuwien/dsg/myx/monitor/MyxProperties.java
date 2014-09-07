@@ -14,5 +14,6 @@ public interface MyxProperties {
     public static String ARCHITECTURE_BRICK_TYPE = "architectureBrickType";
     public static String ARCHITECTURE_INTERFACE_TYPE = "architectureInterfaceType";
 
+    public static String EVENT_MANAGER_CLASS = "eventManagerClass";
     public static String EVENT_MANAGER_CONNECTION_STRING = "eventManagerConnectionString";
 }

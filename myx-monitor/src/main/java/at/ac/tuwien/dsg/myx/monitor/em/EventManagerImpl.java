@@ -9,7 +9,7 @@ public class EventManagerImpl implements EventManager {
 
     @Override
     public void handle(Event event) {
-        // default bahaviour is to drop the events
+        // default bahavior is to drop the events
     }
 
 }

@@ -35,7 +35,7 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- TYPE: HostedArchStructure -->
+    <!-- TYPE: HostedArchInstance -->
     <xsd:complexType name="HostedArchInstance">
         <xsd:complexContent>
             <xsd:extension base="archinst:ArchInstance">

@@ -30,14 +30,6 @@ public final class EventSocketByteMessageProtocol implements Endpoint<Event> {
     public static final char CR = '\r';
     public static final char LF = '\n';
     public static final char SEPARATOR = ';';
-    public static final char TOPIC_TYPE_SEPARATPR = '.';
-    public static final char TOPIC_SEPERATOR = ',';
-
-    public static final char TOPIC = '#';
-    public static final char INIT = '*';
-    public static final char DATA = '+';
-    public static final char CLOSE = '$';
-    public static final char ERROR = '-';
 
     private Socket socket;
 

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import at.ac.tuwien.dsg.myx.monitor.Bootstrap;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.em.EventManagerImpl;
 
 public class MonitoringSubscriber extends Bootstrap {
@@ -17,7 +16,7 @@ public class MonitoringSubscriber extends Bootstrap {
 
     public static void main(String[] args) {
         List<String> realArgs = Arrays.asList(args);
-        
+
         String architectureFilePath = null;
 
         // check if the architecture file is available in the working directory
@@ -48,14 +47,14 @@ public class MonitoringSubscriber extends Bootstrap {
             adaptedArgs.add("--structure");
             adaptedArgs.add(STRUCTURE_NAME);
         }
+        // add the event manager class if none was given
+        if (!realArgs.contains("-e") && !realArgs.contains("--event-manager")) {
+            adaptedArgs.add("--event-manager");
+            adaptedArgs.add(EventManagerImpl.class.getName());
+        }
         adaptedArgs.addAll(realArgs);
 
         // call the myx-monitor bootstrap
         new MonitoringSubscriber().run(adaptedArgs.toArray(new String[0]));
-    }
-
-    @Override
-    public void initEventManager(String architectureRuntimeId, String hostId, String connectionString) {
-        MyxMonitoringUtils.initEventManager(new EventManagerImpl(architectureRuntimeId, hostId, connectionString));
     }
 }

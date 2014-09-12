@@ -40,7 +40,6 @@ public class AudioMessageConsumer extends MessageConsumer<byte[]> {
         case ERROR:
         default:
             end();
-            System.exit(0);
             break;
         }
     }

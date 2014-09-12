@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<instance:xArch xmlns:instance="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd" xmlns:changes="http://www.ics.uci.edu/pub/arch/xArch/changes.xsd" xmlns:hints3="http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd" xmlns:implementation="http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd" xmlns:implementationext="http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd" xmlns:javaimplementation="http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd" xmlns:javainitparams="http://www.ics.uci.edu/pub/arch/xArch/javainitparams.xsd" xmlns:lookupimplementation="http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd" xmlns:types="http://www.ics.uci.edu/pub/arch/xArch/types.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ics.uci.edu/pub/arch/xArch/hostproperty.xsd http://www.ics.uci.edu/pub/arch/xArch/hostproperty.xsd http://www.ics.uci.edu/pub/arch/xArch/typesmapping.xsd http://www.ics.uci.edu/pub/arch/xArch/typesmapping.xsd http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd http://www.ics.uci.edu/pub/arch/xArch/javainitparams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/javainitparams.xsd http://www.ics.uci.edu/pub/arch/xArch/variants.xsd http://www.isr.uci.edu/projects/xarchuci/ext/variants.xsd http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/lookupimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd http://www.ics.uci.edu/~zhengy/schema/Implementationext.xsd http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/javaimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/implementation.xsd http://www.ics.uci.edu/pub/arch/xArch/changes.xsd http://www.ics.uci.edu/~zhengy/schema/changes.xsd http://www.ics.uci.edu/pub/arch/xArch/interactions.xsd http://www.ics.uci.edu/~zhengy/schema/interactions.xsd http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd http://www.isr.uci.edu/projects/xarchuci/ext/hints3.xsd http://www.ics.uci.edu/pub/arch/xArch/instance.xsd http://www.isr.uci.edu/projects/xarchuci/core/instance.xsd http://www.ics.uci.edu/pub/arch/xArch/statecharts.xsd http://www.ics.uci.edu/~zhengy/schema/statecharts.xsd http://www.ics.uci.edu/pub/arch/xArch/activitydiagrams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/activitydiagrams.xsd http://www.ics.uci.edu/pub/arch/xArch/types.xsd http://www.isr.uci.edu/projects/xarchuci/ext/types.xsd http://www.ics.uci.edu/pub/arch/xArch/changesets.xsd http://www.isr.uci.edu/projects/xarchuci/ext/changesets.xsd">
+<instance:xArch xmlns:instance="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd" xmlns:changes="http://www.ics.uci.edu/pub/arch/xArch/changes.xsd" xmlns:hints3="http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd" xmlns:implementation="http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd" xmlns:implementationext="http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd" xmlns:javaimplementation="http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd" xmlns:javainitparams="http://www.ics.uci.edu/pub/arch/xArch/javainitparams.xsd" xmlns:lookupimplementation="http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd" xmlns:types="http://www.ics.uci.edu/pub/arch/xArch/types.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ics.uci.edu/pub/arch/xArch/hostproperty.xsd http://www.ics.uci.edu/pub/arch/xArch/hostproperty.xsd http://www.ics.uci.edu/pub/arch/xArch/typesmapping.xsd http://www.ics.uci.edu/pub/arch/xArch/typesmapping.xsd http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd http://www.ics.uci.edu/pub/arch/xArch/instancemapping.xsd http://www.ics.uci.edu/pub/arch/xArch/javainitparams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/javainitparams.xsd http://www.ics.uci.edu/pub/arch/xArch/variants.xsd http://www.isr.uci.edu/projects/xarchuci/ext/variants.xsd http://www.ics.uci.edu/pub/arch/xArch/lookupimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/lookupimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementationext.xsd http://www.ics.uci.edu/~zhengy/schema/Implementationext.xsd http://www.ics.uci.edu/pub/arch/xArch/javaimplementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/javaimplementation.xsd http://www.ics.uci.edu/pub/arch/xArch/implementation.xsd http://www.isr.uci.edu/projects/xarchuci/ext/implementation.xsd http://www.ics.uci.edu/pub/arch/xArch/changes.xsd http://www.ics.uci.edu/~zhengy/schema/changes.xsd http://www.ics.uci.edu/pub/arch/xArch/interactions.xsd http://www.ics.uci.edu/~zhengy/schema/interactions.xsd http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd http://www.isr.uci.edu/projects/xarchuci/ext/hints3.xsd http://www.ics.uci.edu/pub/arch/xArch/instance.xsd http://www.ics.uci.edu/pub/arch/xArch/instance.xsd http://www.ics.uci.edu/pub/arch/xArch/statecharts.xsd http://www.ics.uci.edu/~zhengy/schema/statecharts.xsd http://www.ics.uci.edu/pub/arch/xArch/activitydiagrams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/activitydiagrams.xsd http://www.ics.uci.edu/pub/arch/xArch/types.xsd http://www.isr.uci.edu/projects/xarchuci/ext/types.xsd http://www.ics.uci.edu/pub/arch/xArch/changesets.xsd http://www.isr.uci.edu/projects/xarchuci/ext/changesets.xsd">
     <types:archTypes xsi:type="types:ArchTypes">
         <types:connectorType types:id="connectorTypefff20c0e-f566a314-b5ba41f3-a26e06c9" xsi:type="implementation:VariantConnectorTypeImpl">
             <types:description xsi:type="instance:Description">PubSubMessageDistributor</types:description>
@@ -395,7 +395,7 @@
                 <instance:anchorOnInterface xlink:href="#interfaceffa83f01-fa78dd8e-bbcf68be-25c30168" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfacefff20c0e-f569c1a7-b867d7fe-a26e08fd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfacefff20c0e-f569c1a7-b867d7fe-a26e08fd" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:point>
@@ -403,7 +403,7 @@
         <types:link types:id="linkffa83f01-fa798b25-b0fda435-25c301a6" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">SubscriberDispatcher2MyxRuntimeAdapter</types:description>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfacefff20c0e-f569c1a7-b867d7fe-a26e08fd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfacefff20c0e-f569c1a7-b867d7fe-a26e08fd" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 
                 
             </types:point>
@@ -3397,25 +3397,25 @@
                 <changes:description xsi:type="instance:Description">New Link</changes:description>
                 <changes:link xlink:href="#linkffa80065-15d60cf6-f3b782d0-67d7049e" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
-            <changes:linkChange changes:id="linkChangeffa80065-57d1af4f-3ffba223-f32e00a7" xsi:type="changes:LinkChange" changes:type="update">
+            <changes:linkChange changes:id="linkChangeffa80065-57d1af4f-3ffba223-f32e00a7" changes:type="update" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Update Link</changes:description>
-                <changes:link xlink:href="#linkffa83f01-fa795bee-b5b5f1cd-25c30196" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:link xlink:href="#linkffa83f01-fa795bee-b5b5f1cd-25c30196" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
-            <changes:linkChange changes:id="linkChangeffa80065-57d1b08c-1115853d-f32e00a8" xsi:type="changes:LinkChange" changes:type="update">
+            <changes:linkChange changes:id="linkChangeffa80065-57d1b08c-1115853d-f32e00a8" changes:type="update" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Update Link</changes:description>
-                <changes:link xlink:href="#linkffa83f01-fa795bee-b5b5f1cd-25c30196" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:link xlink:href="#linkffa83f01-fa795bee-b5b5f1cd-25c30196" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
-            <changes:linkChange changes:id="linkChangeffa80065-57d1bf64-66d43c68-f32e00b0" xsi:type="changes:LinkChange" changes:type="update">
+            <changes:linkChange changes:id="linkChangeffa80065-57d1bf64-66d43c68-f32e00b0" changes:type="update" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Update Link</changes:description>
-                <changes:link xlink:href="#linkffa83f01-fa798b25-b0fda435-25c301a6" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:link xlink:href="#linkffa83f01-fa798b25-b0fda435-25c301a6" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
-            <changes:linkChange changes:id="linkChangeffa80065-57d1bffd-b2c475b0-f32e00b1" xsi:type="changes:LinkChange" changes:type="update">
+            <changes:linkChange changes:id="linkChangeffa80065-57d1bffd-b2c475b0-f32e00b1" changes:type="update" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Update Link</changes:description>
-                <changes:link xlink:href="#linkffa83f01-fa798b25-b0fda435-25c301a6" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:link xlink:href="#linkffa83f01-fa798b25-b0fda435-25c301a6" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
-            <changes:linkChange changes:id="linkChangeffa80065-57d1ec32-de099873-f32e0105" xsi:type="changes:LinkChange" changes:type="remove">
+            <changes:linkChange changes:id="linkChangeffa80065-57d1ec32-de099873-f32e0105" changes:type="remove" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">Remove Link</changes:description>
-                <changes:link xlink:href="#Copy of linkffa80065-15d60cf6-f3b782d0-67d7049e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <changes:link xlink:href="#Copy of linkffa80065-15d60cf6-f3b782d0-67d7049e" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <changes:copyOfRemovedLink types:id="Copy of linkffa80065-15d60cf6-f3b782d0-67d7049e" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">SynchronousProxy2MyxRuntimeAdapter</types:description>
             <types:point xsi:type="instance:Point">
@@ -3763,6 +3763,9 @@
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.publisher.comp.socket.LoopedAudioMessageCreator</javaimplementation:javaClassName>
                     <javainitparams:initializationParameter javainitparams:name="audioFile" javainitparams:value="sound.wav" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="loopCount" xsi:type="javainitparams:InitializationParameter" javainitparams:value="20"/>
+                    
+                    
                 </javaimplementation:mainClass>
             </implementationext:implementation>
         </types:component>

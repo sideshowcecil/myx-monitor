@@ -16,6 +16,7 @@ import at.ac.tuwien.dsg.pubsub.publisher.comp.MessageCreator;
 public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
 
     private String audioFileName;
+    private int loopCount;
 
     private ExecutorService executor;
     private Runnable runnable;
@@ -26,6 +27,7 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
         if (audioFileName == null) {
             throw new RuntimeException("No audio filename given!");
         }
+        loopCount = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("loopCount", "1"));
         executor = Executors.newSingleThreadExecutor();
         runnable = new Runnable() {
             @Override
@@ -34,7 +36,7 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
                 if (url != null) {
                     boolean initSent = false;
                     File audioFile = new File(url.getFile());
-                    for (int i = 0; i < 50; i++) {
+                    for (int i = 0; i < loopCount; i++) {
                         InputStream in = null;
                         try {
                             in = new FileInputStream(audioFile);

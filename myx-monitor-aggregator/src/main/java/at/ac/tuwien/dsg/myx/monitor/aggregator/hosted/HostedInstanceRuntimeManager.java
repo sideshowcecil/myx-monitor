@@ -107,7 +107,7 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
             // subhosts are currently not supported
             break;
         case REMOVE:
-            logger.info("Revoving components/connectors from host " + event.getHostId());
+            logger.info("Removing components/connectors from host " + event.getHostId());
             for (String id : event.getHostedComponentIds()) {
                 if (elementRefIndex.containsKey(id)) {
                     IElementRef ref = elementRefIndex.get(id);

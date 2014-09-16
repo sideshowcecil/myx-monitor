@@ -72,6 +72,7 @@ public final class EventSocketByteMessageProtocol implements Endpoint<Event> {
         out.write(serialized);
         out.write(CR);
         out.write(LF);
+        out.flush();
     }
 
     @Override

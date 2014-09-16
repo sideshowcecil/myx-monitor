@@ -51,6 +51,7 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
         out.write(Base64.encodeBase64(msg.getData()));
         out.write(CR);
         out.write(LF);
+        out.flush();
     }
 
     @Override

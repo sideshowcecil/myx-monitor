@@ -48,6 +48,11 @@ public class AudioMessageCreator extends MessageCreator<byte[]> {
                             publisher.publish(new Message<>(total == 0 ? Type.INIT : Type.DATA, audioFileName, buffer));
                         }
                         publisher.publish(new Message<byte[]>(Type.CLOSE, audioFileName, new byte[0]));
+                        // wait some time so the close message is written to the network
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                        }
                     } catch (IOException e) {
                     } finally {
                         if (in != null) {

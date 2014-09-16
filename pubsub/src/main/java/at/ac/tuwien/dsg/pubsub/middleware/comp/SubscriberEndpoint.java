@@ -38,7 +38,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
     private Runnable runnable;
 
     private String connectionIdentifier = null;
-    private boolean shutdown = false;
+    private volatile boolean shutdown = false;
 
     @Override
     public Object getServiceObject(IMyxName interfaceName) {
@@ -115,7 +115,6 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
                     endpoint.send(message);
                 } catch (IOException e) {
                     endpoint.close();
-                    myxAdapter.shutdownSubscriberEndpoint(this);
                     shutdown = true;
                     if (connectionIdentifier != null) {
                         // send event that the virtual external interface was
@@ -124,6 +123,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
                                 DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                                 connectionIdentifier);
                     }
+                    myxAdapter.shutdownSubscriberEndpoint(this);
                 }
             }
         }

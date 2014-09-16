@@ -86,7 +86,7 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
                     process((XADLRuntimeEvent) event);
                 }
             } catch (Exception e) {
-                logger.warn("An unexpected error occured", e);
+                logger.warn("An unexpected error occured on message " + message, e);
             }
         }
     }

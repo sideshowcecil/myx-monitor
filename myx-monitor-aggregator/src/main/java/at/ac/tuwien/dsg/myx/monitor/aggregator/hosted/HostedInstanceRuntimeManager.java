@@ -55,7 +55,7 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
                     process((XADLHostPropertyEvent) event);
                 }
             } catch (Exception e) {
-                logger.warn("An unexpected error occured", e);
+                logger.warn("An unexpected error occured on message " + message, e);
             }
         }
     }

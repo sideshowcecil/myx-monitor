@@ -50,7 +50,7 @@ public class Bootstrap {
      * 
      * @param args
      */
-    public void run(String[] args) {
+    public void run(String[] args) {        
         // parse arguments
         Properties[] p = parseArgs(args);
 
@@ -105,10 +105,7 @@ public class Bootstrap {
                     usage();
                 }
                 connectionString = args[i];
-            } else {
-                if (xadlFile != null) {
-                    usage();
-                }
+            } else if (xadlFile == null) {
                 xadlFile = args[i];
             }
         }

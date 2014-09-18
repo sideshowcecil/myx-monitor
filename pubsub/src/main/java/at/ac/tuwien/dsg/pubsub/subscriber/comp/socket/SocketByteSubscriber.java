@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.List;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
+import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
@@ -58,7 +59,7 @@ public class SocketByteSubscriber extends Subscriber<byte[]> {
             Socket s = ((SocketByteMessageProtocol) endpoint).getSocket();
             // from,to
             return IdGenerator.generateConnectionIdentifier(s.getInetAddress().getHostAddress() + ":" + s.getPort()
-                    + "," + s.getLocalAddress().getHostAddress() + ":" + s.getLocalPort());
+                    + "," + IpResolver.getLocalIp(s) + ":" + s.getLocalPort());
         }
         return null;
     }

@@ -22,6 +22,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
+import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
@@ -73,7 +74,7 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
 
                         if (receivedMessage.getData() instanceof ModelRequestEvent) {
                             logger.info("Consuming event of type " + receivedMessage.getData().getClass());
-                            
+
                             ModelRequestEvent request = (ModelRequestEvent) receivedMessage.getData();
                             ModelResponseEvent response = null;
 
@@ -102,7 +103,8 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
                 for (IArchStructure structure : modelRoot.getArchStructures()) {
                     for (IComponent component : DBLUtils.getComponents(structure)) {
                         if (component.getId().equals(request.getRuntimeId())) {
-                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(), XADLElementType.COMPONENT);
+                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
+                                    XADLElementType.COMPONENT);
                             response.setDescription(DBLUtils.getDescription(component));
                             for (IInterface intf : DBLUtils.getInterfaces(component)) {
                                 response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
@@ -112,7 +114,8 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
                     }
                     for (IConnector connector : DBLUtils.getConnectors(structure)) {
                         if (connector.getId().equals(request.getRuntimeId())) {
-                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(), XADLElementType.CONNECTOR);
+                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
+                                    XADLElementType.CONNECTOR);
                             response.setDescription(DBLUtils.getDescription(connector));
                             for (IInterface intf : DBLUtils.getInterfaces(connector)) {
                                 response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
@@ -158,8 +161,8 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
         if (endpoint instanceof EventSocketByteMessageProtocol) {
             Socket s = ((EventSocketByteMessageProtocol) endpoint).getSocket();
             // from,to
-            return IdGenerator.generateConnectionIdentifier(s.getLocalAddress().getHostAddress() + ":"
-                    + s.getLocalPort() + "," + s.getInetAddress().getHostAddress() + ":" + s.getPort());
+            return IdGenerator.generateConnectionIdentifier(IpResolver.getLocalIp(s) + ":" + s.getLocalPort() + ","
+                    + s.getInetAddress().getHostAddress() + ":" + s.getPort());
         }
         return null;
     }

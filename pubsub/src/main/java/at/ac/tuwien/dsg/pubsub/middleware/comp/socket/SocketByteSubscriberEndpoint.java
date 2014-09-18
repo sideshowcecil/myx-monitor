@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
+import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
@@ -43,8 +44,8 @@ public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
         if (endpoint instanceof SocketByteMessageProtocol) {
             Socket s = ((SocketByteMessageProtocol) endpoint).getSocket();
             // from,to
-            return IdGenerator.generateConnectionIdentifier(s.getLocalAddress().getHostAddress() + ":"
-                    + s.getLocalPort() + "," + s.getInetAddress().getHostAddress() + ":" + s.getPort());
+            return IdGenerator.generateConnectionIdentifier(IpResolver.getLocalIp(s) + ":" + s.getLocalPort() + ","
+                    + s.getInetAddress().getHostAddress() + ":" + s.getPort());
         }
         return null;
     }

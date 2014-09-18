@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
+import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
@@ -40,8 +41,8 @@ public class SocketBytePublisher extends Publisher<byte[]> {
         if (endpoint instanceof SocketByteMessageProtocol) {
             Socket s = ((SocketByteMessageProtocol) endpoint).getSocket();
             // from,to
-            return IdGenerator.generateConnectionIdentifier(s.getLocalAddress().getHostAddress() + ":"
-                    + s.getLocalPort() + "," + s.getInetAddress().getHostAddress() + ":" + s.getPort());
+            return IdGenerator.generateConnectionIdentifier(IpResolver.getLocalIp(s) + ":" + s.getLocalPort() + ","
+                    + s.getInetAddress().getHostAddress() + ":" + s.getPort());
         }
         return null;
     }

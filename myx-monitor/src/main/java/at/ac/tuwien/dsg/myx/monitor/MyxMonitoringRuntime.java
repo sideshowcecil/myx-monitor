@@ -70,15 +70,17 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                 for (IMyxName brick : bricks) {
                     for (IMyxName b : getBrickNames(null, brick)) {
                         String runtimeId = b.getName();
-                        XADLElementType elementType = runtime2elemntType.get(runtimeId);
-                        // send events
-                        if (elementType == XADLElementType.COMPONENT) {
-                            dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
-                        } else {
-                            dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+                        if (runtime2blueprint.containsKey(runtimeId)) {
+                            XADLElementType elementType = runtime2elemntType.get(runtimeId);
+                            // send events
+                            if (elementType == XADLElementType.COMPONENT) {
+                                dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
+                            } else {
+                                dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+                            }
+                            dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
+                                    elementType);
                         }
-                        dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
-                                elementType);
                     }
                 }
             }

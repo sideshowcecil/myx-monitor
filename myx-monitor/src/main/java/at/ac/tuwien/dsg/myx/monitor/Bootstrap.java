@@ -50,7 +50,7 @@ public class Bootstrap {
      * 
      * @param args
      */
-    public void run(String[] args) {        
+    public void run(String[] args) {
         // parse arguments
         Properties[] p = parseArgs(args);
 

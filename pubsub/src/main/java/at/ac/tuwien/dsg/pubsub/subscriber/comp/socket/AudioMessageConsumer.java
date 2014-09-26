@@ -5,10 +5,12 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.subscriber.comp.MessageConsumer;
 
@@ -26,6 +28,15 @@ public class AudioMessageConsumer extends MessageConsumer<byte[]> {
                 AudioInputStream in = AudioSystem.getAudioInputStream(new ByteArrayInputStream(msg.getData()));
                 audioLine = AudioSystem.getSourceDataLine(in.getFormat());
                 audioLine.open();
+                if (MyxMonitoringUtils.getInitProperties(this).containsKey("volume")) {
+                    // set the volume
+                    float volume = Float.parseFloat(MyxMonitoringUtils.getInitProperties(this).getProperty("volume",
+                            "0.0"));
+                    if (Math.abs(volume) <= 80) {
+                        FloatControl control = (FloatControl) audioLine.getControl(FloatControl.Type.MASTER_GAIN);
+                        control.setValue(volume);
+                    }
+                }
                 audioLine.start();
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 audioLine = null;

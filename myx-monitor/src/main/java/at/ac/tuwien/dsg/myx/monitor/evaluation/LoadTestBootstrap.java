@@ -63,6 +63,8 @@ public final class LoadTestBootstrap extends Bootstrap {
             }
             // shutdown the instances
             executor.shutdownNow();
+        } else {
+            executor.shutdown();
         }
     }
 

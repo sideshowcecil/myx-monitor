@@ -51,40 +51,43 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                List<IMyxName> bricks = MyxMonitoringRuntime.this.getBrickNames(null, null);
-                // send runtime events
-                for (IMyxName brick : bricks) {
-                    for (IMyxName b : getBrickNames(null, brick)) {
-                        String runtimeId = b.getName();
-                        if (runtime2blueprint.containsKey(runtimeId)) {
-                            // send event
-                            dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
-                                    XADLRuntimeEventType.END);
-                        }
-                    }
-                }
-                // send xadl- and hosting events
-                for (IMyxName brick : bricks) {
-                    for (IMyxName b : getBrickNames(null, brick)) {
-                        String runtimeId = b.getName();
-                        if (runtime2blueprint.containsKey(runtimeId)) {
-                            XADLElementType elementType = runtime2elemntType.get(runtimeId);
-                            // send events
-                            if (elementType == XADLElementType.COMPONENT) {
-                                dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
-                            } else {
-                                dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+        try {
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    List<IMyxName> bricks = MyxMonitoringRuntime.this.getBrickNames(null, null);
+                    // send runtime events
+                    for (IMyxName brick : bricks) {
+                        for (IMyxName b : getBrickNames(null, brick)) {
+                            String runtimeId = b.getName();
+                            if (runtime2blueprint.containsKey(runtimeId)) {
+                                // send event
+                                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
+                                        XADLRuntimeEventType.END);
                             }
-                            dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
-                                    elementType);
+                        }
+                    }
+                    // send xadl- and hosting events
+                    for (IMyxName brick : bricks) {
+                        for (IMyxName b : getBrickNames(null, brick)) {
+                            String runtimeId = b.getName();
+                            if (runtime2blueprint.containsKey(runtimeId)) {
+                                XADLElementType elementType = runtime2elemntType.get(runtimeId);
+                                // send events
+                                if (elementType == XADLElementType.COMPONENT) {
+                                    dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
+                                } else {
+                                    dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
+                                }
+                                dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
+                                        elementType);
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        } catch (IllegalStateException e) {
+        }
     }
 
     @Override

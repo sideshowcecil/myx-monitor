@@ -36,7 +36,6 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
 
         String[] dispatcherClassNames = (String[]) initProperties.get(MyxProperties.EVENT_DISPATCHER_CLASSES);
 
-        executor = Executors.newCachedThreadPool();
         dispatchers = getDispatchers(dispatcherClassNames, eventManager);
     }
 
@@ -71,8 +70,11 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void begin() {
-        for (EventDispatcher ed : dispatchers) {
-            executor.execute(ed);
+        if (!dispatchers.isEmpty()) {
+            executor = Executors.newFixedThreadPool(dispatchers.size());
+            for (EventDispatcher ed : dispatchers) {
+                executor.execute(ed);
+            }
         }
     }
 

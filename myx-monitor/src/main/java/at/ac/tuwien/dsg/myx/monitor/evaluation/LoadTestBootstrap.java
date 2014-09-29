@@ -3,9 +3,14 @@ package at.ac.tuwien.dsg.myx.monitor.evaluation;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.tuwien.dsg.myx.monitor.Bootstrap;
 
 public final class LoadTestBootstrap extends Bootstrap {
+
+    private static Logger logger = LoggerFactory.getLogger(LoadTestBootstrap.class);
 
     public static void main(final String[] args) {
         // read the count argument if it is given
@@ -39,7 +44,7 @@ public final class LoadTestBootstrap extends Bootstrap {
         // launch the application <count> times
         for (int i = 0; i < count; i++) {
             // run the instance
-            System.out.println("Starting instance " + (i + 1));
+            logger.info("Starting instance " + (i + 1));
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -62,6 +67,7 @@ public final class LoadTestBootstrap extends Bootstrap {
             } catch (InterruptedException e) {
             }
             // shutdown the instances
+            logger.info("Shutting down instances");
             executor.shutdownNow();
         } else {
             executor.shutdown();

@@ -8,12 +8,17 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.publisher.comp.MessageCreator;
 
 public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
+
+    private static Logger logger = LoggerFactory.getLogger(LoopedAudioMessageCreator.class);
 
     private String audioFileName;
     private int loopCount;
@@ -44,6 +49,7 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
                             int numBytesRead, numBytesToRead = 1024;
                             byte[] buffer = new byte[numBytesToRead];
 
+                            logger.info("Reading audiofile/sending messages (count: " + i + ")");
                             for (long total = 0; total < audioFile.length(); total += numBytesRead) {
                                 numBytesRead = in.read(buffer, 0, numBytesToRead);
                                 if (numBytesRead == -1) {
@@ -68,6 +74,7 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
                             }
                         }
                     }
+                    logger.info("Sending close message");
                     publisher.publish(new Message<byte[]>(Type.CLOSE, audioFileName, new byte[0]));
                     // wait some time so the close message is written to the
                     // network
@@ -76,6 +83,8 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
                     } catch (InterruptedException e) {
                     }
                 }
+                // exit
+                logger.info("Exiting");
                 System.exit(0);
             }
         };

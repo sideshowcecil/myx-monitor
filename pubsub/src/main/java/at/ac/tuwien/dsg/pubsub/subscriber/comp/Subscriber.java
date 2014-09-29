@@ -7,9 +7,13 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
+import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.message.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
@@ -18,6 +22,8 @@ import at.ac.tuwien.dsg.pubsub.subscriber.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.IMyxName;
 
 public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBrick {
+
+    private static Logger logger = LoggerFactory.getLogger(Subscriber.class);
 
     public static IMyxName OUT_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
 
@@ -54,6 +60,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
         runnable = new Runnable() {
             @Override
             public void run() {
+                logger.info("Connecting");
                 endpoint = connect();
                 if (endpoint != null) {
                     String connectionIdentifier = getExternalConnectionIdentifier();
@@ -61,19 +68,27 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
                             DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                     try {
+                        logger.info("Sending topics");
                         // send the topics we subscribe to
                         endpoint.send(getTopicsMessage(topicType, topics));
+                        logger.info("Consuming messages");
                         Message<E> msg;
                         do {
                             msg = endpoint.receive();
                             subscriber.consume(msg);
                         } while (msg.getType() != Message.Type.CLOSE && msg.getType() != Message.Type.ERROR);
+                        if (msg.getType() == Type.CLOSE) {
+                            logger.info("Close message received");
+                        } else {
+                            logger.info("Error message received");
+                        }
                     } catch (IOException e) {
                     }
                     dispatchExternalLinkDisconnectedEvent(
                             DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
                 }
+                logger.info("Exiting");
                 System.exit(0);
             }
         };

@@ -61,7 +61,6 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
                             subscriber.consume(endpoint.receive());
                         }
                     } catch (IOException e) {
-
                     }
                     logger.info("All messages received");
                     // send event that the virtual external interface was

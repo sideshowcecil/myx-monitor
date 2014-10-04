@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import at.ac.tuwien.dsg.concurrent.IdentifiableExecutorService;
+import at.ac.tuwien.dsg.concurrent.IdentifiableThreadPoolExecutor;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
@@ -45,7 +45,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     protected List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
-    protected ExecutorService executor = null;
+    protected IdentifiableExecutorService executor = null;
 
     @Override
     public void init() {
@@ -82,7 +82,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
         if (interfaceClasses.length > 0) {
             proxyObject = Proxy.newProxyInstance(interfaceClasses[0].getClassLoader(), interfaceClasses, this);
         }
-        executor = Executors.newSingleThreadExecutor();
+        executor = new IdentifiableThreadPoolExecutor();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
                                 }
                             }
                         };
-                        executor.execute(r);
+                        executor.execute(r, tso.hashCode());
                     }
                 }
             }
@@ -196,7 +196,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
                 }
             };
 
-            executor.execute(r);
+            executor.execute(r, serviceObject.hashCode());
         }
         // we don't return values from asynchronous calls
         return null;

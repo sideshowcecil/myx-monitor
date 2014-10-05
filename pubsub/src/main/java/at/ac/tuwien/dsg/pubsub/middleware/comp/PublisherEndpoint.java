@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.pubsub.message.Message;
+import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
@@ -56,10 +58,12 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
                             connectionIdentifier);
                     logger.info("Waiting for messages");
                     try {
-                        while (true) {
+                        Message<E> message;
+                        do {
+                            message = endpoint.receive();
                             // wait for a message and send it to the subscriber
-                            subscriber.consume(endpoint.receive());
-                        }
+                            subscriber.consume(message);
+                        } while (message.getType() != Type.CLOSE && message.getType() != Type.ERROR);
                     } catch (IOException e) {
                     }
                     logger.info("All messages received");

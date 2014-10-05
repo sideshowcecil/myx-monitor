@@ -22,8 +22,6 @@ import at.ac.tuwien.dsg.pubsub.network.Endpoint;
  */
 public final class EventSocketByteMessageProtocol implements Endpoint<Event> {
 
-    public static final char SEPARATOR = ';';
-
     private SocketByteMessageProtocol protocol;
 
     /**

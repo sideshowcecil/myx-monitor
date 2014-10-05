@@ -46,7 +46,7 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
                         try {
                             in = new FileInputStream(audioFile);
 
-                            int numBytesRead, numBytesToRead = 1024;
+                            int numBytesRead, numBytesToRead = 4096;
                             byte[] buffer = new byte[numBytesToRead];
 
                             logger.info("Reading audiofile/sending messages (count: " + i + ")");

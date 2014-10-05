@@ -45,7 +45,11 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     protected List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
-    protected IdentifiableExecutorService executor = null;
+    protected IdentifiableExecutorService executor;
+    
+    public MessageDistributor() {
+        executor = new IdentifiableThreadPoolExecutor();
+    }
 
     @Override
     public void init() {
@@ -82,17 +86,14 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
         if (interfaceClasses.length > 0) {
             proxyObject = Proxy.newProxyInstance(interfaceClasses[0].getClassLoader(), interfaceClasses, this);
         }
-        executor = new IdentifiableThreadPoolExecutor();
     }
 
     @Override
     public void end() {
-        if (executor != null) {
-            executor.shutdown();
-            try {
-                executor.awaitTermination(5L, TimeUnit.SECONDS);
-            } catch (InterruptedException ie) {
-            }
+        executor.shutdown();
+        try {
+            executor.awaitTermination(5L, TimeUnit.SECONDS);
+        } catch (InterruptedException ie) {
         }
     }
 

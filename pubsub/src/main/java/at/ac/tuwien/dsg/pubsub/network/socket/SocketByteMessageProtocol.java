@@ -1,14 +1,14 @@
 package at.ac.tuwien.dsg.pubsub.network.socket;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
-
+import redis.clients.util.RedisInputStream;
+import redis.clients.util.RedisOutputStream;
+import redis.clients.util.SafeEncoder;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
@@ -21,20 +21,15 @@ import at.ac.tuwien.dsg.pubsub.network.Endpoint;
  * 
  */
 public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
-    public static final char NULL = '\0';
-    public static final char CR = '\r';
-    public static final char LF = '\n';
+
+    public static final byte DOLLAR_BYTE = '$';
+    public static final byte ASTERISK_BYTE = '*';
+
     public static final char SEPARATOR = ';';
 
-    public static final char TOPIC = '#';
-    public static final char INIT = '*';
-    public static final char DATA = '+';
-    public static final char CLOSE = '$';
-    public static final char ERROR = '-';
-
     private Socket socket;
-    private BufferedReader in;
-    private BufferedWriter out;
+    private RedisInputStream in;
+    private RedisOutputStream out;
 
     /**
      * Default constructor.
@@ -43,50 +38,102 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
      */
     public SocketByteMessageProtocol(Socket socket) throws IOException {
         this.socket = socket;
-        this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-        this.out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+        this.in = new RedisInputStream(this.socket.getInputStream());
+        this.out = new RedisOutputStream(this.socket.getOutputStream());
     }
 
     @Override
     public void send(Message<byte[]> msg) throws IOException {
-        out.write(msg.getType().toString());
-        out.write(SEPARATOR);
-        out.write(msg.getTopic());
-        out.write(SEPARATOR);
-        out.write(Base64.encodeBase64String(msg.getData()));
-        out.write(CR);
-        out.write(LF);
+        byte[][] args = { SafeEncoder.encode(msg.getType().toString()), SafeEncoder.encode(msg.getTopic()),
+                msg.getData() };
+
+        // write the data as a redis multi-bulk data
+        out.write(ASTERISK_BYTE);
+        out.writeIntCrLf(args.length); // type, topic and data
+        for (final byte[] arg : args) {
+            out.write(DOLLAR_BYTE);
+            out.writeIntCrLf(arg.length);
+            out.write(arg);
+            out.writeCrLf();
+        }
+        // flush the stream
         out.flush();
     }
 
     @Override
     public Message<byte[]> receive() throws IOException {
-        String line = in.readLine();
-        if (line == null) {
-            // the end of stream was reached, thus we return a close message
-            return new Message<byte[]>(Type.CLOSE, "", new byte[0]);
-        }
-        String[] parts = line.split(SEPARATOR + "");
-        String data;
-        if (parts.length == 2 && line.endsWith(SEPARATOR + "")) {
-            // if no data is given the part is not contained, thus we have to
-            // fill it manually
-            data = "";
-        } else if (parts.length < 3) {
-            // not all parts are available
-            return new Message<byte[]>(Type.ERROR, "", new byte[0]);
-        } else {
-            data = parts[2];
+        @SuppressWarnings("unchecked")
+        List<byte[]> streamData = (List<byte[]>) read(in);
+
+        if (streamData.size() != 3) {
+            // error
+            System.err.println("Error, wrong number of chunks received");
+            System.err.println(streamData);
         }
 
-        Type type = null;
-        try {
-            type = Type.valueOf(parts[0]);
-        } catch (IllegalArgumentException e) {
-            // the type cannot be resolved
-            type = Type.ERROR;
+        Type type = Type.valueOf(new String(streamData.get(0)));
+        String topic = new String(streamData.get(1));
+        byte[] data = streamData.get(2);
+
+        return new Message<byte[]>(type, topic, data);
+    }
+
+    /**
+     * Read a multi-bulk or bulk reply from the given input stream.
+     * 
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    private static Object read(final RedisInputStream is) throws IOException {
+        return process(is);
+    }
+
+    private static Object process(final RedisInputStream is) throws IOException {
+        byte b = is.readByte();
+        if (b == ASTERISK_BYTE) {
+            return processMultiBulkReply(is);
+        } else if (b == DOLLAR_BYTE) {
+            return processBulkReply(is);
+        } else {
+            throw new IOException("Unknown message: " + (char) b);
         }
-        return new Message<byte[]>(type, parts[1], Base64.decodeBase64(data));
+    }
+
+    private static byte[] processBulkReply(final RedisInputStream is) throws IOException {
+        int len = Integer.parseInt(is.readLine());
+        if (len == -1) {
+            return null;
+        }
+        byte[] read = new byte[len];
+        int offset = 0;
+        while (offset < len) {
+            int size = is.read(read, offset, (len - offset));
+            if (size == -1)
+                throw new IOException("It seems like server has closed the connection.");
+            offset += size;
+        }
+        // read 2 more bytes for the command delimiter
+        is.readByte();
+        is.readByte();
+
+        return read;
+    }
+
+    private static List<Object> processMultiBulkReply(final RedisInputStream is) throws IOException {
+        int num = Integer.parseInt(is.readLine());
+        if (num == -1) {
+            return null;
+        }
+        List<Object> ret = new ArrayList<Object>(num);
+        for (int i = 0; i < num; i++) {
+            try {
+                ret.add(process(is));
+            } catch (IOException e) {
+                ret.add(e);
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -106,6 +153,26 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
      */
     public Socket getSocket() {
         return socket;
+    }
+
+    /**
+     * Converts an integer into a byte array.
+     * 
+     * @param value
+     * @return
+     */
+    public static final byte[] intToByteArray(int value) {
+        return ByteBuffer.allocate(4).putInt(value).array();
+    }
+
+    /**
+     * Converts a byte array to an integer.
+     * 
+     * @param value
+     * @return
+     */
+    public static final int byteArrayToInt(byte[] value) {
+        return ByteBuffer.wrap(value).getInt();
     }
 
 }

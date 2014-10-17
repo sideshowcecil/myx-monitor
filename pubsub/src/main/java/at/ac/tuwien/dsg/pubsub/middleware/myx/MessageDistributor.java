@@ -42,18 +42,14 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     public static final IMyxName REQUIRED_INTERFACE_NAME = MyxMonitoringUtils.createName("out");
     public static final IMyxName PROVIDED_INTERFACE_NAME = MyxMonitoringUtils.createName("in");
 
-    protected List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
+    protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
-    protected IdentifiableExecutorService executor;
-    
-    public MessageDistributor() {
-        executor = new IdentifiableThreadPoolExecutor();
-    }
+    protected final IdentifiableExecutorService executor = new IdentifiableThreadPoolExecutor();
 
     @Override
     public void init() {
-        Set<String> interfaceClassNames = new HashSet<String>();
+        final Set<String> interfaceClassNames = new HashSet<String>();
 
         IMyxInterfaceDescription miDesc = getMyxBrickItems().getInterfaceManager().getInterfaceDescription(
                 PROVIDED_INTERFACE_NAME);
@@ -64,25 +60,25 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
 
         int i = 0;
         while (true) {
-            String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
+            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
             if (interfaceClassName == null)
                 break;
             interfaceClassNames.add(interfaceClassName);
             i++;
         }
 
-        List<Class<?>> interfaceClassList = new ArrayList<Class<?>>();
-        IMyxClassManager classManager = getMyxBrickItems().getClassManager();
-        for (String interfaceClassName : interfaceClassNames) {
+        final List<Class<?>> interfaceClassList = new ArrayList<Class<?>>();
+        final IMyxClassManager classManager = getMyxBrickItems().getClassManager();
+        for (final String interfaceClassName : interfaceClassNames) {
             try {
-                Class<?> interfaceClass = classManager.classForName(interfaceClassName);
+                final Class<?> interfaceClass = classManager.classForName(interfaceClassName);
                 interfaceClassList.add(interfaceClass);
             } catch (ClassNotFoundException cnfe) {
                 throw new IllegalArgumentException("Can't find interface class: " + cnfe.getMessage());
             }
         }
 
-        Class<?>[] interfaceClasses = interfaceClassList.toArray(new Class[interfaceClassList.size()]);
+        final Class<?>[] interfaceClasses = interfaceClassList.toArray(new Class[interfaceClassList.size()]);
         if (interfaceClasses.length > 0) {
             proxyObject = Proxy.newProxyInstance(interfaceClasses[0].getClassLoader(), interfaceClasses, this);
         }
@@ -98,36 +94,30 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     }
 
     @Override
-    public void interfaceConnected(IMyxName interfaceName, Object serviceObject) {
+    public void interfaceConnected(final IMyxName interfaceName, final Object serviceObject) {
         if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
             trueServiceObjects.add(serviceObject);
 
             if (proxyObject == null) {
-                ClassLoader cl = serviceObject.getClass().getClassLoader();
-                Class<?>[] interfaceClasses = serviceObject.getClass().getInterfaces();
-                proxyObject = Proxy.newProxyInstance(cl, interfaceClasses, this);
+                proxyObject = Proxy.newProxyInstance(serviceObject.getClass().getClassLoader(), serviceObject
+                        .getClass().getInterfaces(), this);
             }
 
             if (initCalls.size() > 0) {
-                final Object tso = serviceObject;
-                for (List<Tuple<Method, Object[]>> calls : initCalls.values()) {
-                    for (Tuple<Method, Object[]> call : calls) {
-                        final Method m = call.getFst();
-                        final Object[] a = call.getSnd();
-                        Runnable r = new Runnable() {
+                for (final List<Tuple<Method, Object[]>> calls : initCalls.values()) {
+                    for (final Tuple<Method, Object[]> call : calls) {
+                        final Runnable r = new Runnable() {
                             public void run() {
                                 try {
-                                    m.invoke(tso, a);
+                                    call.getFst().invoke(serviceObject, call.getSnd());
                                 } catch (IllegalAccessException iae) {
                                     iae.printStackTrace();
-                                    return;
                                 } catch (InvocationTargetException ite) {
                                     ite.printStackTrace();
-                                    return;
                                 }
                             }
                         };
-                        executor.execute(r, tso.hashCode());
+                        executor.execute(r, serviceObject.hashCode());
                     }
                 }
             }
@@ -135,18 +125,19 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     }
 
     @Override
-    public void interfaceDisconnecting(IMyxName interfaceName, Object serviceObject) {
+    public void interfaceDisconnecting(final IMyxName interfaceName, final Object serviceObject) {
         if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
             trueServiceObjects.remove(serviceObject);
         }
     }
 
     @SuppressWarnings("unused")
-    public void interfaceDisconnected(IMyxName interfaceName, Object serviceObject) {
+    @Override
+    public void interfaceDisconnected(final IMyxName interfaceName, final Object serviceObject) {
     }
 
     @Override
-    public Object getServiceObject(IMyxName interfaceName) {
+    public Object getServiceObject(final IMyxName interfaceName) {
         if (interfaceName.equals(PROVIDED_INTERFACE_NAME)) {
             return proxyObject;
         }
@@ -154,7 +145,8 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     }
 
     @Override
-    public Object invoke(@SuppressWarnings("unused") Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(@SuppressWarnings("unused") final Object proxy, final Method method, final Object[] args)
+            throws Throwable {
         if (proxyObject == null) {
             // asynchronous messages do not have to get delivered.
             return null;
@@ -166,9 +158,9 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
 
         // if the given arguments contain message objects we search for
         // application specific init-messages
-        for (Object object : args) {
+        for (final Object object : args) {
             if (object instanceof Message<?>) {
-                Message<?> msg = (Message<?>) object;
+                final Message<?> msg = (Message<?>) object;
                 if (msg.getType() == Type.INIT) {
                     if (!initCalls.containsKey(msg.getTopic())) {
                         initCalls.put(msg.getTopic(), new ArrayList<Tuple<Method, Object[]>>());
@@ -181,22 +173,17 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
         }
 
         for (final Object serviceObject : trueServiceObjects) {
-            final Method m = method;
-            final Object[] a = args;
-            Runnable r = new Runnable() {
+            final Runnable r = new Runnable() {
                 public void run() {
                     try {
-                        m.invoke(serviceObject, a);
+                        method.invoke(serviceObject, args);
                     } catch (IllegalAccessException iae) {
                         iae.printStackTrace();
-                        return;
                     } catch (InvocationTargetException ite) {
                         ite.printStackTrace();
-                        return;
                     }
                 }
             };
-
             executor.execute(r, serviceObject.hashCode());
         }
         // we don't return values from asynchronous calls

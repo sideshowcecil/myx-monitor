@@ -2,6 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor.evaluation;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,11 @@ public final class LoadTestBootstrap extends Bootstrap {
             executor.shutdownNow();
         } else {
             executor.shutdown();
+        }
+        // await the termination of all instances
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
         }
     }
 

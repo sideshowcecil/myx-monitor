@@ -1,7 +1,7 @@
 package at.ac.tuwien.dsg.pubsub.middleware.comp;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,7 +32,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
     protected IMyxRuntimeAdapter myxAdapter;
 
     protected Endpoint<E> endpoint;
-    protected List<Topic> topics = null;
+    protected Set<Topic> topics = null;
 
     private ExecutorService executor;
     private Runnable runnable;
@@ -151,7 +151,7 @@ public abstract class SubscriberEndpoint<E> extends AbstractVirtualExternalMyxSi
      * 
      * @return
      */
-    public abstract List<Topic> getTopics();
+    public abstract Set<Topic> getTopics();
 
     /**
      * Get the external connection id of the connected {@link Endpoint}.

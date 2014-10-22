@@ -88,4 +88,17 @@ public class Topic {
         pattern.append('$');
         return pattern.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Topic)) {
+            return false;
+        }
+        return pattern.equals(((Topic) obj).pattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode() + pattern.hashCode();
+    }
 }

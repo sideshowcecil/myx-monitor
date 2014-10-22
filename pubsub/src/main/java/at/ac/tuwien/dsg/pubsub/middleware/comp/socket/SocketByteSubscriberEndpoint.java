@@ -2,8 +2,8 @@ package at.ac.tuwien.dsg.pubsub.middleware.comp.socket;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
@@ -22,12 +22,12 @@ import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
 
     @Override
-    public List<Topic> getTopics() {
+    public Set<Topic> getTopics() {
         try {
             Message<byte[]> msg = endpoint.receive();
             if (msg.getType() == Message.Type.TOPIC) {
                 Topic.Type type = Topic.Type.valueOf(msg.getTopic());
-                List<Topic> topics = new ArrayList<>();
+                Set<Topic> topics = new HashSet<>();
                 for (String topic : new String(msg.getData())
                         .split(String.valueOf(SocketByteMessageProtocol.SEPARATOR))) {
                     topics.add(new Topic(topic, type));

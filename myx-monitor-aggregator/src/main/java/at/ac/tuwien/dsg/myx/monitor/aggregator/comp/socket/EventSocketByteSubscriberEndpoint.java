@@ -2,8 +2,8 @@ package at.ac.tuwien.dsg.myx.monitor.aggregator.comp.socket;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -140,12 +140,12 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
     }
 
     @Override
-    public List<Topic> getTopics() {
+    public Set<Topic> getTopics() {
         try {
             Message<Event> msg = endpoint.receive();
             if (msg.getType() == Message.Type.TOPIC && msg.getData() instanceof TopicEvent) {
                 TopicEvent e = (TopicEvent) msg.getData();
-                List<Topic> topics = new ArrayList<>();
+                Set<Topic> topics = new HashSet<>();
                 for (String topic : e.getTopics()) {
                     topics.add(new Topic(topic, e.getType()));
                 }

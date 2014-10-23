@@ -45,7 +45,11 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
-    protected final IdentifiableExecutorService executor = new IdentifiableThreadPoolExecutor();
+    protected IdentifiableExecutorService executor;
+    
+    public MessageDistributor() {
+        executor = new IdentifiableThreadPoolExecutor();
+    }
 
     @Override
     public void init() {

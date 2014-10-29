@@ -14,7 +14,7 @@ import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
@@ -27,7 +27,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
 
     public static IMyxName OUT_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
 
-    private Topic.Type topicType;
+    private TopicFactory.Type topicType;
     private List<String> topics = new ArrayList<>();
 
     protected Endpoint<E> endpoint;
@@ -45,7 +45,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
     public void init() {
         Properties initProps = MyxMonitoringUtils.getInitProperties(this);
 
-        topicType = Topic.Type.valueOf(initProps.getProperty("topicType", "GLOB"));
+        topicType = TopicFactory.Type.valueOf(initProps.getProperty("topicType", "GLOB"));
         for (String key : initProps.stringPropertyNames()) {
             if (key.startsWith("topicName")) {
                 topics.add(initProps.getProperty(key));
@@ -116,7 +116,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
      * @param topics
      * @return
      */
-    protected abstract Message<E> getTopicsMessage(Topic.Type topicType, List<String> topics);
+    protected abstract Message<E> getTopicsMessage(TopicFactory.Type topicType, List<String> topics);
 
     /**
      * Get the external connection id of the connected {@link Endpoint}.

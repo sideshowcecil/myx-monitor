@@ -25,7 +25,8 @@ import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
@@ -147,7 +148,7 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
                 TopicEvent e = (TopicEvent) msg.getData();
                 Set<Topic> topics = new HashSet<>();
                 for (String topic : e.getTopics()) {
-                    topics.add(new Topic(topic, e.getType()));
+                    topics.add(new TopicFactory().create(e.getType(), topic));
                 }
                 return topics;
             }

@@ -20,7 +20,8 @@ import at.ac.tuwien.dsg.myx.util.EventUtils;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.xarch.instance.IArchInstance;
@@ -63,11 +64,12 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
 
     public XADLInstanceRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
+        TopicFactory factory = new TopicFactory();
         topics = new ArrayList<>();
-        topics.add(new Topic(EventUtils.getTopicPattern(XADLEvent.class)));
-        topics.add(new Topic(EventUtils.getTopicPattern(XADLExternalLinkEvent.class)));
-        topics.add(new Topic(EventUtils.getTopicPattern(XADLLinkEvent.class)));
-        topics.add(new Topic(EventUtils.getTopicPattern(XADLRuntimeEvent.class)));
+        topics.add(factory.create(EventUtils.getTopicPattern(XADLEvent.class)));
+        topics.add(factory.create(EventUtils.getTopicPattern(XADLExternalLinkEvent.class)));
+        topics.add(factory.create(EventUtils.getTopicPattern(XADLLinkEvent.class)));
+        topics.add(factory.create(EventUtils.getTopicPattern(XADLRuntimeEvent.class)));
     }
 
     @Override

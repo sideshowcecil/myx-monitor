@@ -19,7 +19,8 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
 import at.ac.tuwien.dsg.myx.util.EventUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import edu.uci.isr.xarch.hostproperty.IElementRef;
 import edu.uci.isr.xarch.hostproperty.IHost;
@@ -38,7 +39,7 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
     public HostedInstanceRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         topics = new ArrayList<>();
-        topics.add(new Topic(EventUtils.getTopicPattern(XADLHostEvent.class)));
+        topics.add(new TopicFactory().create(EventUtils.getTopicPattern(XADLHostEvent.class)));
     }
 
     @Override

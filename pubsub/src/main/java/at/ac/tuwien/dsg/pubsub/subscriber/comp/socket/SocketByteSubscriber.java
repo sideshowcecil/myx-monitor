@@ -8,7 +8,7 @@ import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 import at.ac.tuwien.dsg.pubsub.subscriber.comp.Subscriber;
@@ -41,7 +41,7 @@ public class SocketByteSubscriber extends Subscriber<byte[]> {
     }
 
     @Override
-    protected Message<byte[]> getTopicsMessage(Topic.Type topicType, List<String> topics) {
+    protected Message<byte[]> getTopicsMessage(TopicFactory.Type topicType, List<String> topics) {
         StringBuilder topicString = new StringBuilder();
         for (String topic : topics) {
             if (topicString.length() > 0) {

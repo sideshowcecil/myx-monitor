@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;

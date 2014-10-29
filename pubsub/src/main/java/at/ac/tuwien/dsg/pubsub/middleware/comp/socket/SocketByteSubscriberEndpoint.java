@@ -8,7 +8,8 @@ import java.util.Set;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
 import at.ac.tuwien.dsg.pubsub.message.Message;
-import at.ac.tuwien.dsg.pubsub.message.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
+import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 
@@ -26,11 +27,11 @@ public class SocketByteSubscriberEndpoint extends SubscriberEndpoint<byte[]> {
         try {
             Message<byte[]> msg = endpoint.receive();
             if (msg.getType() == Message.Type.TOPIC) {
-                Topic.Type type = Topic.Type.valueOf(msg.getTopic());
+                TopicFactory.Type type = TopicFactory.Type.valueOf(msg.getTopic());
                 Set<Topic> topics = new HashSet<>();
                 for (String topic : new String(msg.getData())
                         .split(String.valueOf(SocketByteMessageProtocol.SEPARATOR))) {
-                    topics.add(new Topic(topic, type));
+                    topics.add(new TopicFactory().create(type, topic));
                 }
                 return topics;
             }

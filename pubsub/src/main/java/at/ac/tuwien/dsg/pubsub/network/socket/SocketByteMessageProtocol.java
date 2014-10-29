@@ -2,7 +2,6 @@ package at.ac.tuwien.dsg.pubsub.network.socket;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,25 +153,4 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
     public Socket getSocket() {
         return socket;
     }
-
-    /**
-     * Converts an integer into a byte array.
-     * 
-     * @param value
-     * @return
-     */
-    public static final byte[] intToByteArray(int value) {
-        return ByteBuffer.allocate(4).putInt(value).array();
-    }
-
-    /**
-     * Converts a byte array to an integer.
-     * 
-     * @param value
-     * @return
-     */
-    public static final int byteArrayToInt(byte[] value) {
-        return ByteBuffer.wrap(value).getInt();
-    }
-
 }

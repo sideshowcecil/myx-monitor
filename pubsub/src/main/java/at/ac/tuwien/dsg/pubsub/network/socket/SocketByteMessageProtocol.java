@@ -66,8 +66,7 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
 
         if (streamData.size() != 3) {
             // error
-            System.err.println("Error, wrong number of chunks received");
-            System.err.println(streamData);
+            throw new IOException("Wrong number of chuncks received");
         }
 
         Type type = Type.valueOf(new String(streamData.get(0)));

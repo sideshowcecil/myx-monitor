@@ -69,8 +69,8 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
             throw new IOException("Wrong number of chuncks received");
         }
 
-        Type type = Type.valueOf(new String(streamData.get(0)));
-        String topic = new String(streamData.get(1));
+        Type type = Type.valueOf(SafeEncoder.encode(streamData.get(0)));
+        String topic = SafeEncoder.encode(streamData.get(1));
         byte[] data = streamData.get(2);
 
         return new Message<byte[]>(type, topic, data);

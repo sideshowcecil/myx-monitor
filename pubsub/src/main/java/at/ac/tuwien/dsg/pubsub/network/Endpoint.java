@@ -7,8 +7,6 @@ import at.ac.tuwien.dsg.pubsub.message.Message;
 /**
  * Interface that specifies the methods of a real network endpoint.
  * 
- * @author bernd.rathmanner
- * 
  * @param <E>
  */
 public interface Endpoint<E> {
@@ -25,7 +23,7 @@ public interface Endpoint<E> {
      * @param msg
      */
     public void send(Message<E> msg) throws IOException;
-    
+
     /**
      * Closes (shutdown) the endpoint.
      */

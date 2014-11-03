@@ -38,10 +38,9 @@ public final class LoadTestBootstrap extends Bootstrap {
         }
 
         // compute the time to sleep between each launch
-        int timeInBetween = rampUpTime <= 0 ? 0 : (int) rampUpTime * 1000 / count;
+        final int timeInBetween = rampUpTime <= 0 ? 0 : (int) rampUpTime * 1000 / count;
 
-        long maximumRuntime = runtime > 0 ? (System.currentTimeMillis() / 1000) + runtime : 0;
-        ExecutorService executor = Executors.newFixedThreadPool(count);
+        final ExecutorService executor = Executors.newFixedThreadPool(count);
         // launch the application <count> times
         for (int i = 0; i < count; i++) {
             // run the instance
@@ -61,18 +60,22 @@ public final class LoadTestBootstrap extends Bootstrap {
                 }
             }
         }
-        if (maximumRuntime > 0) {
-            try {
-                // sleep until we should stop
-                Thread.sleep(maximumRuntime - (System.currentTimeMillis() / 1000));
-            } catch (InterruptedException e) {
+        // we no longer accept new tasks
+        executor.shutdown();
+        if (runtime > 0) {
+            final long maximumRuntime = (System.currentTimeMillis() / 1000) + runtime * 1000;
+            if (maximumRuntime > 0) {
+                try {
+                    // sleep until we should stop
+                    Thread.sleep(maximumRuntime - (System.currentTimeMillis() / 1000));
+                } catch (InterruptedException e) {
+                }
             }
             // shutdown the instances
             logger.info("Shutting down instances");
-            executor.shutdownNow();
-        } else {
-            executor.shutdown();
+            System.exit(0);
         }
+        logger.info("Awaiting shutdown, you have to do it manually!");
         // await the termination of all instances
         try {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);

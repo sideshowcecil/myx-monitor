@@ -35,20 +35,18 @@ public class DummyMessageCreator extends MessageCreator<byte[]> {
         runnable = new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < loopCount; i++) {
-                    logger.info("Sending messages (count: " + i + ")");
-                    for (int j = 0; j < messageCount; j++) {
-                        publisher.publish(createDummyMessage());
+                try {
+                    for (int i = 0; i < loopCount; i++) {
+                        logger.info("Sending messages (count: " + i + ")");
+                        for (int j = 0; j < messageCount; j++) {
+                            publisher.publish(createDummyMessage());
+                            Thread.sleep(timeout);
+                        }
                     }
-                    try {
-                        Thread.sleep(timeout);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
+                } catch (InterruptedException e) {
                 }
                 // exit
                 logger.info("Exiting");
-                System.exit(0);
             }
         };
     }

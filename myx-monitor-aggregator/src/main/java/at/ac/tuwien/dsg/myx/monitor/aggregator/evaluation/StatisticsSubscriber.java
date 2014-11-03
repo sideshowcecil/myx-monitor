@@ -141,13 +141,13 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             PrintStream ps = null;
             try {
                 ps = new PrintStream(brickCountStatisticsFile);
+                ps.println("time,amount");
                 for (long i = minimumTimestamp; i < now; i++) {
                     if (brickCountStatistics.containsKey(i)) {
-                        for (long j = 0; j < brickCountStatistics.get(i); j++) {
-                            // we output the seconds starting with 0, thus we
-                            // subtract the smallest timestamp
-                            ps.println(i - minimumTimestamp);
-                        }
+                        ps.print(i - minimumTimestamp);
+                        ps.print(",");
+                        ps.print(brickCountStatistics.get(i));
+                        ps.println();
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -162,6 +162,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             PrintStream ps = null;
             try {
                 ps = new PrintStream(externalConnectionCountStatisticsFile);
+                ps.println("time,amount");
                 long current = 0;
                 minimumTimestamp = externalConnectionCountStatistics.firstKey() < minimumTimestamp ? externalConnectionCountStatistics
                         .firstKey() : minimumTimestamp;
@@ -169,12 +170,10 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     if (externalConnectionCountStatistics.containsKey(i)) {
                         current += externalConnectionCountStatistics.get(i);
                     }
-                    for (long j = 0; j < current; j++) {
-                        // we output the seconds starting with 0, thus we
-                        // subtract
-                        // the smallest timestamp
-                        ps.println(i - minimumTimestamp);
-                    }
+                    ps.print(i - minimumTimestamp);
+                    ps.print(",");
+                    ps.print(current);
+                    ps.println();
                 }
             } catch (FileNotFoundException e) {
                 // ignore

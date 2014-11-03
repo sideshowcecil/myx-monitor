@@ -479,8 +479,8 @@
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.StatisticsSubscriberComponent</javaimplementation:javaClassName>
-                    <javainitparams:initializationParameter javainitparams:name="brickCountStatisticsFile" javainitparams:value="brickCountStatistics.txt" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="externalConnectionCountStatisticsFile" javainitparams:value="externalConnectionCountStatistics.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="brickCountStatisticsFile" javainitparams:value="stability-amount-bricks.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="externalConnectionCountStatisticsFile" javainitparams:value="stability-amount-external-connections.txt" xsi:type="javainitparams:InitializationParameter"/>
                     
                 </javaimplementation:mainClass>
             </implementationext:implementation>

@@ -37,7 +37,7 @@ public class EventManagerImpl implements EventManager, Runnable {
     }
 
     @Override
-    public void handle(Event event) {
+    public synchronized void handle(Event event) {
         // set the architecture runtime id
         event.setArchitectureRuntimeId(architectureRuntimeId);
         if (event instanceof XADLHostEvent) {

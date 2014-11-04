@@ -167,8 +167,15 @@ public class Bootstrap {
      * @param hostId
      * @param connectionString
      */
-    protected void initEventManager(String architectureRuntimeId, String hostId, String eventManagerClassName,
+    protected static void initEventManager(String architectureRuntimeId, String hostId, String eventManagerClassName,
             String connectionString) {
+        try {
+            // check if the event manager has already been initialized
+            MyxMonitoringUtils.getEventManager();
+            return;
+        } catch (NullPointerException e) {
+        }
+        
         EventManager eventManager = null;
         if (!eventManagerClassName.isEmpty()) {
             try {

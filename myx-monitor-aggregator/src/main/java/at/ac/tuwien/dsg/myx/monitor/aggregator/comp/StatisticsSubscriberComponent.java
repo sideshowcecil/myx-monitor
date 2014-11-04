@@ -1,5 +1,9 @@
 package at.ac.tuwien.dsg.myx.monitor.aggregator.comp;
 
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+
 import at.ac.tuwien.dsg.myx.monitor.aggregator.evaluation.StatisticsSubscriber;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
@@ -24,11 +28,21 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        String brickCountStatisticsFile = MyxMonitoringUtils.getInitProperties(this).getProperty(
-                "brickCountStatisticsFile", null);
-        String externalConnectionCountStatisticsFile = MyxMonitoringUtils.getInitProperties(this).getProperty(
-                "externalConnectionCountStatisticsFile", null);
-        statisticsSubscriber = new StatisticsSubscriber(brickCountStatisticsFile, externalConnectionCountStatisticsFile);
+        Properties initProps = MyxMonitoringUtils.getInitProperties(this);
+
+        String brickCountStatisticsFile = initProps.getProperty("brickCountStatisticsFile", null);
+        String externalConnectionCountStatisticsFile = initProps.getProperty("externalConnectionCountStatisticsFile",
+                null);
+        String watchedBricksStatisticsFile = initProps.getProperty("watchedBricksStatisticsFile", null);
+        Set<String> watchedBricks = new HashSet<String>();
+        for (String key : initProps.stringPropertyNames()) {
+            if (key.startsWith("watchedBrick")) {
+                watchedBricks.add(initProps.getProperty(key));
+            }
+        }
+
+        statisticsSubscriber = new StatisticsSubscriber(brickCountStatisticsFile,
+                externalConnectionCountStatisticsFile, watchedBricksStatisticsFile, watchedBricks);
     }
 
 }

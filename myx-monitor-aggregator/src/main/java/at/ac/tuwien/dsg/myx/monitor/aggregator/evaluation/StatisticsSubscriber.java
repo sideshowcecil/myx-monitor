@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -22,9 +24,9 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
      */
     private Map<String, Tuple<Long, Long>> brickLifetimes = new HashMap<>();
     /**
-     * Represents the count of instances for each blueprint brick.
+     * Represents a mapping of runtime- to blueprint-ids.
      */
-    private Map<String, Long> brickCounts = new HashMap<>();
+    private Map<String, String> runtime2blueprint = new HashMap<>();
     /**
      * Represents the time where an external connection was established or shut
      * down.
@@ -35,10 +37,15 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
 
     private String brickCountStatisticsFile;
     private String externalConnectionCountStatisticsFile;
+    private String watchedBricksStatisticsFile;
+    private Set<String> watchedBricks;
 
-    public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile) {
+    public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
+            String watchedBricksStatisticsFile, Set<String> watchedBricks) {
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
+        this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;
+        this.watchedBricks = watchedBricks;
     }
 
     @Override
@@ -49,6 +56,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             // brick lifetime
             if (!brickLifetimes.containsKey(e.getXadlRuntimeId())) {
                 brickLifetimes.put(e.getXadlRuntimeId(), new Tuple<Long, Long>());
+                runtime2blueprint.put(e.getXadlRuntimeId(), e.getXadlBlueprintId());
             }
             switch (e.getXadlEventType()) {
             case ADD:
@@ -61,13 +69,6 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 break;
             default:
                 break;
-            }
-
-            // brick counts
-            if (!brickCounts.containsKey(e.getXadlBlueprintId())) {
-                brickCounts.put(e.getXadlBlueprintId(), 1L);
-            } else {
-                brickCounts.put(e.getXadlBlueprintId(), brickCounts.get(e.getXadlBlueprintId()) + 1);
             }
         } else if (message.getData() instanceof XADLExternalLinkEvent) {
             XADLExternalLinkEvent e = (XADLExternalLinkEvent) message.getData();
@@ -95,6 +96,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
     public void persist() {
         SortedMap<Long, Long> brickCountStatistics = new TreeMap<>();
         SortedMap<Long, Long> externalConnectionCountStatistics = new TreeMap<>();
+        SortedMap<Long, Long> watchedBrickCountStatistics = new TreeMap<>();
 
         // compute statistics
         long now = System.currentTimeMillis() / 1000;
@@ -123,6 +125,19 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 break;
             default:
                 break;
+            }
+        }
+        for (Entry<String, Tuple<Long, Long>> entry : brickLifetimes.entrySet()) {
+            // is the brick watched
+            if (watchedBricks.contains(runtime2blueprint.get(entry.getKey()))) {
+                long max = entry.getValue().getSnd() != null ? entry.getValue().getSnd() : now;
+                for (long i = entry.getValue().getFst(); i <= max; i++) {
+                    if (!watchedBrickCountStatistics.containsKey(i)) {
+                        watchedBrickCountStatistics.put(new Long(i), 1L);
+                    } else {
+                        watchedBrickCountStatistics.put(new Long(i), watchedBrickCountStatistics.get(i) + 1);
+                    }
+                }
             }
         }
 
@@ -174,6 +189,27 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     ps.print(",");
                     ps.print(current);
                     ps.println();
+                }
+            } catch (FileNotFoundException e) {
+                // ignore
+            } finally {
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        }
+        if (watchedBrickCountStatistics.size() > 0 && watchedBricksStatisticsFile != null) {
+            PrintStream ps = null;
+            try {
+                ps = new PrintStream(watchedBricksStatisticsFile);
+                ps.println("time,amount");
+                for (long i = minimumTimestamp; i < now; i++) {
+                    if (watchedBrickCountStatistics.containsKey(i)) {
+                        ps.print(i - minimumTimestamp);
+                        ps.print(",");
+                        ps.print(watchedBrickCountStatistics.get(i));
+                        ps.println();
+                    }
                 }
             } catch (FileNotFoundException e) {
                 // ignore

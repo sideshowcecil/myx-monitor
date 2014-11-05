@@ -58,6 +58,11 @@ public final class Tuple<X, Y> {
     }
 
     @Override
+    public String toString() {
+        return "Tuple [" + getFst() + ", " + getSnd() + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Tuple<?, ?>) {
             Tuple<?, ?> t = (Tuple<?, ?>) obj;

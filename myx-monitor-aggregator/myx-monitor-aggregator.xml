@@ -481,10 +481,18 @@
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.StatisticsSubscriberComponent</javaimplementation:javaClassName>
                     <javainitparams:initializationParameter javainitparams:name="brickCountStatisticsFile" javainitparams:value="stability-amount-bricks.txt" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="externalConnectionCountStatisticsFile" javainitparams:value="stability-amount-external-connections.txt" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="watchedBrick1" xsi:type="javainitparams:InitializationParameter" javainitparams:value="connectorffa83f01-fa73cff6-1ec5f067-25c300d0"/>
-                    <javainitparams:initializationParameter javainitparams:name="watchedBrick2" xsi:type="javainitparams:InitializationParameter" javainitparams:value="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b"/>
-                    <javainitparams:initializationParameter javainitparams:name="watchedBrick3" xsi:type="javainitparams:InitializationParameter" javainitparams:value="connectorffa80065-dd56fa89-04a4013e-18f70890"/>
+                    <javainitparams:initializationParameter javainitparams:name="watchedBrick1" javainitparams:value="connectorffa83f01-fa73cff6-1ec5f067-25c300d0" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="watchedBrick2" javainitparams:value="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="watchedBrick3" javainitparams:value="connectorffa80065-dd56fa89-04a4013e-18f70890" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="watchedBricksStatisticsFile" javainitparams:value="stability-amount-watched-bricks.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="brickEventTimeDiffFile" xsi:type="javainitparams:InitializationParameter" javainitparams:value="stability-brick-event-time-diff.txt"/>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     
                     
                     

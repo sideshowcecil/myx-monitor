@@ -3,7 +3,6 @@ package at.ac.tuwien.dsg.myx.monitor.aggregator.evaluation;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +19,6 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
-import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
@@ -46,10 +44,9 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
      */
     private Map<String, Set<String>> runtime2externalConnections = new HashMap<>();
     /**
-     * Represents a list of events for each brick, that can be associated with
-     * the bricks creation and destruction.
+     * Represents the creation times of different kind of events.
      */
-    private Map<String, List<Event>> brickEvents = new HashMap<>();
+    private Map<Class<? extends Event>, List<Long>> eventTimes = new HashMap<>();
 
     // files used to save statistics data
 
@@ -57,17 +54,18 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
     private String externalConnectionCountStatisticsFile;
     private String watchedBricksStatisticsFile;
     private Set<String> watchedBricks;
-    private String brickEventTimeDiffFile;
+    private String eventStatisticsFile;
 
     private ScheduledExecutorService persistenceExecutor = Executors.newScheduledThreadPool(1);
+    private long startingTimestamp = System.currentTimeMillis() / 1000;
 
     public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
-            String watchedBricksStatisticsFile, Set<String> watchedBricks, String brickEventTimeDiffFile) {
+            String watchedBricksStatisticsFile, Set<String> watchedBricks, String eventStatisticsFile) {
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
         this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;
         this.watchedBricks = watchedBricks;
-        this.brickEventTimeDiffFile = brickEventTimeDiffFile;
+        this.eventStatisticsFile = eventStatisticsFile;
 
         persistenceExecutor.scheduleWithFixedDelay(new Runnable() {
             @Override
@@ -120,19 +118,6 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     }
                 }
             }
-            synchronized (brickEvents) {
-                if (!brickEvents.containsKey(e.getXadlRuntimeId()))
-                    brickEvents.put(e.getXadlRuntimeId(), new ArrayList<Event>());
-                brickEvents.get(e.getXadlRuntimeId()).add(e);
-            }
-        } else if (event instanceof XADLRuntimeEvent) {
-            XADLRuntimeEvent e = (XADLRuntimeEvent) event;
-
-            synchronized (brickEvents) {
-                if (!brickEvents.containsKey(e.getXadlRuntimeId()))
-                    brickEvents.put(e.getXadlRuntimeId(), new ArrayList<Event>());
-                brickEvents.get(e.getXadlRuntimeId()).add(e);
-            }
         } else if (event instanceof XADLExternalLinkEvent) {
             XADLExternalLinkEvent e = (XADLExternalLinkEvent) event;
 
@@ -154,20 +139,28 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 runtime2externalConnections.get(e.getXadlRuntimeId()).add(e.getXadlExternalConnectionIdentifier());
             }
         }
+        synchronized (eventTimes) {
+            if (!eventTimes.containsKey(event.getClass())) {
+                eventTimes.put(event.getClass(), new ArrayList<Long>());
+            }
+            eventTimes.get(event.getClass()).add(timestamp);
+        }
         // TODO: what other data can we extract that is interesting
+        // TODO: häufigkeiten der einzelnen events, wann treten events auf,
+        // speichern von timestamps aller events und anzeige dieser in einer art
+        // histogram für jede art von event
+        // dadurch kann dann gezeigt werden, dass es sich nicht lohnt auf
+        // runtime events zu subscriben.
     }
 
     /**
      * Persist/Print the statistics.
      */
     public void persist() {
-        SortedMap<Long, Long> brickCountStatistics = new TreeMap<>();
-        SortedMap<Long, Long> externalConnectionCountStatistics = new TreeMap<>();
-        SortedMap<Long, Long> watchedBrickCountStatistics = new TreeMap<>();
-        double[] brickEventTimeDifferenceStatistics = new double[3];
-
         // compute statistics
         long now = System.currentTimeMillis() / 1000;
+        SortedMap<Long, Long> brickCountStatistics = new TreeMap<>();
+        SortedMap<Long, Long> watchedBrickCountStatistics = new TreeMap<>();
         synchronized (brickLifetimes) {
             for (Tuple<Long, Long> brick : brickLifetimes.values()) {
                 long max = brick.getSnd() != null ? brick.getSnd() : now;
@@ -193,6 +186,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
+        SortedMap<Long, Long> externalConnectionCountStatistics = new TreeMap<>();
         synchronized (externalConnectionCounts) {
             for (Map.Entry<Tuple<String, XADLEventType>, Long> entry : externalConnectionCounts.entrySet()) {
                 if (!externalConnectionCountStatistics.containsKey(entry.getValue())) {
@@ -212,50 +206,38 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
-        synchronized (brickEvents) {
-            List<Tuple<Double, Integer>> brickEventTimeDifferences = Arrays.asList(new Tuple<Double, Integer>(0.0, 0),
-                    new Tuple<Double, Integer>(0.0, 0), new Tuple<Double, Integer>(0.0, 0));
-
-            for (Entry<String, List<Event>> entry : brickEvents.entrySet()) {
-                List<Event> events = entry.getValue();
-                for (int i = 0; i + 1 < events.size(); i++) {
-                    Tuple<Double, Integer> diff = brickEventTimeDifferences.get(i);
-
-                    diff.setFst(diff.getFst() - events.get(i).getTimestamp() + events.get(i + 1).getTimestamp());
-                    diff.setSnd(diff.getSnd() + 1);
-
-                    brickEventTimeDifferences.set(i, diff);
+        // create a mapping of class to index
+        Map<Class<? extends Event>, Integer> classMapping = new HashMap<>();
+        for (Class<? extends Event> clazz : eventTimes.keySet()) {
+            classMapping.put(clazz, classMapping.size());
+        }
+        SortedMap<Long, Long[]> eventTimeStatistics = new TreeMap<>();
+        synchronized (eventTimes) {
+            for (Entry<Class<? extends Event>, List<Long>> entry : eventTimes.entrySet()) {
+                for (long timestamp : entry.getValue()) {
+                    if (!eventTimeStatistics.containsKey(timestamp)) {
+                        Long[] stats = new Long[classMapping.size()];
+                        for (int i = 0; i < classMapping.size(); i++) {
+                            stats[i] = 0L;
+                        }
+                        eventTimeStatistics.put(timestamp, stats);
+                    }
+                    Long[] stats = eventTimeStatistics.get(timestamp);
+                    stats[classMapping.get(entry.getKey())]++;
+                    eventTimeStatistics.put(timestamp, stats);
                 }
             }
-            
-            for (int i = 0; i < brickEventTimeDifferences.size(); i++) {
-                Tuple<Double, Integer> diff = brickEventTimeDifferences.get(i);
-                if (diff.getSnd() > 0)
-                    brickEventTimeDifferenceStatistics[i] = diff.getFst() / diff.getSnd() / 1000;
-                else
-                    brickEventTimeDifferenceStatistics[i] = 0;
-            }
-        }
-
-        // compute the starting timestamp
-        long minimumTimestamp = Long.MAX_VALUE;
-        if (brickCountStatistics.size() > 0) {
-            minimumTimestamp = brickCountStatistics.firstKey();
-        }
-        if (externalConnectionCountStatistics.size() > 0
-                && minimumTimestamp > externalConnectionCountStatistics.firstKey()) {
-            minimumTimestamp = externalConnectionCountStatistics.firstKey();
         }
 
         // print statistics
-        if (brickCountStatistics.size() > 0 && brickCountStatisticsFile != null) {
+        if (brickCountStatisticsFile != null && brickCountStatistics.size() > 0) {
             PrintStream ps = null;
             try {
                 ps = new PrintStream(brickCountStatisticsFile);
                 ps.println("time,amount");
-                for (long i = minimumTimestamp; i < now; i++) {
+                for (long i = startingTimestamp; i < now; i++) {
                     if (brickCountStatistics.containsKey(i)) {
-                        ps.print(i - minimumTimestamp);
+                        ps.print(i - startingTimestamp);
                         ps.print(",");
                         ps.print(brickCountStatistics.get(i));
                         ps.println();
@@ -269,14 +251,14 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
-        if (watchedBrickCountStatistics.size() > 0 && watchedBricksStatisticsFile != null) {
+        if (watchedBricksStatisticsFile != null && watchedBrickCountStatistics.size() > 0) {
             PrintStream ps = null;
             try {
                 ps = new PrintStream(watchedBricksStatisticsFile);
                 ps.println("time,amount");
-                for (long i = minimumTimestamp; i < now; i++) {
+                for (long i = startingTimestamp; i < now; i++) {
                     if (watchedBrickCountStatistics.containsKey(i)) {
-                        ps.print(i - minimumTimestamp);
+                        ps.print(i - startingTimestamp);
                         ps.print(",");
                         ps.print(watchedBrickCountStatistics.get(i));
                         ps.println();
@@ -290,19 +272,19 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
-        if (externalConnectionCountStatistics.size() > 0 && externalConnectionCountStatisticsFile != null) {
+        if (externalConnectionCountStatisticsFile != null && externalConnectionCountStatistics.size() > 0) {
             PrintStream ps = null;
             try {
                 ps = new PrintStream(externalConnectionCountStatisticsFile);
                 ps.println("time,amount");
                 long current = 0;
-                minimumTimestamp = externalConnectionCountStatistics.firstKey() < minimumTimestamp ? externalConnectionCountStatistics
-                        .firstKey() : minimumTimestamp;
-                for (long i = minimumTimestamp; i < now; i++) {
+                startingTimestamp = externalConnectionCountStatistics.firstKey() < startingTimestamp ? externalConnectionCountStatistics
+                        .firstKey() : startingTimestamp;
+                for (long i = startingTimestamp; i < now; i++) {
                     if (externalConnectionCountStatistics.containsKey(i)) {
                         current += externalConnectionCountStatistics.get(i);
                     }
-                    ps.print(i - minimumTimestamp);
+                    ps.print(i - startingTimestamp);
                     ps.print(",");
                     ps.print(current);
                     ps.println();
@@ -315,17 +297,32 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
-        if (brickEventTimeDiffFile != null) {
+        if (eventStatisticsFile != null && eventTimeStatistics.size() > 0) {
             PrintStream ps = null;
             try {
-                ps = new PrintStream(brickEventTimeDiffFile);
-                ps.println("events,differnces");
-                ps.print("create-running,");
-                ps.println(brickEventTimeDifferenceStatistics[0]);
-                ps.print("running-shutdown,");
-                ps.println(brickEventTimeDifferenceStatistics[1]);
-                ps.print("shutdown-destroy,");
-                ps.println(brickEventTimeDifferenceStatistics[2]);
+                ps = new PrintStream(eventStatisticsFile);
+                // print header
+                ps.print("time");
+                for (Class<? extends Event> clazz : classMapping.keySet()) {
+                    ps.print(",");
+                    ps.print(clazz.getSimpleName());
+                }
+                ps.println();
+                // print data
+                for (long i = startingTimestamp; i < now; i++) {
+                    ps.print(i - startingTimestamp);
+                    if (eventTimeStatistics.containsKey(i)) {
+                        for (Long count : eventTimeStatistics.get(i)) {
+                            ps.print(",");
+                            ps.print(count);
+                        }
+                    } else {
+                        for (int j = 0; j < classMapping.size(); j++) {
+                            ps.print(",0");
+                        }
+                    }
+                    ps.println();
+                }
             } catch (FileNotFoundException e) {
                 // ignore
             } finally {

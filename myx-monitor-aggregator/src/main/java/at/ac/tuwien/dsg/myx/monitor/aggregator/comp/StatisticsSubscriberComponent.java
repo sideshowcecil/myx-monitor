@@ -40,10 +40,10 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
                 watchedBricks.add(initProps.getProperty(key));
             }
         }
-        String brickEventTimeDiffFile = initProps.getProperty("brickEventTimeDiffFile", null);
+        String eventStatisticsFile = initProps.getProperty("eventStatisticsFile", null);
 
         statisticsSubscriber = new StatisticsSubscriber(brickCountStatisticsFile,
-                externalConnectionCountStatisticsFile, watchedBricksStatisticsFile, watchedBricks, brickEventTimeDiffFile);
+                externalConnectionCountStatisticsFile, watchedBricksStatisticsFile, watchedBricks, eventStatisticsFile);
     }
 
 }

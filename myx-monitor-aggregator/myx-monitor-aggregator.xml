@@ -485,7 +485,7 @@
                     <javainitparams:initializationParameter javainitparams:name="watchedBrick2" javainitparams:value="connectorffa83f01-fa731b1e-0ca1cde8-25c3008b" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="watchedBrick3" javainitparams:value="connectorffa80065-dd56fa89-04a4013e-18f70890" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="watchedBricksStatisticsFile" javainitparams:value="stability-amount-watched-bricks.txt" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="brickEventTimeDiffFile" xsi:type="javainitparams:InitializationParameter" javainitparams:value="stability-brick-event-time-diff.txt"/>
+                    <javainitparams:initializationParameter javainitparams:name="eventStatisticsFile" javainitparams:value="stability-events.txt" xsi:type="javainitparams:InitializationParameter"/>
                     
                     
                     

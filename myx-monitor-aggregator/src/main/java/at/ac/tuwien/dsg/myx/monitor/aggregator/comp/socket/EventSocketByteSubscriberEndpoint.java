@@ -101,31 +101,33 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
              * @return
              */
             private ModelResponseEvent getElementRespone(ModelElementRequestEvent request) {
-                for (IArchStructure structure : modelRoot.getArchStructures()) {
-                    for (IComponent component : DBLUtils.getComponents(structure)) {
-                        if (component.getId().equals(request.getRuntimeId())) {
-                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
-                                    XADLElementType.COMPONENT);
-                            response.setDescription(DBLUtils.getDescription(component));
-                            for (IInterface intf : DBLUtils.getInterfaces(component)) {
-                                response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
+                synchronized (modelRoot) {
+                    for (IArchStructure structure : modelRoot.getArchStructures()) {
+                        for (IComponent component : DBLUtils.getComponents(structure)) {
+                            if (component.getId().equals(request.getRuntimeId())) {
+                                ModelElementResponseEvent response = new ModelElementResponseEvent(
+                                        request.getRuntimeId(), XADLElementType.COMPONENT);
+                                response.setDescription(DBLUtils.getDescription(component));
+                                for (IInterface intf : DBLUtils.getInterfaces(component)) {
+                                    response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
+                                }
+                                return response;
                             }
-                            return response;
+                        }
+                        for (IConnector connector : DBLUtils.getConnectors(structure)) {
+                            if (connector.getId().equals(request.getRuntimeId())) {
+                                ModelElementResponseEvent response = new ModelElementResponseEvent(
+                                        request.getRuntimeId(), XADLElementType.CONNECTOR);
+                                response.setDescription(DBLUtils.getDescription(connector));
+                                for (IInterface intf : DBLUtils.getInterfaces(connector)) {
+                                    response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
+                                }
+                                return response;
+                            }
                         }
                     }
-                    for (IConnector connector : DBLUtils.getConnectors(structure)) {
-                        if (connector.getId().equals(request.getRuntimeId())) {
-                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
-                                    XADLElementType.CONNECTOR);
-                            response.setDescription(DBLUtils.getDescription(connector));
-                            for (IInterface intf : DBLUtils.getInterfaces(connector)) {
-                                response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
-                            }
-                            return response;
-                        }
-                    }
+                    return new ModelNoSuchElementResponseEvent(request.getRuntimeId());
                 }
-                return new ModelNoSuchElementResponseEvent(request.getRuntimeId());
             }
         };
     }

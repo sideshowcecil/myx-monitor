@@ -46,17 +46,19 @@ public class HostedStructureRuntimeManager implements ISubscriber<Event> {
     public void consume(Message<Event> message) {
         if (matches(message.getTopic())) {
             logger.info("Consuming event of type " + message.getData().getClass());
-            try {
-                Event event = message.getData();
-                if (event instanceof XADLHostingEvent) {
-                    process((XADLHostingEvent) event);
-                } else if (event instanceof XADLHostInstanceEvent) {
-                    process((XADLHostInstanceEvent) event);
-                } else if (event instanceof XADLHostPropertyEvent) {
-                    process((XADLHostPropertyEvent) event);
+            synchronized (modelRoot) {
+                try {
+                    Event event = message.getData();
+                    if (event instanceof XADLHostingEvent) {
+                        process((XADLHostingEvent) event);
+                    } else if (event instanceof XADLHostInstanceEvent) {
+                        process((XADLHostInstanceEvent) event);
+                    } else if (event instanceof XADLHostPropertyEvent) {
+                        process((XADLHostPropertyEvent) event);
+                    }
+                } catch (Exception e) {
+                    logger.warn("An unexpected error occured", e);
                 }
-            } catch (Exception e) {
-                logger.warn("An unexpected error occured", e);
             }
         }
     }

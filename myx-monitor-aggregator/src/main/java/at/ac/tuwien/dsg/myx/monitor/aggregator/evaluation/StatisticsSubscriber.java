@@ -19,6 +19,8 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostEvent;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
@@ -138,6 +140,11 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
                 runtime2externalConnections.get(e.getXadlRuntimeId()).add(e.getXadlExternalConnectionIdentifier());
             }
+        } else if (event instanceof XADLHostingEvent) {
+            XADLHostingEvent e = (XADLHostingEvent) event;
+            
+            // TODO
+            e.getXadlEventType();
         }
         synchronized (eventTimes) {
             if (!eventTimes.containsKey(event.getClass())) {
@@ -146,11 +153,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             eventTimes.get(event.getClass()).add(timestamp);
         }
         // TODO: what other data can we extract that is interesting
-        // TODO: häufigkeiten der einzelnen events, wann treten events auf,
-        // speichern von timestamps aller events und anzeige dieser in einer art
-        // histogram für jede art von event
-        // dadurch kann dann gezeigt werden, dass es sich nicht lohnt auf
-        // runtime events zu subscriben.
+        // TODO: current host count
     }
 
     /**

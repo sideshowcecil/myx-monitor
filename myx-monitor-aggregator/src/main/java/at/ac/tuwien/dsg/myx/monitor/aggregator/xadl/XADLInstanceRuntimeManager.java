@@ -76,19 +76,21 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
     public void consume(Message<Event> message) {
         if (matches(message.getTopic())) {
             logger.info("Consuming event of type " + message.getData().getClass());
-            try {
-                Event event = message.getData();
-                if (event instanceof XADLEvent) {
-                    process((XADLEvent) event);
-                } else if (event instanceof XADLExternalLinkEvent) {
-                    process((XADLExternalLinkEvent) event);
-                } else if (event instanceof XADLLinkEvent) {
-                    process((XADLLinkEvent) event);
-                } else if (event instanceof XADLRuntimeEvent) {
-                    process((XADLRuntimeEvent) event);
+            synchronized (modelRoot) {
+                try {
+                    Event event = message.getData();
+                    if (event instanceof XADLEvent) {
+                        process((XADLEvent) event);
+                    } else if (event instanceof XADLExternalLinkEvent) {
+                        process((XADLExternalLinkEvent) event);
+                    } else if (event instanceof XADLLinkEvent) {
+                        process((XADLLinkEvent) event);
+                    } else if (event instanceof XADLRuntimeEvent) {
+                        process((XADLRuntimeEvent) event);
+                    }
+                } catch (Exception e) {
+                    logger.warn("An unexpected error occured on message " + message, e);
                 }
-            } catch (Exception e) {
-                logger.warn("An unexpected error occured on message " + message, e);
             }
         }
     }

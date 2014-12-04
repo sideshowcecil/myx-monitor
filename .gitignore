@@ -1,7 +1,4 @@
 *.swp
 *~
 *.bak
-myx-monitor-aggregator/stability-amount-bricks.txt
-myx-monitor-aggregator/stability-amount-external-connections.txt
-myx-monitor-aggregator/stability-amount-watched-bricks.txt
-myx-monitor-aggregator/stability-brick-event-time-diff.txt
+myx-monitor-aggregator/stability-*

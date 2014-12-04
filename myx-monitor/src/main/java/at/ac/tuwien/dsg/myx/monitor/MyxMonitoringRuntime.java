@@ -84,6 +84,11 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                             }
                         }
                     }
+                    // wait some time so that all events were dispatched
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
                 }
             });
         } catch (IllegalStateException e) {

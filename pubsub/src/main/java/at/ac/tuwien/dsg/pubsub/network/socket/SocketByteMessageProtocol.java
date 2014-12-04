@@ -125,11 +125,7 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
         }
         List<Object> ret = new ArrayList<Object>(num);
         for (int i = 0; i < num; i++) {
-            try {
-                ret.add(process(is));
-            } catch (IOException e) {
-                ret.add(e);
-            }
+            ret.add(process(is));
         }
         return ret;
     }

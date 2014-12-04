@@ -19,7 +19,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
-import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostEvent;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostInstanceEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
@@ -49,6 +49,14 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
      * Represents the creation times of different kind of events.
      */
     private Map<Class<? extends Event>, List<Long>> eventTimes = new HashMap<>();
+    /**
+     * Represents the time a brick is added to a host or removed.
+     */
+    private Map<String, SortedMap<Long, List<XADLHostingEvent>>> hostingEvents = new HashMap<>();
+    /**
+     * Represents the time a host is added or removed.
+     */
+    private SortedMap<Long, List<XADLHostInstanceEvent>> hostInstanceEvents = new TreeMap<>();
 
     // files used to save statistics data
 
@@ -57,16 +65,19 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
     private String watchedBricksStatisticsFile;
     private Set<String> watchedBricks;
     private String eventStatisticsFile;
+    private String hostStatisticsFile;
 
     private ScheduledExecutorService persistenceExecutor = Executors.newScheduledThreadPool(1);
     private long startingTimestamp = System.currentTimeMillis() / 1000;
 
     public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
-            String watchedBricksStatisticsFile, Set<String> watchedBricks, String eventStatisticsFile) {
+            String watchedBricksStatisticsFile, Set<String> watchedBricks,
+            String hostStatisticsFile, String eventStatisticsFile) {
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
         this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;
         this.watchedBricks = watchedBricks;
+        this.hostStatisticsFile = hostStatisticsFile;
         this.eventStatisticsFile = eventStatisticsFile;
 
         persistenceExecutor.scheduleWithFixedDelay(new Runnable() {
@@ -140,11 +151,25 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
                 runtime2externalConnections.get(e.getXadlRuntimeId()).add(e.getXadlExternalConnectionIdentifier());
             }
+        } else if (event instanceof XADLHostInstanceEvent) {
+            XADLHostInstanceEvent e = (XADLHostInstanceEvent) event;
+            synchronized (hostInstanceEvents) {
+                if (!hostInstanceEvents.containsKey(timestamp)) {
+                    hostInstanceEvents.put(timestamp, new ArrayList<XADLHostInstanceEvent>());
+                }
+                hostInstanceEvents.get(timestamp).add(e);
+            }
         } else if (event instanceof XADLHostingEvent) {
             XADLHostingEvent e = (XADLHostingEvent) event;
-            
-            // TODO
-            e.getXadlEventType();
+            synchronized (hostingEvents) {
+                if (!hostingEvents.containsKey(e.getHostId())) {
+                    hostingEvents.put(e.getHostId(), new TreeMap<Long, List<XADLHostingEvent>>());
+                }
+                if (!hostingEvents.get(e.getHostId()).containsKey(timestamp)) {
+                    hostingEvents.get(e.getHostId()).put(timestamp, new ArrayList<XADLHostingEvent>());
+                }
+                hostingEvents.get(e.getHostId()).get(timestamp).add(e);
+            }
         }
         synchronized (eventTimes) {
             if (!eventTimes.containsKey(event.getClass())) {
@@ -152,8 +177,6 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             }
             eventTimes.get(event.getClass()).add(timestamp);
         }
-        // TODO: what other data can we extract that is interesting
-        // TODO: current host count
     }
 
     /**
@@ -231,6 +254,70 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
             }
         }
+        // create a mapping of the host and its brick count over time
+        final Map<String, Map<Long, Long>> hostBrickCount = new HashMap<>();
+        long minimumHostsTimestamp = -1;
+        synchronized (hostingEvents) {
+            for (Entry<String, SortedMap<Long, List<XADLHostingEvent>>> entry : hostingEvents.entrySet()) {
+                if (minimumHostsTimestamp == -1 || entry.getValue().firstKey() < minimumHostsTimestamp) {
+                    minimumHostsTimestamp = entry.getValue().firstKey();
+                }
+                if (!hostBrickCount.containsKey(entry.getKey())) {
+                    hostBrickCount.put(entry.getKey(), new HashMap<Long, Long>());
+                }
+                long current = 0;
+                for (long timestamp = entry.getValue().firstKey(); timestamp <= now; timestamp++) {
+                    if (entry.getValue().containsKey(timestamp)) {
+                        for (final XADLHostingEvent e : entry.getValue().get(timestamp)) {
+                            if (e.getXadlEventType() == XADLEventType.ADD) {
+                                current += e.getHostedComponentIds().size();
+                                current += e.getHostedConnectorIds().size();
+                            } else if (e.getXadlEventType() == XADLEventType.REMOVE) {
+                                current -= e.getHostedComponentIds().size();
+                                current -= e.getHostedConnectorIds().size();
+                            }
+                        }
+                    }
+                    hostBrickCount.get(entry.getKey()).put(timestamp, current);
+                }
+            }
+        }
+        // compute statistics
+        SortedMap<Long, Long> hostsCountStatistics = new TreeMap<>();
+        synchronized (hostInstanceEvents) {
+            if (hostInstanceEvents.size() > 0) {
+                if (hostInstanceEvents.firstKey() < minimumHostsTimestamp) {
+                    minimumHostsTimestamp = hostInstanceEvents.firstKey();
+                }
+            }
+            Set<String> currentHosts = new HashSet<>();
+            for (long timestamp = minimumHostsTimestamp; timestamp <= now; timestamp++) {
+                Set<String> processedHosts = new HashSet<>();
+                // process host instances
+                if (hostInstanceEvents.containsKey(timestamp)) {
+                    for (XADLHostInstanceEvent e : hostInstanceEvents.get(timestamp)) {
+                        if (e.getXadlEventType() == XADLEventType.ADD
+                                || (e.getXadlEventType() == XADLEventType.REMOVE && (!hostBrickCount.containsKey(e
+                                        .getHostId()) || !hostBrickCount.get(e.getHostId()).containsKey(timestamp) || hostBrickCount
+                                        .get(e.getHostId()).get(timestamp) == 0))) {
+                            currentHosts.add(e.getHostId());
+                            processedHosts.add(e.getHostId());
+                        }
+                    }
+                }
+                // process host components and connectors
+                for (Entry<String, Map<Long, Long>> entry : hostBrickCount.entrySet()) {
+                    if (!processedHosts.contains(entry.getKey()) && entry.getValue().containsKey(timestamp)) {
+                        if (entry.getValue().get(timestamp) > 0) {
+                            currentHosts.add(entry.getKey());
+                        } else {
+                            currentHosts.remove(entry.getKey());
+                        }
+                    }
+                }
+                hostsCountStatistics.put(timestamp, new Long(currentHosts.size()));
+            }
+        }
 
         // print statistics
         if (brickCountStatisticsFile != null && brickCountStatistics.size() > 0) {
@@ -239,12 +326,10 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 ps = new PrintStream(brickCountStatisticsFile);
                 ps.println("time,amount");
                 for (long i = startingTimestamp; i < now; i++) {
-                    if (brickCountStatistics.containsKey(i)) {
-                        ps.print(i - startingTimestamp);
-                        ps.print(",");
-                        ps.print(brickCountStatistics.get(i));
-                        ps.println();
-                    }
+                    ps.print(i - startingTimestamp);
+                    ps.print(",");
+                    ps.print(brickCountStatistics.containsKey(i) ? brickCountStatistics.get(i) : 0);
+                    ps.println();
                 }
             } catch (FileNotFoundException e) {
                 // ignore
@@ -260,12 +345,10 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 ps = new PrintStream(watchedBricksStatisticsFile);
                 ps.println("time,amount");
                 for (long i = startingTimestamp; i < now; i++) {
-                    if (watchedBrickCountStatistics.containsKey(i)) {
-                        ps.print(i - startingTimestamp);
-                        ps.print(",");
-                        ps.print(watchedBrickCountStatistics.get(i));
-                        ps.println();
-                    }
+                    ps.print(i - startingTimestamp);
+                    ps.print(",");
+                    ps.print(watchedBrickCountStatistics.containsKey(i) ? watchedBrickCountStatistics.get(i) : 0);
+                    ps.println();
                 }
             } catch (FileNotFoundException e) {
                 // ignore
@@ -281,8 +364,6 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 ps = new PrintStream(externalConnectionCountStatisticsFile);
                 ps.println("time,amount");
                 long current = 0;
-                startingTimestamp = externalConnectionCountStatistics.firstKey() < startingTimestamp ? externalConnectionCountStatistics
-                        .firstKey() : startingTimestamp;
                 for (long i = startingTimestamp; i < now; i++) {
                     if (externalConnectionCountStatistics.containsKey(i)) {
                         current += externalConnectionCountStatistics.get(i);
@@ -290,6 +371,27 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     ps.print(i - startingTimestamp);
                     ps.print(",");
                     ps.print(current);
+                    ps.println();
+                }
+            } catch (FileNotFoundException e) {
+                // ignore
+            } finally {
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        }
+        if (hostStatisticsFile != null && eventTimeStatistics.size() > 0) {
+            PrintStream ps = null;
+            try {
+                ps = new PrintStream(hostStatisticsFile);
+                // print header
+                ps.println("time,count");
+                // print data
+                for (long i = startingTimestamp; i < now; i++) {
+                    ps.print(i - startingTimestamp);
+                    ps.print(",");
+                    ps.print(hostsCountStatistics.containsKey(i) ? hostsCountStatistics.get(i) : 0);
                     ps.println();
                 }
             } catch (FileNotFoundException e) {

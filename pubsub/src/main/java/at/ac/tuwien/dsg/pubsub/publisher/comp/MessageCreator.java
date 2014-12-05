@@ -9,21 +9,17 @@ import at.ac.tuwien.dsg.pubsub.publisher.myx.MyxInterfaceNames;
 public abstract class MessageCreator<E> extends AbstractVirtualExternalMyxSimpleBrick {
 
     public static final IMyxName OUT_PUBLISHER = MyxInterfaceNames.IPUBLISHER;
-    
+
     protected IPublisher<E> publisher;
-    
+
     @Override
     public Object getServiceObject(@SuppressWarnings("unused") IMyxName interfaceName) {
         return null;
     }
-    
-    @SuppressWarnings("unchecked")
+
     @Override
     public void begin() {
-        publisher = (IPublisher<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_PUBLISHER);
-        if (publisher == null) {
-            throw new RuntimeException("Interface " + OUT_PUBLISHER + " returned null");
-        }
+        publisher = MyxMonitoringUtils.<IPublisher<E>> getFirstRequiredServiceObject(this, OUT_PUBLISHER);
     }
 
 }

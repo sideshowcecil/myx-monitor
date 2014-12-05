@@ -26,8 +26,8 @@ public class HostedRuntimeManagerComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        ModelRoot modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
-        hostedRuntimeManager = new HostedInstanceRuntimeManager(modelRoot);
+        hostedRuntimeManager = new HostedInstanceRuntimeManager(
+                MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, OUT_MODEL_ROOT));
     }
 
 }

@@ -60,10 +60,7 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     @Override
     public void begin() {
-        myxAdapter = (IMyxRuntimeAdapter) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
-        if (myxAdapter == null) {
-            throw new RuntimeException("Interface " + OUT_MYX_ADAPTER + " returned null");
-        }
+        myxAdapter = MyxMonitoringUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
         executor.execute(runnable);
     }
 

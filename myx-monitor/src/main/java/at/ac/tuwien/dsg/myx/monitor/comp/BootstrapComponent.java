@@ -30,8 +30,8 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void begin() {
-        launcher = (Launcher) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
-        modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
+        launcher = MyxMonitoringUtils.<Launcher> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
+        modelRoot = MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
 
         String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty(
                 MyxProperties.STRUCTURE_NAME, MyxProperties.DEFAULT_STRUCTURE_NAME);

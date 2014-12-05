@@ -31,7 +31,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
     public void init() {
         Properties initProperties = MyxMonitoringUtils.getInitProperties(this);
 
-        EventManager eventManager = (EventManager) MyxMonitoringUtils.getFirstRequiredServiceObject(this,
+        EventManager eventManager = MyxMonitoringUtils.<EventManager> getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_EVENTMANAGER);
 
         String[] dispatcherClassNames = (String[]) initProperties.get(MyxProperties.EVENT_DISPATCHER_CLASSES);

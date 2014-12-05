@@ -113,8 +113,16 @@ public final class MyxMonitoringUtils {
         return MyxUtils.classForName(name, clArray);
     }
 
-    public static Object getFirstRequiredServiceObject(IMyxBrick b, IMyxName interfaceName) {
-        return MyxUtils.getFirstRequiredServiceObject(b, interfaceName);
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> E getFirstRequiredServiceObject(IMyxBrick brick, IMyxName interfaceName) {
+        E object = (E) MyxUtils.getFirstRequiredServiceObject(brick, interfaceName);
+        if (object == null) {
+            throw new RuntimeException("Interface " + interfaceName + " returned null for " + brick);
+        }
+        return object;
     }
 
     public static Object[] getRequiredServiceObjects(IMyxBrick b, IMyxName interfaceName) {

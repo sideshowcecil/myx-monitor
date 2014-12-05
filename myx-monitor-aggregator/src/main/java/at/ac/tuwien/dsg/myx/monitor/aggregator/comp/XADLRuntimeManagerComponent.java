@@ -26,8 +26,8 @@ public class XADLRuntimeManagerComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        ModelRoot modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
-        xadlRuntimeManager = new XADLInstanceRuntimeManager(modelRoot);
+        xadlRuntimeManager = new XADLInstanceRuntimeManager(
+                MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, OUT_MODEL_ROOT));
     }
 
 }

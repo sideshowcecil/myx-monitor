@@ -79,21 +79,11 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
         };
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void begin() {
-        dispatcher = (IDispatcher<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
-        if (dispatcher == null) {
-            throw new RuntimeException("Interface " + OUT_IDISPATCHER + " returned null");
-        }
-        subscriber = (ISubscriber<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
-        if (subscriber == null) {
-            throw new RuntimeException("Interface " + OUT_ISUBSCRIBER + " returned null");
-        }
-        myxAdapter = (IMyxRuntimeAdapter) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
-        if (myxAdapter == null) {
-            throw new RuntimeException("Interface " + OUT_MYX_ADAPTER + " returned null");
-        }
+        dispatcher = MyxMonitoringUtils.<IDispatcher<E>> getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
+        subscriber = MyxMonitoringUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
+        myxAdapter = MyxMonitoringUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
         executor.execute(runnable);
     }
 

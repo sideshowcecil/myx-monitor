@@ -134,10 +134,7 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
 
     @Override
     public void begin() {
-        modelRoot = (ModelRoot) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
-        if (modelRoot == null) {
-            throw new RuntimeException("Interface " + OUT_MODEL_ROOT + " returned null");
-        }
+        modelRoot = MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
         super.begin();
         executor.execute(runnable);
     }

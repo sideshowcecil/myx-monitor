@@ -94,13 +94,9 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
         };
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void begin() {
-        subscriber = (ISubscriber<E>) MyxMonitoringUtils.getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
-        if (subscriber == null) {
-            throw new RuntimeException("Interface " + OUT_ISUBSCRIBER + " returned null");
-        }
+        subscriber = MyxMonitoringUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
         executor.execute(runnable);
     }
 

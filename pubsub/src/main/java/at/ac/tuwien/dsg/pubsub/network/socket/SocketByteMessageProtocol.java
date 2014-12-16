@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.util.RedisInputStream;
 import redis.clients.util.RedisOutputStream;
 import redis.clients.util.SafeEncoder;
@@ -59,10 +60,15 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
         out.flush();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Message<byte[]> receive() throws IOException {
-        @SuppressWarnings("unchecked")
-        List<byte[]> streamData = (List<byte[]>) read(in);
+        List<byte[]> streamData;
+        try {
+            streamData = (List<byte[]>) read(in);
+        } catch (JedisException e) {
+            throw new IOException(e);
+        }
 
         if (streamData.size() != 3) {
             // error

@@ -71,8 +71,8 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
     private long startingTimestamp = System.currentTimeMillis() / 1000;
 
     public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
-            String watchedBricksStatisticsFile, Set<String> watchedBricks,
-            String hostStatisticsFile, String eventStatisticsFile) {
+            String watchedBricksStatisticsFile, Set<String> watchedBricks, String hostStatisticsFile,
+            String eventStatisticsFile) {
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
         this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;

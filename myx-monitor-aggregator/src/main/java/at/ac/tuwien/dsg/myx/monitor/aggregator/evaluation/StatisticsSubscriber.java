@@ -420,17 +420,22 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     ps.print(",");
                     ps.print(clazz.getSimpleName());
                 }
+                ps.print(",total");
                 ps.println();
                 // print data
                 for (long i = startingTimestamp; i < now; i++) {
                     ps.print(i - startingTimestamp);
                     if (eventTimeStatistics.containsKey(i)) {
+                        long total = 0;
                         for (Long count : eventTimeStatistics.get(i)) {
                             ps.print(",");
                             ps.print(count);
+                            total += count;
                         }
+                        ps.print(",");
+                        ps.print(total);
                     } else {
-                        for (int j = 0; j < classMapping.size(); j++) {
+                        for (int j = 0; j < classMapping.size() + 1; j++) {
                             ps.print(",0");
                         }
                     }

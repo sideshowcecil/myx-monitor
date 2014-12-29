@@ -83,7 +83,11 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
         persistenceExecutor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                persist();
+                try {
+                    persist();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 10, 10, TimeUnit.SECONDS);
     }
@@ -127,6 +131,12 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                         Tuple<String, XADLEventType> key = new Tuple<>(extId, e.getXadlEventType());
                         if (!externalConnectionCounts.containsKey(key)) {
                             externalConnectionCounts.put(key, timestamp);
+                            synchronized (eventTimes) {
+                                if (!eventTimes.containsKey(XADLExternalLinkEvent.class)) {
+                                    eventTimes.put(XADLExternalLinkEvent.class, new ArrayList<Long>());
+                                }
+                                eventTimes.get(XADLExternalLinkEvent.class).add(timestamp);
+                            }
                         }
                     }
                 }
@@ -188,8 +198,10 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
         SortedMap<Long, Long> brickCountStatistics = new TreeMap<>();
         SortedMap<Long, Long> watchedBrickCountStatistics = new TreeMap<>();
         synchronized (brickLifetimes) {
-            for (Tuple<Long, Long> brick : brickLifetimes.values()) {
+            for (Entry<String, Tuple<Long, Long>> entry : brickLifetimes.entrySet()) {
+                Tuple<Long, Long> brick = entry.getValue();
                 long max = brick.getSnd() != null ? brick.getSnd() : now;
+                
                 for (long i = brick.getFst(); i <= max; i++) {
                     if (!brickCountStatistics.containsKey(i)) {
                         brickCountStatistics.put(new Long(i), 1L);
@@ -197,12 +209,8 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                         brickCountStatistics.put(new Long(i), brickCountStatistics.get(i) + 1);
                     }
                 }
-            }
-            for (Entry<String, Tuple<Long, Long>> entry : brickLifetimes.entrySet()) {
-                // is the brick watched
                 if (watchedBricks.contains(runtime2blueprint.get(entry.getKey()))) {
-                    long max = entry.getValue().getSnd() != null ? entry.getValue().getSnd() : now;
-                    for (long i = entry.getValue().getFst(); i <= max; i++) {
+                    for (long i = brick.getFst(); i <= max; i++) {
                         if (!watchedBrickCountStatistics.containsKey(i)) {
                             watchedBrickCountStatistics.put(new Long(i), 1L);
                         } else {
@@ -386,7 +394,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             try {
                 ps = new PrintStream(hostStatisticsFile);
                 // print header
-                ps.println("time,count");
+                ps.println("time,amount");
                 // print data
                 for (long i = startingTimestamp; i < now; i++) {
                     ps.print(i - startingTimestamp);

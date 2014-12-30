@@ -2,9 +2,11 @@ package at.ac.tuwien.dsg.myx.monitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import at.ac.tuwien.dsg.myx.fw.IMyxInitPropertiesInterfaceDescription;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
@@ -47,6 +49,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * This map is used to keep track of the added interfaces.
      */
     protected Map<Tuple<String, String>, String> interfaces = new HashMap<>();
+    /**
+     * This map is used to keep track of the active welds of a brick.
+     */
+    protected Map<String, Set<IMyxWeld>> activeWelds = new HashMap<>();
 
     public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -55,36 +61,47 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
+                    // get all active bricks
+                    final Set<IMyxName> bricks = new HashSet<>();
+                    for (IMyxName brick : getBrickNames(null, null)) {
+                        bricks.addAll(getBrickNames(null, brick));
+                    }
                     long totalEvents = 0;
-                    List<IMyxName> bricks = MyxMonitoringRuntime.this.getBrickNames(null, null);
                     // send runtime events
                     for (IMyxName brick : bricks) {
-                        for (IMyxName b : getBrickNames(null, brick)) {
-                            String runtimeId = b.getName();
-                            if (runtime2blueprint.containsKey(runtimeId)) {
+                        String runtimeId = brick.getName();
+                        if (runtime2blueprint.containsKey(runtimeId)) {
+                            // send event
+                            dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
+                                    XADLRuntimeEventType.END);
+                            totalEvents++;
+                        }
+                    }
+                    // send link events
+                    for (IMyxName brick : bricks) {
+                        String runtimeId = brick.getName();
+                        if (runtime2blueprint.containsKey(runtimeId) && activeWelds.containsKey(runtimeId)) {
+                            for (IMyxWeld weld : activeWelds.get(runtimeId)) {
                                 // send event
-                                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
-                                        XADLRuntimeEventType.END);
+                                dispatchXADLLinkEvent(weld, XADLEventType.REMOVE);
                                 totalEvents++;
                             }
                         }
                     }
                     // send xadl- and hosting events
                     for (IMyxName brick : bricks) {
-                        for (IMyxName b : getBrickNames(null, brick)) {
-                            String runtimeId = b.getName();
-                            if (runtime2blueprint.containsKey(runtimeId)) {
-                                XADLElementType elementType = runtime2elemntType.get(runtimeId);
-                                // send events
-                                if (elementType == XADLElementType.COMPONENT) {
-                                    dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
-                                } else {
-                                    dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
-                                }
-                                dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
-                                        elementType);
-                                totalEvents += 2;
+                        String runtimeId = brick.getName();
+                        if (runtime2blueprint.containsKey(runtimeId)) {
+                            XADLElementType elementType = runtime2elemntType.get(runtimeId);
+                            // send events
+                            if (elementType == XADLElementType.COMPONENT) {
+                                dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
+                            } else {
+                                dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
                             }
+                            dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
+                                    elementType);
+                            totalEvents += 2;
                         }
                     }
                     // wait some time so that all events were dispatched
@@ -181,6 +198,13 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.addWeld(weld);
 
         dispatchXADLLinkEvent(weld, XADLEventType.ADD);
+
+        // save the weld
+        String sourceRuntimeId = weld.getRequiredBrickName().getName();
+        if (!activeWelds.containsKey(sourceRuntimeId)) {
+            activeWelds.put(sourceRuntimeId, new HashSet<IMyxWeld>());
+        }
+        activeWelds.get(sourceRuntimeId).add(weld);
     }
 
     @Override
@@ -188,6 +212,12 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.removeWeld(weld);
 
         dispatchXADLLinkEvent(weld, XADLEventType.REMOVE);
+
+        // remove the saved weld
+        String sourceRuntimeId = weld.getRequiredBrickName().getName();
+        if (activeWelds.containsKey(sourceRuntimeId)) {
+            activeWelds.get(sourceRuntimeId).remove(weld);
+        }
     }
 
     @Override

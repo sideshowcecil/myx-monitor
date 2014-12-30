@@ -19,7 +19,7 @@ public final class LoadTestBootstrap extends Bootstrap {
     public static void main(final String[] args) {
         // read the count argument if it is given
         final List<String> customArgs = new ArrayList<String>();
-        
+
         int count = 1;
         int rampUpTime = 0;
         int runtime = 0;
@@ -27,7 +27,7 @@ public final class LoadTestBootstrap extends Bootstrap {
         String hostId = IdGenerator.getHostId();
         String eventManagerClass = "";
         String connectionString = "";
-        
+
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-a") || args[i].equals("--amount")) {
                 if (++i == args.length) {
@@ -65,7 +65,7 @@ public final class LoadTestBootstrap extends Bootstrap {
                 customArgs.add(args[i]);
             }
         }
-        
+
         // init the event manager
         initEventManager(architectureRuntimeId, hostId, eventManagerClass, connectionString);
 
@@ -96,13 +96,10 @@ public final class LoadTestBootstrap extends Bootstrap {
         // we no longer accept new tasks
         executor.shutdown();
         if (runtime > 0) {
-            final long maximumRuntime = (System.currentTimeMillis() / 1000) + runtime * 1000;
-            if (maximumRuntime > 0) {
-                try {
-                    // sleep until we should stop
-                    Thread.sleep(maximumRuntime - (System.currentTimeMillis() / 1000));
-                } catch (InterruptedException e) {
-                }
+            try {
+                // sleep until we should stop
+                Thread.sleep(runtime);
+            } catch (InterruptedException e) {
             }
             // shutdown the instances
             logger.info("Shutting down instances");

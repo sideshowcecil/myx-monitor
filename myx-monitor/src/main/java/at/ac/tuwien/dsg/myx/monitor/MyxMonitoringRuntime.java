@@ -55,6 +55,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
+                    long totalEvents = 0;
                     List<IMyxName> bricks = MyxMonitoringRuntime.this.getBrickNames(null, null);
                     // send runtime events
                     for (IMyxName brick : bricks) {
@@ -64,6 +65,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                                 // send event
                                 dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
                                         XADLRuntimeEventType.END);
+                                totalEvents++;
                             }
                         }
                     }
@@ -81,12 +83,13 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                                 }
                                 dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
                                         elementType);
+                                totalEvents += 2;
                             }
                         }
                     }
                     // wait some time so that all events were dispatched
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(totalEvents * 100);
                     } catch (InterruptedException e) {
                     }
                 }

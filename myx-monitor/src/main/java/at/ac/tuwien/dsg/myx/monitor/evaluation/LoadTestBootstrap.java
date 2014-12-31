@@ -98,7 +98,7 @@ public final class LoadTestBootstrap extends Bootstrap {
         if (runtime > 0) {
             try {
                 // sleep until we should stop
-                Thread.sleep(runtime);
+                Thread.sleep(runtime * 1000);
             } catch (InterruptedException e) {
             }
             // shutdown the instances

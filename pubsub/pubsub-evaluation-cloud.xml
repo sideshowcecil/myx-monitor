@@ -3763,9 +3763,9 @@
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.pubsub.publisher.comp.socket.DummyMessageCreator</javaimplementation:javaClassName>
                     <javainitparams:initializationParameter javainitparams:value="sound" javainitparams:name="topicName" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="loopCount" javainitparams:value="20" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="messageCount" javainitparams:value="100" xsi:type="javainitparams:InitializationParameter"/>
-                    <javainitparams:initializationParameter javainitparams:name="timeout" javainitparams:value="100" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="loopCount" javainitparams:value="1" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="messageCount" javainitparams:value="200" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="timeout" javainitparams:value="1000" xsi:type="javainitparams:InitializationParameter"/>
                     
                     
                     

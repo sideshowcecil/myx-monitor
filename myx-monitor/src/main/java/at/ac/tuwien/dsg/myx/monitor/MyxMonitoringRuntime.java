@@ -256,9 +256,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      */
     private void dispatchXADLEvent(String xadlRuntimeId, String xadlElementId, XADLEventType xadlEventType,
             XADLElementType xadlElementType) {
-        XADLEvent e = new XADLEvent(xadlRuntimeId, xadlElementId, xadlEventType);
-        e.setXadlElementType(xadlElementType);
-        dispatchEvent(e);
+        dispatchEvent(new XADLEvent(xadlRuntimeId, xadlElementId, xadlEventType, xadlElementType));
     }
 
     /**

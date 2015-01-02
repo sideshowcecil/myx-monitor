@@ -7,14 +7,14 @@ public class XADLEvent extends Event {
     private final String xadlRuntimeId;
     private final String xadlBlueprintId;
     private final XADLEventType xadlEventType;
+    private final XADLElementType xadlElementType;
 
-    private XADLElementType xadlElementType;
-
-    public XADLEvent(String xadlRuntimeId, String xadlBlueprintId, XADLEventType xadlEventType) {
+    public XADLEvent(String xadlRuntimeId, String xadlBlueprintId, XADLEventType xadlEventType, XADLElementType xadlElementType) {
         super();
         this.xadlRuntimeId = xadlRuntimeId;
         this.xadlBlueprintId = xadlBlueprintId;
         this.xadlEventType = xadlEventType;
+        this.xadlElementType = xadlElementType;
     }
 
     public XADLEvent(XADLEvent copyFrom) {
@@ -39,10 +39,6 @@ public class XADLEvent extends Event {
 
     public XADLElementType getXadlElementType() {
         return xadlElementType;
-    }
-
-    public void setXadlElementType(XADLElementType xadlType) {
-        this.xadlElementType = xadlType;
     }
 
     @Override

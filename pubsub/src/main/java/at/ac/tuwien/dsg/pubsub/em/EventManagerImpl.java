@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
@@ -25,7 +25,7 @@ public class EventManagerImpl implements EventManager, Runnable {
     private final String hostId;
     private final String connectionString;
 
-    private BlockingQueue<Event> queue = new LinkedBlockingQueue<>();
+    private BlockingDeque<Event> deque = new LinkedBlockingDeque<>();
 
     private Endpoint<Event> endpoint;
 
@@ -44,7 +44,7 @@ public class EventManagerImpl implements EventManager, Runnable {
             // set the host id
             ((XADLHostEvent) event).setHostId(hostId);
         }
-        queue.add(event);
+        deque.addLast(event);
     }
 
     @Override
@@ -59,15 +59,25 @@ public class EventManagerImpl implements EventManager, Runnable {
             }
         }
         try {
+            int failCount = 0;
             while (true) {
-                Event event = queue.take();
+                Event event = deque.takeFirst();
                 if (endpoint != null) {
                     Message<Event> msg = new Message<Event>(EventUtils.getTopic(event), event);
                     try {
                         endpoint.send(msg);
+                        failCount = 0;
                     } catch (IOException e) {
-                        endpoint.close();
-                        endpoint = null;
+                        failCount++;
+                        if (failCount > 5) {
+                            // close the connection after 5 failed transmissions
+                            endpoint.close();
+                            endpoint = null;
+                        } else {
+                            // add the event again so we can try to deliver it once more
+                            deque.addFirst(event);
+                            Thread.sleep(25);
+                        }
                     }
                 }
             }

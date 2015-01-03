@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
@@ -17,72 +16,84 @@ import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
 
-public class EventManagerImpl implements EventManager, Runnable {
+public class EventManagerImpl implements EventManager {
 
-    private static ExecutorService executor = Executors.newSingleThreadExecutor();
+    private static Logger logger = LoggerFactory.getLogger(EventManagerImpl.class);
 
     private final String architectureRuntimeId;
     private final String hostId;
     private final String connectionString;
 
-    private BlockingDeque<Event> deque = new LinkedBlockingDeque<>();
-
-    private Endpoint<Event> endpoint;
+    private Endpoint<Event> endpoint = null;
 
     public EventManagerImpl(String architectureRuntimeId, String hostId, String connectionString) {
         this.architectureRuntimeId = architectureRuntimeId;
         this.hostId = hostId;
         this.connectionString = connectionString;
-        executor.execute(this);
+        // connect to the specified endpoint
+        connect();
     }
 
     @Override
     public synchronized void handle(Event event) {
-        // set the architecture runtime id
+        if (endpoint == null) {
+            return;
+        }
+        setEventProperties(event);
+        sendEvent(event);
+    }
+
+    /**
+     * Connect the to the specified address.
+     */
+    private void connect() {
+        if (connectionString == null || connectionString.isEmpty()) {
+            return;
+        }
+        try {
+            URI uri = new URI(connectionString);
+            endpoint = new EventSocketByteMessageProtocol(new Socket(uri.getHost(), uri.getPort()));
+        } catch (URISyntaxException | IOException e) {
+            logger.error("Could not connect to the specified address '" + connectionString + "'", e);
+        }
+    }
+
+    /**
+     * Set some basic properties of the event.
+     * 
+     * @param event
+     */
+    protected void setEventProperties(Event event) {
+        // set architecture runtime id
         event.setArchitectureRuntimeId(architectureRuntimeId);
         if (event instanceof XADLHostEvent) {
             // set the host id
             ((XADLHostEvent) event).setHostId(hostId);
         }
-        deque.addLast(event);
     }
 
-    @Override
-    public void run() {
-        if (connectionString != null && !connectionString.isEmpty()) {
-            URI uri;
+    /**
+     * Send the event to the specified endpoint.
+     * 
+     * @param event
+     */
+    private void sendEvent(Event event) {
+        // pack the event into a message
+        Message<Event> msg = new Message<Event>(EventUtils.getTopic(event), event);
+        // send it
+        IOException last = null;
+        for (int i = 0; i < 3; i++) {
             try {
-                uri = new URI(connectionString);
-                Socket s = new Socket(uri.getHost(), uri.getPort());
-                endpoint = new EventSocketByteMessageProtocol(s);
-            } catch (URISyntaxException | IOException e) {
+                endpoint.send(msg);
+                return;
+            } catch (IOException e) {
+                // ignore the exception and try it once more
+                last = e;
             }
         }
-        try {
-            int failCount = 0;
-            while (true) {
-                Event event = deque.takeFirst();
-                if (endpoint != null) {
-                    Message<Event> msg = new Message<Event>(EventUtils.getTopic(event), event);
-                    try {
-                        endpoint.send(msg);
-                        failCount = 0;
-                    } catch (IOException e) {
-                        failCount++;
-                        if (failCount > 5) {
-                            // close the connection after 5 failed transmissions
-                            endpoint.close();
-                            endpoint = null;
-                        } else {
-                            // add the event again so we can try to deliver it once more
-                            deque.addFirst(event);
-                            Thread.sleep(25);
-                        }
-                    }
-                }
-            }
-        } catch (InterruptedException e) {
-        }
+        // if we could not send the message we invalidate the connection
+        logger.error("Could not send message", last);
+        endpoint.close();
+        endpoint = null;
     }
-
 }

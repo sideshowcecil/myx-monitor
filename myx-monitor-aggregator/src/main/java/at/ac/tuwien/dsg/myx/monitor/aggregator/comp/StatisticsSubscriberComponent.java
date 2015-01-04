@@ -42,10 +42,12 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
         }
         String hostStatisticsFile = initProps.getProperty("hostStatisticsFile", null);
         String eventStatisticsFile = initProps.getProperty("eventStatisticsFile", null);
+        String hostCPUStatisticsFile = initProps.getProperty("hostCPUStatisticsFile", null);
+        String hostMemoryStatisticsFile = initProps.getProperty("hostMemoryStatisticsFile", null);
 
         statisticsSubscriber = new StatisticsSubscriber(brickCountStatisticsFile,
                 externalConnectionCountStatisticsFile, watchedBricksStatisticsFile, watchedBricks, hostStatisticsFile,
-                eventStatisticsFile);
+                eventStatisticsFile, hostCPUStatisticsFile, hostMemoryStatisticsFile);
     }
 
 }

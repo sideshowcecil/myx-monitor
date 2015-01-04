@@ -487,6 +487,8 @@
                     <javainitparams:initializationParameter javainitparams:name="watchedBricksStatisticsFile" javainitparams:value="stat-amount-watched-bricks.txt" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="eventStatisticsFile" javainitparams:value="stat-events.txt" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="hostStatisticsFile" javainitparams:value="stat-hosts.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="hostCPUStatisticsFile" javainitparams:value="stat-hosts-cpu.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="hostMemoryStatisticsFile" javainitparams:value="stat-hosts-memory.txt" xsi:type="javainitparams:InitializationParameter"/>
                     
                     
                     

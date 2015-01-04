@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -20,6 +21,8 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostInstanceEvent;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostProperties;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
@@ -57,6 +60,14 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
      * Represents the time a host is added or removed.
      */
     private SortedMap<Long, List<XADLHostInstanceEvent>> hostInstanceEvents = new TreeMap<>();
+    /**
+     * Represents the cpu utilization of each host.
+     */
+    private Map<String, SortedMap<Long, Short>> cpuUtilization = new HashMap<>();
+    /**
+     * Represents the memory utilization of each host in kilobytes.
+     */
+    private Map<String, SortedMap<Long, Long>> memoryUtilization = new HashMap<>();
 
     // files used to save statistics data
 
@@ -66,19 +77,23 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
     private Set<String> watchedBricks;
     private String eventStatisticsFile;
     private String hostStatisticsFile;
+    private String hostCPUStatisticsFile;
+    private String hostMemoryStatisticsFile;
 
     private ScheduledExecutorService persistenceExecutor = Executors.newScheduledThreadPool(1);
     private long startingTimestamp = System.currentTimeMillis() / 1000;
 
     public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
             String watchedBricksStatisticsFile, Set<String> watchedBricks, String hostStatisticsFile,
-            String eventStatisticsFile) {
+            String eventStatisticsFile, String hostCPUStatisticsFile, String hostMemoryStatisticsFile) {
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
         this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;
         this.watchedBricks = watchedBricks;
         this.hostStatisticsFile = hostStatisticsFile;
         this.eventStatisticsFile = eventStatisticsFile;
+        this.hostCPUStatisticsFile = hostCPUStatisticsFile;
+        this.hostMemoryStatisticsFile = hostMemoryStatisticsFile;
 
         persistenceExecutor.scheduleWithFixedDelay(new Runnable() {
             @Override
@@ -180,6 +195,37 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                 }
                 hostingEvents.get(e.getHostId()).get(timestamp).add(e);
             }
+        } else if (event instanceof XADLHostPropertyEvent) {
+            XADLHostPropertyEvent e = (XADLHostPropertyEvent) event;
+            Properties hostProperties = e.getHostProperties();
+
+            // cpu
+            if (hostProperties.containsKey(XADLHostProperties.CPU_SYSTEM_LOAD)) {
+                synchronized (cpuUtilization) {
+                    if (!cpuUtilization.containsKey(e.getHostId())) {
+                        cpuUtilization.put(e.getHostId(), new TreeMap<Long, Short>());
+                    }
+                    cpuUtilization.get(e.getHostId()).put(timestamp,
+                            ((Double) hostProperties.get(XADLHostProperties.CPU_SYSTEM_LOAD)).shortValue());
+                }
+            }
+            // memory
+            if (hostProperties.containsKey(XADLHostProperties.MEMORY_HEAP_USED)
+                    || hostProperties.containsKey(XADLHostProperties.MEMORY_NON_HEAP_USED)) {
+                long usedMemory = 0;
+                if (hostProperties.containsKey(XADLHostProperties.MEMORY_HEAP_USED)) {
+                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_HEAP_USED) / 1024;
+                }
+                if (hostProperties.containsKey(XADLHostProperties.MEMORY_NON_HEAP_USED)) {
+                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_NON_HEAP_USED) / 1024;
+                }
+                synchronized (memoryUtilization) {
+                    if (!memoryUtilization.containsKey(e.getHostId())) {
+                        memoryUtilization.put(e.getHostId(), new TreeMap<Long, Long>());
+                    }
+                    memoryUtilization.get(e.getHostId()).put(timestamp, usedMemory);
+                }
+            }
         }
         synchronized (eventTimes) {
             if (!eventTimes.containsKey(event.getClass())) {
@@ -201,7 +247,7 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
             for (Entry<String, Tuple<Long, Long>> entry : brickLifetimes.entrySet()) {
                 Tuple<Long, Long> brick = entry.getValue();
                 long max = brick.getSnd() != null ? brick.getSnd() : now;
-                
+
                 for (long i = brick.getFst(); i <= max; i++) {
                     if (!brickCountStatistics.containsKey(i)) {
                         brickCountStatistics.put(new Long(i), 1L);
@@ -440,6 +486,86 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                         }
                     }
                     ps.println();
+                }
+            } catch (FileNotFoundException e) {
+                // ignore
+            } finally {
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        }
+        if (hostCPUStatisticsFile != null && cpuUtilization.size() > 0) {
+            PrintStream ps = null;
+            try {
+                synchronized (cpuUtilization) {
+                    Set<String> hosts = cpuUtilization.keySet();
+                    Map<String, Short> lastUtil = new HashMap<>();
+
+                    ps = new PrintStream(hostCPUStatisticsFile);
+                    // print header
+                    ps.print("time");
+                    for (String hostId : hosts) {
+                        ps.print(",");
+                        ps.print(hostId);
+                    }
+                    ps.println();
+                    // print data
+                    for (long i = startingTimestamp; i < now; i++) {
+                        ps.print(i - startingTimestamp);
+                        for (String hostId : hosts) {
+                            ps.print(",");
+                            if (cpuUtilization.get(hostId).containsKey(i)) {
+                                ps.print(cpuUtilization.get(hostId).get(i));
+                                lastUtil.put(hostId, cpuUtilization.get(hostId).get(i));
+                            } else if (lastUtil.containsKey(hostId)) {
+                                ps.print(lastUtil.get(hostId));
+                            } else {
+                                ps.print(0);
+                            }
+                        }
+                        ps.println();
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                // ignore
+            } finally {
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        }
+        if (hostMemoryStatisticsFile != null && memoryUtilization.size() > 0) {
+            PrintStream ps = null;
+            try {
+                synchronized (memoryUtilization) {
+                    Set<String> hosts = memoryUtilization.keySet();
+                    Map<String, Long> lastUtil = new HashMap<>();
+
+                    ps = new PrintStream(hostMemoryStatisticsFile);
+                    // print header
+                    ps.print("time");
+                    for (String hostId : hosts) {
+                        ps.print(",");
+                        ps.print(hostId);
+                    }
+                    ps.println();
+                    // print data
+                    for (long i = startingTimestamp; i < now; i++) {
+                        ps.print(i - startingTimestamp);
+                        for (String hostId : hosts) {
+                            ps.print(",");
+                            if (memoryUtilization.get(hostId).containsKey(i)) {
+                                ps.print(memoryUtilization.get(hostId).get(i));
+                                lastUtil.put(hostId, memoryUtilization.get(hostId).get(i));
+                            } else if (lastUtil.containsKey(hostId)) {
+                                ps.print(lastUtil.get(hostId));
+                            } else {
+                                ps.print(0);
+                            }
+                        }
+                        ps.println();
+                    }
                 }
             } catch (FileNotFoundException e) {
                 // ignore

@@ -37,7 +37,7 @@ public class CPUMonitor extends EventDispatcher {
 
             // sleep for some time
             try {
-                Thread.sleep(15 * 1000);
+                Thread.sleep(2 * 1000);
             } catch (InterruptedException e) {
                 return;
             }

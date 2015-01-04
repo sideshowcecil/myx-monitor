@@ -106,7 +106,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                     }
                     // wait some time so that all events were dispatched
                     try {
-                        Thread.sleep(totalEvents * 100);
+                        Thread.sleep(totalEvents * 10);
                     } catch (InterruptedException e) {
                     }
                 }

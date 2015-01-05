@@ -40,7 +40,7 @@ public class MemoryMonitor extends EventDispatcher {
 
             // sleep for some time
             try {
-                Thread.sleep(2 * 1000);
+                Thread.sleep(5 * 1000);
             } catch (InterruptedException e) {
                 return;
             }

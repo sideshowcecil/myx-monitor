@@ -13,6 +13,7 @@ import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchSerializeException;
 import edu.uci.isr.xarch.XArchUtils;
+import edu.uci.isr.xarch.extcon.IExtconContext;
 import edu.uci.isr.xarch.hostproperty.IHostedArchInstance;
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
@@ -33,6 +34,7 @@ public class ModelRootImpl implements ModelRoot {
     protected ITypesContext typesContext;
     protected ITypesmappingContext typesMappingContext;
     protected IHostpropertyContext hostpropertyContext;
+    protected IExtconContext extconContext;
 
     public ModelRootImpl() {
         xArchImpl = XArchUtils.getDefaultXArchImplementation();
@@ -53,6 +55,7 @@ public class ModelRootImpl implements ModelRoot {
             typesContext = (ITypesContext) xArchImpl.createContext(xArchRoot, "types");
             typesMappingContext = (ITypesmappingContext) xArchImpl.createContext(xArchRoot, "typesmapping");
             hostpropertyContext = (IHostpropertyContext) xArchImpl.createContext(xArchRoot, "hostproperty");
+            extconContext = (IExtconContext) xArchImpl.createContext(xArchRoot, "extcon");
         } catch (XArchParseException | FileNotFoundException e) {
             throw new IllegalArgumentException("There was an error while parsing the given xadl file", e);
         }
@@ -107,6 +110,11 @@ public class ModelRootImpl implements ModelRoot {
     }
 
     @Override
+    public IExtconContext getExtconContext() {
+        return extconContext;
+    }
+
+    @Override
     public Collection<IArchStructure> getArchStructures() {
         return DBLUtils.getArchStructures(xArchRoot);
     }
@@ -141,7 +149,7 @@ public class ModelRootImpl implements ModelRoot {
         synchronized (xArchRoot) {
             IArchInstance archInstance = DBLUtils.getArchInstance(xArchRoot, id);
             if (archInstance == null) {
-                archInstance = getInstanceContext().createArchInstanceElement();;
+                archInstance = getInstanceContext().createArchInstanceElement();
                 archInstance.setId(id);
                 archInstance.setDescription(DBLUtils.createDescription(id, getInstanceContext()));
                 xArchRoot.addObject(archInstance);

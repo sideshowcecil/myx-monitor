@@ -2,6 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor.aggregator.model;
 
 import java.util.Collection;
 
+import edu.uci.isr.xarch.extcon.IExtconContext;
 import edu.uci.isr.xarch.hostproperty.IHostedArchInstance;
 import edu.uci.isr.xarch.hostproperty.IHostedArchStructure;
 import edu.uci.isr.xarch.hostproperty.IHostpropertyContext;
@@ -61,6 +62,13 @@ public interface ModelRoot {
      * @return
      */
     public IHostpropertyContext getHostpropertyContext();
+
+    /**
+     * Create an {@link ExtconnContext}.
+     * 
+     * @return
+     */
+    public IExtconContext getExtconContext();
 
     /**
      * Get all {@link IArchStructure}s.

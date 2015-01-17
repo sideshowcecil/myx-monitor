@@ -24,6 +24,7 @@ import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
 import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
+import edu.uci.isr.xarch.extcon.IExternalIdentifiedLinkInstance;
 import edu.uci.isr.xarch.instance.IArchInstance;
 import edu.uci.isr.xarch.instance.IComponentInstance;
 import edu.uci.isr.xarch.instance.IConnectorInstance;
@@ -362,8 +363,9 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
                 } else if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
                     for (IMappedInterfaceInstance destination : externalConnections.get(event
                             .getXadlExternalConnectionIdentifier())) {
-                        ILinkInstance link = createLink(event.getXadlRuntimeId(), intf,
-                                event.getXadlExternalConnectionIdentifier(), destination);
+                        ILinkInstance link = createExternalIdentifiedLink(event.getXadlRuntimeId(), intf,
+                                event.getXadlExternalConnectionIdentifier(), destination,
+                                event.getXadlExternalConnectionIdentifier());
                         if (link != null) {
                             instance.addLinkInstance(link);
                             Tuple<String, String> linkIdentifier = new Tuple<String, String>(intf.getId(),
@@ -587,6 +589,38 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
         IPoint destinationPoint = modelRoot.getTypesContext().createPoint();
         destinationPoint.setAnchorOnInterface(DBLUtils.createXMLLink(destination.getId(), modelRoot.getTypesContext()));
         link.addPoint(destinationPoint);
+
+        return link;
+    }
+
+    /**
+     * Create a {@link IExternalIdentifiedLinkInstance} instance and validate
+     * the two interfaces.
+     * 
+     * @param sourceRuntimeId
+     * @param soucre
+     * @param destinationRuntimeId
+     * @param destination
+     * @param externalId
+     * @return
+     */
+    private IExternalIdentifiedLinkInstance createExternalIdentifiedLink(String sourceRuntimeId,
+            IMappedInterfaceInstance source, String destinationRuntimeId, IMappedInterfaceInstance destination,
+            String externalId) {
+        IExternalIdentifiedLinkInstance link = modelRoot.getExtconContext().createExternalIdentifiedLinkInstance();
+        link.setId(IdGenerator.generateId("link"));
+        link.setDescription(DBLUtils.createDescription(sourceRuntimeId + "2" + destinationRuntimeId,
+                modelRoot.getTypesContext()));
+        // source
+        IPoint sourcePoint = modelRoot.getTypesContext().createPoint();
+        sourcePoint.setAnchorOnInterface(DBLUtils.createXMLLink(source.getId(), modelRoot.getTypesContext()));
+        link.addPoint(sourcePoint);
+        // destination
+        IPoint destinationPoint = modelRoot.getTypesContext().createPoint();
+        destinationPoint.setAnchorOnInterface(DBLUtils.createXMLLink(destination.getId(), modelRoot.getTypesContext()));
+        link.addPoint(destinationPoint);
+        // external identifier
+        link.setExtId(externalId);
 
         return link;
     }

@@ -45,7 +45,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
-    protected IdentifiableExecutorService executor;
+    protected final IdentifiableExecutorService executor;
     
     public MessageDistributor() {
         executor = new IdentifiableThreadPoolExecutor();
@@ -151,11 +151,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
     @Override
     public Object invoke(@SuppressWarnings("unused") final Object proxy, final Method method, final Object[] args)
             throws Throwable {
-        if (proxyObject == null) {
-            // asynchronous messages do not have to get delivered.
-            return null;
-        }
-        if (trueServiceObjects.isEmpty()) {
+        if (proxyObject == null || trueServiceObjects.isEmpty()) {
             // asynchronous messages do not have to get delivered.
             return null;
         }

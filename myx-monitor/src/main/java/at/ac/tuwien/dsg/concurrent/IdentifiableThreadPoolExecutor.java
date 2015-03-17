@@ -2,10 +2,10 @@ package at.ac.tuwien.dsg.concurrent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +24,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     /**
      * A mapping of identifiers to the used {@link ExecutorService}.
      */
-    final Map<Integer, ExecutorService> mapping = new HashMap<>();
+    final ConcurrentMap<Integer, ExecutorService> mapping = new ConcurrentHashMap<>();
 
     /**
      * The reals {@link ExecutorService} instances.

@@ -10,5 +10,5 @@ public interface Topic {
      * @param topic
      * @return
      */
-    public abstract boolean matches(String topic);
+    public boolean matches(String topic);
 }

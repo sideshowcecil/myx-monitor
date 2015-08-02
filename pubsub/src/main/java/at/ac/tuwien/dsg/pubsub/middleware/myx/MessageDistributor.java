@@ -62,13 +62,11 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
             interfaceClassNames.addAll(Arrays.asList(jmiDesc.getServiceObjectInterfaceNames()));
         }
 
-        int i = 0;
-        while (true) {
+        for (int i = 0; ; i++) {
             final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
             if (interfaceClassName == null)
                 break;
             interfaceClassNames.add(interfaceClassName);
-            i++;
         }
 
         final List<Class<?>> interfaceClassList = new ArrayList<Class<?>>();

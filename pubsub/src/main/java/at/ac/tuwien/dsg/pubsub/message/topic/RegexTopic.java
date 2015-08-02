@@ -36,7 +36,7 @@ public class RegexTopic implements Topic {
 
     @Override
     public int hashCode() {
-        return RegexTopic.class.hashCode() + pattern.hashCode();
+        return getClass().hashCode() + pattern.hashCode();
     }
 
     @Override

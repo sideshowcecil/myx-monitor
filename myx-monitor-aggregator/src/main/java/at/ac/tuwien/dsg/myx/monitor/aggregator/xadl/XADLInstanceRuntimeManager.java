@@ -217,7 +217,7 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
      * @param blueprintComponent
      * @return
      */
-    private IComponentInstance createComponentFromBlueprint(String runtimeId, IComponent blueprintComponent) {
+    private IMappedComponentInstance createComponentFromBlueprint(String runtimeId, IComponent blueprintComponent) {
         IMappedComponentInstance component = modelRoot.getInstanceMappingContext().createMappedComponentInstance();
         component.setId(runtimeId);
         component.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintComponent.getId()),
@@ -271,7 +271,7 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
      * @param blueprintConnector
      * @return
      */
-    private IConnectorInstance createConnectorFromBlueprint(String runtimeId, IConnector blueprintConnector) {
+    private IMappedConnectorInstance createConnectorFromBlueprint(String runtimeId, IConnector blueprintConnector) {
         IMappedConnectorInstance connector = modelRoot.getInstanceMappingContext().createMappedConnectorInstance();
         connector.setId(runtimeId);
         connector.setBlueprint(DBLUtils.createXMLLink(DBLUtils.getHref(blueprintConnector.getId()),
@@ -363,7 +363,7 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
                 } else if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
                     for (IMappedInterfaceInstance destination : externalConnections.get(event
                             .getXadlExternalConnectionIdentifier())) {
-                        ILinkInstance link = createExternalIdentifiedLink(event.getXadlRuntimeId(), intf,
+                        IExternalIdentifiedLinkInstance link = createExternalIdentifiedLink(event.getXadlRuntimeId(), intf,
                                 event.getXadlExternalConnectionIdentifier(), destination,
                                 event.getXadlExternalConnectionIdentifier());
                         if (link != null) {

@@ -97,6 +97,20 @@ public final class IdGenerator {
     }
 
     /**
+     * Get the name of the current host.
+     * 
+     * @return the name of the current hosto <code>null</code> if the name could
+     *         not be extracted.
+     */
+    public static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return null;
+        }
+    }
+
+    /**
      * Generate an id from the given connection identifier. This method should
      * be used to shorten long connection identifieres.
      * 

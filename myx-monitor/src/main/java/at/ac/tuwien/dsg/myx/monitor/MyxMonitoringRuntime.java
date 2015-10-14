@@ -14,10 +14,12 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
+import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostInstanceEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostingEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEventType;
+import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
@@ -56,6 +58,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
     public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
+
+        // dispatch an event that the host as been created
+        dispatchXADLHostInstanceEvent(XADLEventType.ADD);
 
         try {
             Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -104,6 +109,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                             totalEvents += 2;
                         }
                     }
+                    // dispatch an event that the host as been removed
+                    dispatchXADLHostInstanceEvent(XADLEventType.REMOVE);
+                    totalEvents++;
                     // wait some time so that all events were dispatched
                     try {
                         Thread.sleep(totalEvents * 10);
@@ -317,6 +325,31 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     private void dispatchXADLRuntimeEvent(String xadlRuntimeId, String xadlBlueprintId,
             XADLRuntimeEventType xadlRuntimeType) {
         XADLRuntimeEvent e = new XADLRuntimeEvent(xadlRuntimeId, xadlBlueprintId, xadlRuntimeType);
+        dispatchEvent(e);
+    }
+
+    /**
+     * Dispatch a {@link XADLHostInstanceEvent} with dynamic injection of the
+     * hostname.
+     * 
+     * @param xadlEventType
+     */
+    private void dispatchXADLHostInstanceEvent(XADLEventType xadlEventType) {
+        String name = IdGenerator.getHostName();
+        if (name != null) {
+            dispatchXADLHostInstanceEvent(IdGenerator.getHostName(), xadlEventType);
+        }
+    }
+
+    /**
+     * Dispatch a {@link XADLHostInstanceEvent}.
+     * 
+     * @param description
+     * @param xadlEventType
+     */
+    private void dispatchXADLHostInstanceEvent(String description, XADLEventType xadlEventType) {
+        XADLHostInstanceEvent e = new XADLHostInstanceEvent(xadlEventType);
+        e.setDescription(description);
         dispatchEvent(e);
     }
 

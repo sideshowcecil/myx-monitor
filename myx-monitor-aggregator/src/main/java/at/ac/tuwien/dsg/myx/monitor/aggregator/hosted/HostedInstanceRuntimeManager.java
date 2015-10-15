@@ -155,9 +155,8 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
         case REMOVE:
             logger.info("Removing host " + event.getHostId());
             // we only remove the host if it is empty
-            if (host.getAllHostPropertys().isEmpty() && host.getAllHostsComponents().isEmpty()
-                    && host.getAllHostsConnectors().isEmpty() && host.getAllHostsGroups().isEmpty()
-                    && host.getAllSubhosts().isEmpty()) {
+            if (host.getAllHostsComponents().isEmpty() && host.getAllHostsConnectors().isEmpty()
+                    && host.getAllHostsGroups().isEmpty() && host.getAllSubhosts().isEmpty()) {
                 instance.removeHost(host);
             }
             break;

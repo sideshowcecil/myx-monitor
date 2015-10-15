@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,24 +177,51 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
 
         switch (event.getXadlEventType()) {
         case ADD:
-        case UPDATE:
-            logger.info("Adding/Updating hostproperties for host " + event.getHostId());
-            Set<String> stringNames = event.getHostProperties().stringPropertyNames();
-            Set<Entry<Object, Object>> entryset = event.getHostProperties().entrySet();
+            logger.info("Adding hostproperties for host " + event.getHostId());
             for (Entry<Object, Object> entry : event.getHostProperties().entrySet()) {
                 String name = entry.getKey().toString();
-                String value = entry.getValue().toString();
 
+                // get or create property
                 IProperty prop = DBLUtils.getHostProperty(host, name);
                 if (prop == null) {
                     prop = DBLUtils.createHostProperty(name, modelRoot.getHostpropertyContext());
                     host.addHostProperty(prop);
                 }
-                prop.clearValues();
-                prop.addValue(DBLUtils.createDescription(value, modelRoot.getHostpropertyContext()));
+
+                // add values
+                if (entry.getValue() instanceof Iterable<?>) {
+                    for (Object o : (Iterable<?>) entry.getValue()) {
+                        prop.addValue(DBLUtils.createDescription(o.toString(), modelRoot.getHostpropertyContext()));
+                    }
+                } else {
+                    prop.addValue(DBLUtils.createDescription(entry.getValue().toString(),
+                            modelRoot.getHostpropertyContext()));
+                }
             }
-            stringNames.getClass();
-            entryset.getClass();
+            break;
+        case UPDATE:
+            logger.info("Updating hostproperties for host " + event.getHostId());
+            for (Entry<Object, Object> entry : event.getHostProperties().entrySet()) {
+                String name = entry.getKey().toString();
+
+                // get or create property
+                IProperty prop = DBLUtils.getHostProperty(host, name);
+                if (prop == null) {
+                    prop = DBLUtils.createHostProperty(name, modelRoot.getHostpropertyContext());
+                    host.addHostProperty(prop);
+                }
+
+                // update values
+                prop.clearValues();
+                if (entry.getValue() instanceof Iterable<?>) {
+                    for (Object o : (Iterable<?>) entry.getValue()) {
+                        prop.addValue(DBLUtils.createDescription(o.toString(), modelRoot.getHostpropertyContext()));
+                    }
+                } else {
+                    prop.addValue(DBLUtils.createDescription(entry.getValue().toString(),
+                            modelRoot.getHostpropertyContext()));
+                }
+            }
             break;
         case REMOVE:
             logger.info("Removing hostproperties from host " + event.getHostId());

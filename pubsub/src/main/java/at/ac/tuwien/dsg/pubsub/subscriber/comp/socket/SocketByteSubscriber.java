@@ -6,7 +6,7 @@ import java.util.List;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
@@ -20,9 +20,9 @@ public class SocketByteSubscriber extends Subscriber<byte[]> {
 
     @Override
     public void init() {
-        host = MyxMonitoringUtils.getInitProperties(this).getProperty("hostname", "localhost");
+        host = MyxUtils.getInitProperties(this).getProperty("hostname", "localhost");
         try {
-            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "6667"));
+            port = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("port", "6667"));
         } catch (NumberFormatException e) {
             // use default value
             port = 6667;

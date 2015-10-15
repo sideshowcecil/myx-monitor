@@ -1,6 +1,6 @@
 package at.ac.tuwien.dsg.pubsub.publisher.myx;
 
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IPublisher;
 import edu.uci.isr.myx.fw.IMyxName;
 
@@ -12,5 +12,5 @@ import edu.uci.isr.myx.fw.IMyxName;
  */
 public interface MyxInterfaceNames {
     // interfaces
-    public static IMyxName IPUBLISHER = MyxMonitoringUtils.createName(IPublisher.class.getName());
+    public static IMyxName IPUBLISHER = MyxUtils.createName(IPublisher.class.getName());
 }

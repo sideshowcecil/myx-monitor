@@ -7,7 +7,7 @@ import java.util.Set;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.evaluation.StatisticsSubscriber;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.ISubscriber;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
@@ -28,7 +28,7 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        Properties initProps = MyxMonitoringUtils.getInitProperties(this);
+        Properties initProps = MyxUtils.getInitProperties(this);
 
         String brickCountStatisticsFile = initProps.getProperty("brickCountStatisticsFile", null);
         String externalConnectionCountStatisticsFile = initProps.getProperty("externalConnectionCountStatisticsFile",

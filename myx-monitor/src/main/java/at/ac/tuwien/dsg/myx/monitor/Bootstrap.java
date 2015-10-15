@@ -17,7 +17,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxBrickDescription;
 import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
@@ -28,12 +28,12 @@ import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
 
 public class Bootstrap {
 
-    public static final IMyxName BOOTSTRAP_NAME = MyxMonitoringUtils.createName("bootstrap-comp");
-    public static final IMyxName EVENT_DISPATCHER_NAME = MyxMonitoringUtils.createName("event-dispatcher-comp");
-    public static final IMyxName EVENT_MANAGER_NAME = MyxMonitoringUtils.createName("event-manager-comp");
-    public static final IMyxName LAUNCHER_NAME = MyxMonitoringUtils.createName("launcher-comp");
-    public static final IMyxName MODEL_ROOT_NAME = MyxMonitoringUtils.createName("model-root-comp");
-    public static final IMyxName MYX_RUNTIME_NAME = MyxMonitoringUtils.createName("myx-runtime-comp");
+    public static final IMyxName BOOTSTRAP_NAME = MyxUtils.createName("bootstrap-comp");
+    public static final IMyxName EVENT_DISPATCHER_NAME = MyxUtils.createName("event-dispatcher-comp");
+    public static final IMyxName EVENT_MANAGER_NAME = MyxUtils.createName("event-manager-comp");
+    public static final IMyxName LAUNCHER_NAME = MyxUtils.createName("launcher-comp");
+    public static final IMyxName MODEL_ROOT_NAME = MyxUtils.createName("model-root-comp");
+    public static final IMyxName MYX_RUNTIME_NAME = MyxUtils.createName("myx-runtime-comp");
 
     private IMyxRuntime myx;
 
@@ -42,7 +42,7 @@ public class Bootstrap {
     }
 
     public Bootstrap() {
-        myx = MyxMonitoringUtils.getDefaultImplementation().createRuntime();
+        myx = MyxUtils.getDefaultImplementation().createRuntime();
     }
 
     /**
@@ -171,7 +171,7 @@ public class Bootstrap {
             String connectionString) {
         try {
             // check if the event manager has already been initialized
-            MyxMonitoringUtils.getEventManager();
+            MyxUtils.getEventManager();
             return;
         } catch (NullPointerException e) {
         }
@@ -194,14 +194,14 @@ public class Bootstrap {
             eventManager = new EventManagerImpl(architectureRuntimeId, hostId, connectionString);
         }
 
-        MyxMonitoringUtils.initEventManager(eventManager);
+        MyxUtils.initEventManager(eventManager);
     }
 
     /**
      * Initialize the {@link MyxMonitoringImplementation}.
      */
     protected void initMyxMonitoringImplementation() {
-        MyxMonitoringUtils.initMontioringImplementation(MyxMonitoringUtils.getEventManager());
+        MyxUtils.initMontioringImplementation(MyxUtils.getEventManager());
     }
 
     /**

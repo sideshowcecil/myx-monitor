@@ -11,7 +11,7 @@ import at.ac.tuwien.dsg.myx.monitor.AbstractMyxMonitoringRuntimeAdapter;
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MessageDistributor;
@@ -24,7 +24,6 @@ import edu.uci.isr.myx.fw.IMyxWeld;
 import edu.uci.isr.myx.fw.MyxBrickCreationException;
 import edu.uci.isr.myx.fw.MyxBrickLoadException;
 import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
-import edu.uci.isr.myx.fw.MyxUtils;
 
 public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter implements IMyxRuntimeAdapter {
 
@@ -149,7 +148,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
                 new String[0], virtualExternalInterfaceInitProps);
 
         // create name
-        IMyxName publisherEndpoint = MyxMonitoringUtils.createName(IdGenerator
+        IMyxName publisherEndpoint = MyxUtils.createName(IdGenerator
                 .generateRuntimeInstantiationId(DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_BLUEPRINT_ID));
 
         // add the bricks
@@ -181,11 +180,11 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
 
         // wire up the endpoint
         IMyxWeld pe2d = getMyxRuntime().createWeld(PATH, publisherEndpoint, MyxInterfaceNames.IDISPATCHER, PATH,
-                MyxMonitoringUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
+                MyxUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
         getMyxRuntime().addWeld(pe2d);
         component2Welds.get(publisherEndpoint).add(pe2d);
         IMyxWeld pe2md = getMyxRuntime().createWeld(PATH, publisherEndpoint, MyxInterfaceNames.ISUBSCRIBER, PATH,
-                messageDistributorRuntimeId, MyxMonitoringUtils.createName("in"));
+                messageDistributorRuntimeId, MyxUtils.createName("in"));
         getMyxRuntime().addWeld(pe2md);
         component2Welds.get(publisherEndpoint).add(pe2md);
         IMyxWeld pe2myx = getMyxRuntime().createWeld(PATH, publisherEndpoint, MyxInterfaceNames.IMYX_ADAPTER, PATH,
@@ -199,7 +198,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
 
     @Override
     public void shutdownPublisherEndpoint(PublisherEndpoint<?> endpoint) {
-        removeComponent(MyxMonitoringUtils.getName(endpoint));
+        removeComponent(MyxUtils.getName(endpoint));
     }
 
     @Override
@@ -248,7 +247,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
                 new String[0], virtualExternalInterfaceInitProps);
 
         // create name
-        IMyxName subscriberEndpoint = MyxMonitoringUtils.createName(IdGenerator
+        IMyxName subscriberEndpoint = MyxUtils.createName(IdGenerator
                 .generateRuntimeInstantiationId(DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_BLUEPRINT_ID));
 
         // add the bricks
@@ -280,7 +279,7 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
 
         // wire up the endpoint
         IMyxWeld se2d = getMyxRuntime().createWeld(PATH, subscriberEndpoint, MyxInterfaceNames.IDISPATCHER, PATH,
-                MyxMonitoringUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
+                MyxUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
         getMyxRuntime().addWeld(se2d);
         component2Welds.get(subscriberEndpoint).add(se2d);
         IMyxWeld se2myx = getMyxRuntime().createWeld(PATH, subscriberEndpoint, MyxInterfaceNames.IMYX_ADAPTER, PATH,
@@ -294,17 +293,17 @@ public class MyxRuntimeAdapter extends AbstractMyxMonitoringRuntimeAdapter imple
 
     @Override
     public void wireSubscriberEndpoint(SubscriberEndpoint<?> subscriber) {
-        IMyxName subscriberEndpoint = MyxMonitoringUtils.getName(subscriber);
+        IMyxName subscriberEndpoint = MyxUtils.getName(subscriber);
 
         IMyxWeld md2se = getMyxRuntime().createWeld(PATH, messageDistributorRuntimeId,
-                MyxMonitoringUtils.createName("out"), PATH, subscriberEndpoint, MyxInterfaceNames.ISUBSCRIBER);
+                MyxUtils.createName("out"), PATH, subscriberEndpoint, MyxInterfaceNames.ISUBSCRIBER);
         getMyxRuntime().addWeld(md2se);
         component2Welds.get(subscriberEndpoint).add(md2se);
     }
 
     @Override
     public void shutdownSubscriberEndpoint(SubscriberEndpoint<?> endpoint) {
-        removeComponent(MyxMonitoringUtils.getName(endpoint));
+        removeComponent(MyxUtils.getName(endpoint));
     }
 
 }

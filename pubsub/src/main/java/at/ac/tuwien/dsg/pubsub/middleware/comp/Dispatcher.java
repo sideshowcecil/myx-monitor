@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IMyxRuntimeAdapter;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.MyxInterfaceNames;
@@ -60,7 +60,7 @@ public abstract class Dispatcher<E> extends AbstractMyxSimpleBrick implements ID
 
     @Override
     public void begin() {
-        myxAdapter = MyxMonitoringUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
+        myxAdapter = MyxUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
         executor.execute(runnable);
     }
 

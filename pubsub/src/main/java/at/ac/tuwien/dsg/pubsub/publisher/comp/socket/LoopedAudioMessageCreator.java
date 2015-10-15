@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.publisher.comp.MessageCreator;
@@ -28,11 +28,11 @@ public class LoopedAudioMessageCreator extends MessageCreator<byte[]> {
 
     @Override
     public void init() {
-        audioFileName = MyxMonitoringUtils.getInitProperties(this).getProperty("audioFile");
+        audioFileName = MyxUtils.getInitProperties(this).getProperty("audioFile");
         if (audioFileName == null) {
             throw new RuntimeException("No audio filename given!");
         }
-        loopCount = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("loopCount", "1"));
+        loopCount = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("loopCount", "1"));
         executor = Executors.newSingleThreadExecutor();
         runnable = new Runnable() {
             @Override

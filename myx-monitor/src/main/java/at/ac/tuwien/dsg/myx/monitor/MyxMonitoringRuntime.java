@@ -20,7 +20,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLLinkEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLRuntimeEventType;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
 import edu.uci.isr.myx.fw.IMyxBrick;
@@ -395,7 +395,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      * @return
      */
     private List<IMyxName> getBrickNames(IMyxName[] path, IMyxName brickName) {
-        IMyxContainer container = MyxMonitoringUtils.resolvePath(mainContainer, path);
+        IMyxContainer container = MyxUtils.resolvePath(mainContainer, path);
         if (container == null) {
             throw new MyxInvalidPathException(path);
         }
@@ -410,7 +410,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         } else {
             if (container.getInternalBrick(brickName) == null) {
                 throw new IllegalArgumentException("No brick found with name: " + brickName + " at "
-                        + MyxMonitoringUtils.pathToString(path));
+                        + MyxUtils.pathToString(path));
             }
             bricks.add(brickName);
         }

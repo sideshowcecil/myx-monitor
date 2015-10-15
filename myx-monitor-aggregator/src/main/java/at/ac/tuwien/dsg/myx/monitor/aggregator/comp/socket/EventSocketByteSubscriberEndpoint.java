@@ -23,7 +23,7 @@ import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.topic.Topic;
 import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
@@ -134,7 +134,7 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
 
     @Override
     public void begin() {
-        modelRoot = MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
+        modelRoot = MyxUtils.<ModelRoot> getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
         super.begin();
         executor.execute(runnable);
     }

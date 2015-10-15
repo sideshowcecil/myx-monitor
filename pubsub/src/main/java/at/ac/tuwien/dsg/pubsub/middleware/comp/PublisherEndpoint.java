@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IDispatcher;
@@ -81,9 +81,9 @@ public abstract class PublisherEndpoint<E> extends AbstractVirtualExternalMyxSim
 
     @Override
     public void begin() {
-        dispatcher = MyxMonitoringUtils.<IDispatcher<E>> getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
-        subscriber = MyxMonitoringUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
-        myxAdapter = MyxMonitoringUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
+        dispatcher = MyxUtils.<IDispatcher<E>> getFirstRequiredServiceObject(this, OUT_IDISPATCHER);
+        subscriber = MyxUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
+        myxAdapter = MyxUtils.<IMyxRuntimeAdapter> getFirstRequiredServiceObject(this, OUT_MYX_ADAPTER);
         executor.execute(runnable);
     }
 

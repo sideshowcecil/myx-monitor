@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.IpResolver;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
 import at.ac.tuwien.dsg.pubsub.publisher.comp.Publisher;
@@ -17,9 +17,9 @@ public class SocketBytePublisher extends Publisher<byte[]> {
 
     @Override
     public void init() {
-        host = MyxMonitoringUtils.getInitProperties(this).getProperty("hostname", "localhost");
+        host = MyxUtils.getInitProperties(this).getProperty("hostname", "localhost");
         try {
-            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "6666"));
+            port = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("port", "6666"));
         } catch (NumberFormatException e) {
             // use default value
             port = 6666;

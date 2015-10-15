@@ -9,7 +9,7 @@ import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.DynamicArchitectureModelPrope
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLElementType;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.Dispatcher;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberEndpoint;
 import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
@@ -20,7 +20,6 @@ import edu.uci.isr.myx.fw.MyxBrickCreationException;
 import edu.uci.isr.myx.fw.MyxBrickLoadException;
 import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
 import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
-import edu.uci.isr.myx.fw.MyxUtils;
 
 public class MyxRuntimeAdapter extends at.ac.tuwien.dsg.pubsub.middleware.comp.MyxRuntimeAdapter {
 
@@ -89,7 +88,7 @@ public class MyxRuntimeAdapter extends at.ac.tuwien.dsg.pubsub.middleware.comp.M
                 new String[0], virtualExternalInterfaceInitProps);
 
         // create name
-        IMyxName subscriberEndpoint = MyxMonitoringUtils.createName(IdGenerator
+        IMyxName subscriberEndpoint = MyxUtils.createName(IdGenerator
                 .generateRuntimeInstantiationId(DynamicArchitectureModelProperties.SUBSCRIBER_ENDPOINT_BLUEPRINT_ID));
 
         // add the bricks
@@ -124,7 +123,7 @@ public class MyxRuntimeAdapter extends at.ac.tuwien.dsg.pubsub.middleware.comp.M
 
         // wire up the endpoint
         IMyxWeld se2d = getMyxRuntime().createWeld(PATH, subscriberEndpoint, MyxInterfaceNames.IDISPATCHER, PATH,
-                MyxMonitoringUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
+                MyxUtils.getName(dispatcher), MyxInterfaceNames.IDISPATCHER);
         getMyxRuntime().addWeld(se2d);
         component2Welds.get(subscriberEndpoint).add(se2d);
         IMyxWeld se2myx = getMyxRuntime().createWeld(PATH, subscriberEndpoint, MyxInterfaceNames.IMYX_ADAPTER, PATH,

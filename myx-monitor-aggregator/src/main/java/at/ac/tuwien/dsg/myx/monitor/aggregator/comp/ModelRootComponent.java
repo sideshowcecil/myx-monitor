@@ -4,7 +4,7 @@ import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRootImpl;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 
@@ -25,7 +25,7 @@ public class ModelRootComponent extends AbstractMyxSimpleBrick implements Runnab
     
     @Override
     public void init() {
-        xadlFile = MyxMonitoringUtils.getInitProperties(this).getProperty(MyxProperties.XADL_FILE);
+        xadlFile = MyxUtils.getInitProperties(this).getProperty(MyxProperties.XADL_FILE);
         if (xadlFile == null) {
             throw new IllegalArgumentException("File parameter missing for model-root component.");
         }

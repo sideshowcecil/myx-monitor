@@ -8,15 +8,15 @@ import at.ac.tuwien.dsg.myx.monitor.aim.ArchitectureInstantiationException;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.util.DBLUtils;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.xarch.types.IArchStructure;
 
 public class BootstrapComponent extends AbstractMyxSimpleBrick {
 
-    public static final IMyxName INTERFACE_NAME_OUT_LAUNCHER = MyxMonitoringUtils.createName("launcher");
-    public static final IMyxName INTERFACE_NAME_OUT_MODELROOT = MyxMonitoringUtils.createName("model-root");
+    public static final IMyxName INTERFACE_NAME_OUT_LAUNCHER = MyxUtils.createName("launcher");
+    public static final IMyxName INTERFACE_NAME_OUT_MODELROOT = MyxUtils.createName("model-root");
 
     public static final String ARCHITECTURE_NAME = "main";
 
@@ -30,10 +30,10 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void begin() {
-        launcher = MyxMonitoringUtils.<Launcher> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
-        modelRoot = MyxMonitoringUtils.<ModelRoot> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
+        launcher = MyxUtils.<Launcher> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
+        modelRoot = MyxUtils.<ModelRoot> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
 
-        String structureDescription = MyxMonitoringUtils.getInitProperties(this).getProperty(
+        String structureDescription = MyxUtils.getInitProperties(this).getProperty(
                 MyxProperties.STRUCTURE_NAME, MyxProperties.DEFAULT_STRUCTURE_NAME);
 
         IArchStructure archStructure = null;

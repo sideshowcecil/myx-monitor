@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
 import at.ac.tuwien.dsg.pubsub.message.topic.TopicFactory;
@@ -43,7 +43,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
 
     @Override
     public void init() {
-        Properties initProps = MyxMonitoringUtils.getInitProperties(this);
+        Properties initProps = MyxUtils.getInitProperties(this);
 
         topicType = TopicFactory.Type.valueOf(initProps.getProperty("topicType", "GLOB"));
         for (String key : initProps.stringPropertyNames()) {
@@ -96,7 +96,7 @@ public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBric
 
     @Override
     public void begin() {
-        subscriber = MyxMonitoringUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
+        subscriber = MyxUtils.<ISubscriber<E>> getFirstRequiredServiceObject(this, OUT_ISUBSCRIBER);
         executor.execute(runnable);
     }
 

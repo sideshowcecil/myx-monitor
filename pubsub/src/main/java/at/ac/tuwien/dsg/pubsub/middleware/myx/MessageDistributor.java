@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import at.ac.tuwien.dsg.concurrent.IdentifiableExecutorService;
 import at.ac.tuwien.dsg.concurrent.IdentifiableThreadPoolExecutor;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
@@ -26,7 +26,6 @@ import edu.uci.isr.myx.fw.IMyxDynamicBrick;
 import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
-import edu.uci.isr.myx.fw.MyxUtils;
 
 /**
  * An alternative implementation of the EventPumpConnector that allows to save
@@ -39,14 +38,14 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
 
     private Map<String, List<Tuple<Method, Object[]>>> initCalls = new HashMap<>();
 
-    public static final IMyxName REQUIRED_INTERFACE_NAME = MyxMonitoringUtils.createName("out");
-    public static final IMyxName PROVIDED_INTERFACE_NAME = MyxMonitoringUtils.createName("in");
+    public static final IMyxName REQUIRED_INTERFACE_NAME = MyxUtils.createName("out");
+    public static final IMyxName PROVIDED_INTERFACE_NAME = MyxUtils.createName("in");
 
     protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
     protected Object proxyObject = null;
 
     protected final IdentifiableExecutorService executor;
-    
+
     public MessageDistributor() {
         executor = new IdentifiableThreadPoolExecutor();
     }
@@ -62,8 +61,9 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
             interfaceClassNames.addAll(Arrays.asList(jmiDesc.getServiceObjectInterfaceNames()));
         }
 
-        for (int i = 0; ; i++) {
-            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
+        for (int i = 0;; i++) {
+            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty(
+                    "interfaceClassName" + i);
             if (interfaceClassName == null)
                 break;
             interfaceClassNames.add(interfaceClassName);

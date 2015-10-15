@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.PublisherDispatcher;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.EventSocketByteMessageProtocol;
@@ -26,7 +26,7 @@ public class EventSocketBytePublisherDispatcher extends PublisherDispatcher<Even
     @Override
     public void init() {
         try {
-            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "9000"));
+            port = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("port", "9000"));
         } catch (NumberFormatException e) {
             // use default value
             port = 9000;

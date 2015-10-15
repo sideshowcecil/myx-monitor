@@ -2,7 +2,7 @@ package at.ac.tuwien.dsg.pubsub.publisher.comp;
 
 import edu.uci.isr.myx.fw.IMyxName;
 import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IPublisher;
 import at.ac.tuwien.dsg.pubsub.publisher.myx.MyxInterfaceNames;
 
@@ -19,7 +19,7 @@ public abstract class MessageCreator<E> extends AbstractVirtualExternalMyxSimple
 
     @Override
     public void begin() {
-        publisher = MyxMonitoringUtils.<IPublisher<E>> getFirstRequiredServiceObject(this, OUT_PUBLISHER);
+        publisher = MyxUtils.<IPublisher<E>> getFirstRequiredServiceObject(this, OUT_PUBLISHER);
     }
 
 }

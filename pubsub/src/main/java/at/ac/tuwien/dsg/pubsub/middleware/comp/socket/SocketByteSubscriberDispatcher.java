@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import at.ac.tuwien.dsg.myx.util.MyxMonitoringUtils;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.middleware.comp.SubscriberDispatcher;
 import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.network.socket.SocketByteMessageProtocol;
@@ -23,7 +23,7 @@ public class SocketByteSubscriberDispatcher extends SubscriberDispatcher<byte[]>
     @Override
     public void init() {
         try {
-            port = Integer.parseInt(MyxMonitoringUtils.getInitProperties(this).getProperty("port", "6667"));
+            port = Integer.parseInt(MyxUtils.getInitProperties(this).getProperty("port", "6667"));
         } catch (NumberFormatException e) {
             // use default value
             port = 6667;

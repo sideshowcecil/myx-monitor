@@ -1,6 +1,5 @@
 package at.ac.tuwien.dsg.pubsub.middleware.myx;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -20,9 +19,8 @@ import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.myx.util.Tuple;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
-import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
+import edu.uci.isr.myx.conn.EventPumpConnector;
 import edu.uci.isr.myx.fw.IMyxClassManager;
-import edu.uci.isr.myx.fw.IMyxDynamicBrick;
 import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
@@ -34,15 +32,11 @@ import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
  * @author bernd.rathmanner
  * 
  */
-public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDynamicBrick, InvocationHandler {
+public class MessageDistributor extends EventPumpConnector {
 
     private Map<String, List<Tuple<Method, Object[]>>> initCalls = new HashMap<>();
 
-    public static final IMyxName REQUIRED_INTERFACE_NAME = MyxUtils.createName("out");
-    public static final IMyxName PROVIDED_INTERFACE_NAME = MyxUtils.createName("in");
-
     protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
-    protected Object proxyObject = null;
 
     protected final IdentifiableExecutorService executor;
 
@@ -62,8 +56,7 @@ public class MessageDistributor extends AbstractMyxSimpleBrick implements IMyxDy
         }
 
         for (int i = 0;; i++) {
-            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty(
-                    "interfaceClassName" + i);
+            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
             if (interfaceClassName == null)
                 break;
             interfaceClassNames.add(interfaceClassName);

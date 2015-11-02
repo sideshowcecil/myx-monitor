@@ -11,13 +11,6 @@ public interface ModelRoot {
     public void parse(String xadlFile);
 
     /**
-     * Save the current {@link ModelRoot} to the given xadl file.
-     * 
-     * @param xadlFile
-     */
-    public void save(String xadlFile);
-
-    /**
      * Get the root ({@link IXArch}) of the parsed xadl file.
      * 
      * @return

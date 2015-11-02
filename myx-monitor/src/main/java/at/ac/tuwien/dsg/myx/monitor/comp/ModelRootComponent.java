@@ -10,7 +10,7 @@ import edu.uci.isr.myx.fw.IMyxName;
 public class ModelRootComponent extends AbstractMyxSimpleBrick {
 
     public static final IMyxName INTERFACE_NAME_IN_MODELROOT = MyxUtils.createName("model-root");
-    
+
     protected String xadlFile;
     protected ModelRoot modelRoot;
 
@@ -21,21 +21,15 @@ public class ModelRootComponent extends AbstractMyxSimpleBrick {
         }
         return null;
     }
-    
+
     @Override
     public void init() {
         xadlFile = MyxUtils.getInitProperties(this).getProperty(MyxProperties.XADL_FILE);
         if (xadlFile == null) {
             throw new IllegalArgumentException("File parameter missing for model-root component.");
         }
-        
+
         modelRoot = new ModelRootImpl();
         modelRoot.parse(xadlFile);
-    }
-    
-    @Override
-    public void end() {
-        String filename = xadlFile.substring(0, xadlFile.lastIndexOf('.')) + ".end.xml";
-        modelRoot.save(filename);
     }
 }

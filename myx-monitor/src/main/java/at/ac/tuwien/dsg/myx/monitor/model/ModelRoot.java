@@ -8,12 +8,12 @@ public interface ModelRoot {
      * 
      * @param xadlFile
      */
-    public void parse(String xadlFile);
+    void parse(String xadlFile);
 
     /**
      * Get the root ({@link IXArch}) of the parsed xadl file.
      * 
      * @return
      */
-    public IXArch getArchitectureRoot();
+    IXArch getArchitectureRoot();
 }

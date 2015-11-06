@@ -26,9 +26,9 @@ public class LauncherComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void init() {
-        IMyxRuntime myx = MyxUtils.<IMyxRuntime> getFirstRequiredServiceObject(this,
+        IMyxRuntime myx = MyxUtils.getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_MYXRUNTIME);
-        ModelRoot modelRoot = MyxUtils.<ModelRoot> getFirstRequiredServiceObject(this,
+        ModelRoot modelRoot = MyxUtils.getFirstRequiredServiceObject(this,
                 INTERFACE_NAME_OUT_MODELROOT);
         launcher = new LauncherImpl(myx, modelRoot);
     }

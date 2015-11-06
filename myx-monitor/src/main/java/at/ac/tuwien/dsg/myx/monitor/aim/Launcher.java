@@ -10,5 +10,5 @@ public interface Launcher {
      * @param structure
      * @throws ArchitectureInstantiationException
      */
-    public void instantiate(String name, IArchStructure structure) throws ArchitectureInstantiationException;
+    void instantiate(String name, IArchStructure structure) throws ArchitectureInstantiationException;
 }

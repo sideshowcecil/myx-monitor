@@ -1,10 +1,11 @@
 package at.ac.tuwien.dsg.myx.monitor.aim.structure;
 
+import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ArchitectureType;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
-
-import at.ac.tuwien.dsg.myx.monitor.aim.structure.type.ArchitectureType;
 
 public class InstantiationElement extends ArchitectureElement {
 
@@ -59,7 +60,7 @@ public class InstantiationElement extends ArchitectureElement {
      */
     public Interface getInterface(String id) {
         for (Interface intf : getInterfaces()) {
-            if (intf.getBlueprintId() == id) {
+            if (Objects.equals(intf.getBlueprintId(), id)) {
                 return intf;
             }
         }

@@ -32,10 +32,14 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     private final ExecutorService[] executors;
 
     /**
-     * Simple integer instance used for locking and {@link ExecutorService}
-     * selection.
+     * Simple lock object.
      */
-    private Integer c = 0;
+    private final Object lock = new Object();
+
+    /**
+     * Simple index used for {@link ExecutorService} selection.
+     */
+    private int c = 0;
 
     /**
      * Constructor.
@@ -62,7 +66,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
         if (mapping.containsKey(identifier)) {
             mapping.get(identifier).execute(command);
         } else {
-            synchronized (c) {
+            synchronized (lock) {
                 mapping.put(identifier, executors[c]);
                 executors[c].execute(command);
                 c = ++c % executors.length;
@@ -72,7 +76,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
 
     @Override
     public void execute(Runnable command) {
-        synchronized (c) {
+        synchronized (lock) {
             executors[c].execute(command);
             c = ++c % executors.length;
         }
@@ -120,7 +124,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     @Override
     public <T> Future<T> submit(Callable<T> task) {
         Future<T> futureResult;
-        synchronized (c) {
+        synchronized (lock) {
             futureResult = executors[c].submit(task);
             c = ++c % executors.length;
         }
@@ -130,7 +134,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     @Override
     public <T> Future<T> submit(Runnable task, T result) {
         Future<T> futureResult;
-        synchronized (c) {
+        synchronized (lock) {
             futureResult = executors[c].submit(task, result);
             c = ++c % executors.length;
         }
@@ -140,7 +144,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     @Override
     public Future<?> submit(Runnable task) {
         Future<?> futureResult;
-        synchronized (c) {
+        synchronized (lock) {
             futureResult = executors[c].submit(task);
             c = ++c % executors.length;
         }
@@ -150,7 +154,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
         List<Future<T>> futureResults;
-        synchronized (c) {
+        synchronized (lock) {
             futureResults = executors[c].invokeAll(tasks);
             c = ++c % executors.length;
         }
@@ -161,7 +165,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
             throws InterruptedException {
         List<Future<T>> futureResults;
-        synchronized (c) {
+        synchronized (lock) {
             futureResults = executors[c].invokeAll(tasks, timeout, unit);
             c = ++c % executors.length;
         }
@@ -171,7 +175,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
         T result;
-        synchronized (c) {
+        synchronized (lock) {
             result = executors[c].invokeAny(tasks);
             c = ++c % executors.length;
         }
@@ -182,7 +186,7 @@ public class IdentifiableThreadPoolExecutor implements IdentifiableExecutorServi
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         T result;
-        synchronized (c) {
+        synchronized (lock) {
             result = executors[c].invokeAny(tasks, timeout, unit);
             c = ++c % executors.length;
         }

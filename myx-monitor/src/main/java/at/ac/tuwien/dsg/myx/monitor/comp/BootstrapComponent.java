@@ -1,8 +1,5 @@
 package at.ac.tuwien.dsg.myx.monitor.comp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
 import at.ac.tuwien.dsg.myx.monitor.aim.ArchitectureInstantiationException;
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
@@ -12,6 +9,9 @@ import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 import edu.uci.isr.myx.fw.IMyxName;
 import edu.uci.isr.xarch.types.IArchStructure;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BootstrapComponent extends AbstractMyxSimpleBrick {
 
@@ -30,8 +30,8 @@ public class BootstrapComponent extends AbstractMyxSimpleBrick {
 
     @Override
     public void begin() {
-        launcher = MyxUtils.<Launcher> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
-        modelRoot = MyxUtils.<ModelRoot> getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
+        launcher = MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_LAUNCHER);
+        modelRoot = MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_MODELROOT);
 
         String structureDescription = MyxUtils.getInitProperties(this).getProperty(
                 MyxProperties.STRUCTURE_NAME, MyxProperties.DEFAULT_STRUCTURE_NAME);

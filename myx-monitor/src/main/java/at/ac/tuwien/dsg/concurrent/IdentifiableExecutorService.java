@@ -24,5 +24,5 @@ public interface IdentifiableExecutorService extends ExecutorService {
      * @throws NullPointerException
      *             if command is null
      */
-    public void execute(Runnable command, int identifier);
+    void execute(Runnable command, int identifier);
 }

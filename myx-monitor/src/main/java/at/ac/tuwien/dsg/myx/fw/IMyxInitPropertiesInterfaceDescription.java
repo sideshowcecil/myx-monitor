@@ -5,5 +5,5 @@ import java.util.Properties;
 import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
 
 public interface IMyxInitPropertiesInterfaceDescription extends IMyxInterfaceDescription {
-    public Properties getInitParams();
+    Properties getInitParams();
 }

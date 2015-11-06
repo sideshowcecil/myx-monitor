@@ -67,8 +67,7 @@ public final class IpResolver {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(new URL("http://checkip.amazonaws.com").openStream()));
-            String ip = in.readLine();
-            return ip;
+            return in.readLine();
         } catch (IOException e) {
         } finally {
             if (in != null) {
@@ -103,7 +102,7 @@ public final class IpResolver {
             }
         } catch (SocketException e) {
         }
-        return addresses.toArray(new String[0]);
+        return addresses.toArray(new String[addresses.size()]);
     }
 
 }

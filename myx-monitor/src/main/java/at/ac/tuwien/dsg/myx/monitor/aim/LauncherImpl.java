@@ -1,13 +1,6 @@
 package at.ac.tuwien.dsg.myx.monitor.aim;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import at.ac.tuwien.dsg.myx.fw.MyxJavaClassInitPropertiesInterfaceDescription;
 import at.ac.tuwien.dsg.myx.monitor.MyxProperties;
@@ -252,7 +245,7 @@ public class LauncherImpl implements Launcher {
                 String signatureId = DBLUtils.getId(m.getOuterSignature());
                 Signature outer = null;
                 for (Signature s : signatures) {
-                    if (s.getBlueprintId() == signatureId) {
+                    if (Objects.equals(s.getBlueprintId(), signatureId)) {
                         outer = s;
                     }
                 }
@@ -276,13 +269,13 @@ public class LauncherImpl implements Launcher {
                             + iInner.getDescription().getValue());
                 }
                 String parentId = DBLUtils.getId(parent);
-                if (parentId == DBLUtils.getId(element)) {
+                if (Objects.equals(parentId, DBLUtils.getId(element))) {
                     throw new ArchitectureInstantiationException("Can't apply mapping on duplucate component in "
                             + elementDescription);
                 }
 
                 for (Interface i : getInterfaces(DBLUtils.getInterfaces(parent))) {
-                    if (i.getBlueprintId() == interfaceId) {
+                    if (Objects.equals(i.getBlueprintId(), interfaceId)) {
                         inner = i;
                     }
                 }
@@ -388,8 +381,9 @@ public class LauncherImpl implements Launcher {
                 IMyxName outerIntfName = MyxUtils.createName(outerIntf.getName());
                 IMyxName innerBrickName = MyxUtils.createName(m.getFst());
                 IMyxName innerIntfName = MyxUtils.createName(m.getSnd().getName());
-                IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(outerIntf
-                        .getImplementationMainClassNames().toArray(new String[0]));
+                List<String> var = outerIntf
+                        .getImplementationMainClassNames();
+                IMyxInterfaceDescription intfDesc = new MyxJavaClassInterfaceDescription(var.toArray(new String[var.size()]));
                 myx.addContainerInterface(path, brickName, outerIntfName, intfDesc, outerIntf.getDirection(),
                         innerBrickName, innerIntfName);
             }
@@ -417,8 +411,9 @@ public class LauncherImpl implements Launcher {
                 Properties intfInitProps = new Properties();
                 intfInitProps.put(MyxProperties.ARCHITECTURE_INTERFACE_TYPE, intf.getType().getBlueprintId());
 
-                IMyxInterfaceDescription intfDesc = new MyxJavaClassInitPropertiesInterfaceDescription(intf
-                        .getImplementationMainClassNames().toArray(new String[0]), intfInitProps);
+                List<String> var = intf
+                        .getImplementationMainClassNames();
+                IMyxInterfaceDescription intfDesc = new MyxJavaClassInitPropertiesInterfaceDescription(var.toArray(new String[var.size()]), intfInitProps);
                 IMyxName intfName = MyxUtils.createName(intf.getName());
                 myx.addInterface(path, brickName, intfName, intfDesc, intf.getDirection());
             }
@@ -733,7 +728,7 @@ public class LauncherImpl implements Launcher {
         }
 
         private List<String> getDescriptions(Collection<InstantiationElement> elements) {
-            List<String> s = new ArrayList<String>();
+            List<String> s = new ArrayList<>();
             for (InstantiationElement e : elements) {
                 s.add(e.getDescription());
             }
@@ -741,7 +736,7 @@ public class LauncherImpl implements Launcher {
         }
 
         private List<String> getDescriptionsOfLinks(Collection<Link> elements) {
-            List<String> s = new ArrayList<String>();
+            List<String> s = new ArrayList<>();
             for (Link e : elements) {
                 s.add(e.getDescription());
             }
@@ -751,14 +746,12 @@ public class LauncherImpl implements Launcher {
         @Override
         public String toString() {
             String EOL = System.getProperty("line.separator");
-            StringBuffer sb = new StringBuffer();
-            sb.append("[").append(element.getBlueprintId());
-            sb.append(", ").append(element.getRuntimeId()).append("] ");
-            sb.append(element.getDescription());
-            sb.append(" <- ").append(getDescriptions(dependents)).append(EOL);
-            sb.append(" - init:  ").append(getDescriptionsOfLinks(element.getInitLinks())).append(EOL);
-            sb.append(" - begin: ").append(getDescriptionsOfLinks(element.getBeginLinks())).append(EOL);
-            return sb.toString();
+            return "[" + element.getBlueprintId() +
+                    ", " + element.getRuntimeId() + "] " +
+                    element.getDescription() +
+                    " <- " + getDescriptions(dependents) + EOL +
+                    " - init:  " + getDescriptionsOfLinks(element.getInitLinks()) + EOL +
+                    " - begin: " + getDescriptionsOfLinks(element.getBeginLinks()) + EOL;
         }
     }
 }

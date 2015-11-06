@@ -1,19 +1,19 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
 public interface MyxProperties {
-    public static String XADL_FILE = "file";
+    String XADL_FILE = "file";
 
-    public static String STRUCTURE_NAME = "structure";
-    public static String DEFAULT_STRUCTURE_NAME = "main";
+    String STRUCTURE_NAME = "structure";
+    String DEFAULT_STRUCTURE_NAME = "main";
 
-    public static String ARCHITECTURE_RUNTIME_ID = "architectureRuntimeId";
-    public static String ARCHITECTURE_HOST_ID = "architectureHostId";
-    public static String EVENT_DISPATCHER_CLASSES = "eventDispatcherClasses";
+    String ARCHITECTURE_RUNTIME_ID = "architectureRuntimeId";
+    String ARCHITECTURE_HOST_ID = "architectureHostId";
+    String EVENT_DISPATCHER_CLASSES = "eventDispatcherClasses";
 
-    public static String ARCHITECTURE_BLUEPRINT_ID = "architectureBlueprintId";
-    public static String ARCHITECTURE_BRICK_TYPE = "architectureBrickType";
-    public static String ARCHITECTURE_INTERFACE_TYPE = "architectureInterfaceType";
+    String ARCHITECTURE_BLUEPRINT_ID = "architectureBlueprintId";
+    String ARCHITECTURE_BRICK_TYPE = "architectureBrickType";
+    String ARCHITECTURE_INTERFACE_TYPE = "architectureInterfaceType";
 
-    public static String EVENT_MANAGER_CLASS = "eventManagerClass";
-    public static String EVENT_MANAGER_CONNECTION_STRING = "eventManagerConnectionString";
+    String EVENT_MANAGER_CLASS = "eventManagerClass";
+    String EVENT_MANAGER_CONNECTION_STRING = "eventManagerConnectionString";
 }

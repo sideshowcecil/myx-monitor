@@ -8,5 +8,5 @@ public interface EventManager {
      * 
      * @param event
      */
-    public void handle(Event event);
+    void handle(Event event);
 }

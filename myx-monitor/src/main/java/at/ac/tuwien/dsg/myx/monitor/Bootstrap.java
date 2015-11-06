@@ -1,30 +1,19 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
-import at.ac.tuwien.dsg.myx.monitor.comp.BootstrapComponent;
-import at.ac.tuwien.dsg.myx.monitor.comp.EventDispatcherComponent;
-import at.ac.tuwien.dsg.myx.monitor.comp.EventManagerComponent;
-import at.ac.tuwien.dsg.myx.monitor.comp.LauncherComponent;
-import at.ac.tuwien.dsg.myx.monitor.comp.ModelRootComponent;
-import at.ac.tuwien.dsg.myx.monitor.comp.MyxRuntimeComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.*;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
 import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
 import at.ac.tuwien.dsg.myx.util.MyxUtils;
-import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
-import edu.uci.isr.myx.fw.IMyxBrickDescription;
-import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
-import edu.uci.isr.myx.fw.IMyxName;
-import edu.uci.isr.myx.fw.IMyxRuntime;
-import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
-import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
+import edu.uci.isr.myx.fw.*;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class Bootstrap {
 
@@ -128,7 +117,7 @@ public class Bootstrap {
         }
 
         p[2] = new Properties();
-        p[2].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[0]));
+        p[2].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[eventDispatcherClasses.size()]));
 
         p[3] = new Properties();
         p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
@@ -181,8 +170,8 @@ public class Bootstrap {
             try {
                 Class<?> eventManagerClass = Class.forName(eventManagerClassName);
                 if (EventManager.class.isAssignableFrom(eventManagerClass)) {
-                    Constructor<?> c = eventManagerClass.getConstructor(new Class<?>[] { String.class, String.class,
-                            String.class });
+                    Constructor<?> c = eventManagerClass.getConstructor(String.class, String.class,
+                            String.class);
                     eventManager = (EventManager) c.newInstance(architectureRuntimeId, hostId, connectionString);
                 }
             } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException

@@ -578,14 +578,14 @@ public class LauncherImpl implements Launcher {
                 InitializationOrderInfo currInfo = dependencyInfos.get(curr);
                 InitializationOrderInfo otherInfo = dependencyInfos.get(other);
 
-                if (pServiceTypes[i] != null && pServiceTypes[i].equals("required")) {
+                if (Objects.equals(pServiceTypes[i], "required")) {
                     if (pDirections[i] == EMyxInterfaceDirection.OUT) {
                         currInfo.dependencies.add(other);
                         otherInfo.dependents.add(curr);
                         curr.getInitLinks().add(l);
                         break;
                     }
-                } else if (pServiceTypes[i] != null && pServiceTypes[i].equals("provides")) {
+                } else if (Objects.equals(pServiceTypes[i], "provides")) {
                     if (pDirections[i] == EMyxInterfaceDirection.IN) {
                         currInfo.dependents.add(other);
                         otherInfo.dependencies.add(curr);

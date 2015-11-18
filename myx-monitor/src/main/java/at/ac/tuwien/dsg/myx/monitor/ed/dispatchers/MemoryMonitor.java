@@ -3,12 +3,12 @@ package at.ac.tuwien.dsg.myx.monitor.ed.dispatchers;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
-import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
+import at.ac.tuwien.dsg.myx.monitor.ed.AbstractEventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
-public class MemoryMonitor extends EventDispatcher {
+public class MemoryMonitor extends AbstractEventDispatcher {
 
     public MemoryMonitor(EventManager eventManager) {
         super(eventManager);

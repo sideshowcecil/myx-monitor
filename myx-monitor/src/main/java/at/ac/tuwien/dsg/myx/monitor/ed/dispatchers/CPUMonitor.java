@@ -4,13 +4,13 @@ import java.lang.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 
-import at.ac.tuwien.dsg.myx.monitor.ed.EventDispatcher;
+import at.ac.tuwien.dsg.myx.monitor.ed.AbstractEventDispatcher;
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostProperties;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
 
 @SuppressWarnings("restriction")
-public class CPUMonitor extends EventDispatcher {
+public class CPUMonitor extends AbstractEventDispatcher {
 
     public CPUMonitor(EventManager eventManager) {
         super(eventManager);

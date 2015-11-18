@@ -1,37 +1,17 @@
 package at.ac.tuwien.dsg.myx.monitor.ed;
 
-import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
-import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
-import at.ac.tuwien.dsg.myx.monitor.em.events.XADLHostPropertyEvent;
-
-public abstract class EventDispatcher implements Runnable {
-
-    private final EventManager eventManager;
-
-    public EventDispatcher(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
+/**
+ * EventDispatcher interface specification.
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
+public interface EventDispatcher extends Runnable {
     /**
-     * Dispatch a {@link Event} to the {@link EventManager}.
+     * Execute the monitoring.
      * 
-     * @param event
+     * @see Runnable
      */
-    protected void dispatch(Event event) {
-        if (eventManager != null) {
-            event.setEventSourceId(this.getClass().getName());
-            eventManager.handle(event);
-        }
-    }
-
-    /**
-     * Initialize a {@link XADLHostPropertyEvent}.
-     * 
-     * @return
-     */
-    protected XADLHostPropertyEvent initHostPropertyEvent() {
-        return new XADLHostPropertyEvent(XADLEventType.UPDATE);
-    }
-
+    @Override
+    public void run();
 }

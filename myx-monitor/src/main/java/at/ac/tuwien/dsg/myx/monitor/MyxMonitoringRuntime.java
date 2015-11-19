@@ -40,21 +40,19 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
     protected EventManager eventManager;
 
     /**
-     * This map is used to reference the runtime id to the blueprint id.
+     * Mapping used to track elements of an active brick
      */
-    protected Map<String, String> runtime2blueprint = new HashMap<>();
-    /**
-     * This map is used to reference the runtime id to the element type.
-     */
-    protected Map<String, XADLElementType> runtime2elemntType = new HashMap<>();
+    protected Map<String, RuntimeElement> runtimeElements = new HashMap<>();
+
     /**
      * This map is used to keep track of the added interfaces.
      */
     protected Map<Tuple<String, String>, String> interfaces = new HashMap<>();
+
     /**
      * This map is used to keep track of the active welds of a brick.
      */
-    protected Map<String, Set<IMyxWeld>> activeWelds = new HashMap<>();
+    // protected Map<String, Set<IMyxWeld>> activeWelds = new HashMap<>();
 
     public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -75,9 +73,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                     // send runtime events
                     for (IMyxName brick : bricks) {
                         String runtimeId = brick.getName();
-                        if (runtime2blueprint.containsKey(runtimeId)) {
+                        if (runtimeElements.containsKey(runtimeId)) {
                             // send event
-                            dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId),
+                            dispatchXADLRuntimeEvent(runtimeId, runtimeElements.get(runtimeId).blueprintId,
                                     XADLRuntimeEventType.END);
                             totalEvents++;
                         }
@@ -85,8 +83,8 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                     // send link events
                     for (IMyxName brick : bricks) {
                         String runtimeId = brick.getName();
-                        if (runtime2blueprint.containsKey(runtimeId) && activeWelds.containsKey(runtimeId)) {
-                            for (IMyxWeld weld : activeWelds.get(runtimeId)) {
+                        if (runtimeElements.containsKey(runtimeId)) {
+                            for (IMyxWeld weld : runtimeElements.get(runtimeId).welds) {
                                 // send event
                                 dispatchXADLLinkEvent(weld, XADLEventType.REMOVE);
                                 totalEvents++;
@@ -96,16 +94,15 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                     // send xadl- and hosting events
                     for (IMyxName brick : bricks) {
                         String runtimeId = brick.getName();
-                        if (runtime2blueprint.containsKey(runtimeId)) {
-                            XADLElementType elementType = runtime2elemntType.get(runtimeId);
+                        if (runtimeElements.containsKey(runtimeId)) {
+                            RuntimeElement e = runtimeElements.get(runtimeId);
                             // send events
-                            if (elementType == XADLElementType.COMPONENT) {
+                            if (e.elementType == XADLElementType.COMPONENT) {
                                 dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
                             } else {
                                 dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
                             }
-                            dispatchXADLEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLEventType.REMOVE,
-                                    elementType);
+                            dispatchXADLEvent(runtimeId, e.blueprintId, XADLEventType.REMOVE, e.elementType);
                             totalEvents += 2;
                         }
                     }
@@ -138,8 +135,11 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             dispatchXADLEvent(runtimeId, blueprintId, XADLEventType.ADD, elementType);
 
             // save the id and type
-            runtime2blueprint.put(runtimeId, blueprintId);
-            runtime2elemntType.put(runtimeId, elementType);
+            RuntimeElement e = new RuntimeElement();
+            e.runtimeId = runtimeId;
+            e.blueprintId = blueprintId;
+            e.elementType = elementType;
+            runtimeElements.put(runtimeId, e);
 
             // send the hosting event
             if (elementType == XADLElementType.COMPONENT) {
@@ -155,15 +155,14 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         super.removeBrick(path, brickName);
 
         String runtimeId = brickName.getName();
-        if (runtime2blueprint.containsKey(runtimeId)) {
-            String blueprintId = runtime2blueprint.get(runtimeId);
-            XADLElementType elementType = runtime2elemntType.get(runtimeId);
+        if (runtimeElements.containsKey(runtimeId)) {
+            RuntimeElement e = runtimeElements.get(runtimeId);
 
             // send event
-            dispatchXADLEvent(runtimeId, blueprintId, XADLEventType.REMOVE, elementType);
+            dispatchXADLEvent(runtimeId, e.blueprintId, XADLEventType.REMOVE, e.elementType);
 
             // send the hosting event
-            if (elementType == XADLElementType.COMPONENT) {
+            if (e.elementType == XADLElementType.COMPONENT) {
                 dispatchXADLHostingEventForComponent(runtimeId, XADLEventType.REMOVE);
             } else {
                 dispatchXADLHostingEventForConnector(runtimeId, XADLEventType.REMOVE);
@@ -209,10 +208,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         // save the weld
         String sourceRuntimeId = weld.getRequiredBrickName().getName();
-        if (!activeWelds.containsKey(sourceRuntimeId)) {
-            activeWelds.put(sourceRuntimeId, new HashSet<IMyxWeld>());
+        if (runtimeElements.containsKey(sourceRuntimeId)) {
+            runtimeElements.get(sourceRuntimeId).welds.add(weld);
         }
-        activeWelds.get(sourceRuntimeId).add(weld);
     }
 
     @Override
@@ -223,8 +221,8 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         // remove the saved weld
         String sourceRuntimeId = weld.getRequiredBrickName().getName();
-        if (activeWelds.containsKey(sourceRuntimeId)) {
-            activeWelds.get(sourceRuntimeId).remove(weld);
+        if (runtimeElements.containsKey(sourceRuntimeId)) {
+            runtimeElements.get(sourceRuntimeId).welds.remove(weld);
         }
     }
 
@@ -234,9 +232,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         for (IMyxName b : getBrickNames(path, brickName)) {
             String runtimeId = b.getName();
-            if (runtime2blueprint.containsKey(runtimeId)) {
+            if (runtimeElements.containsKey(runtimeId)) {
                 // send event
-                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLRuntimeEventType.BEGIN);
+                dispatchXADLRuntimeEvent(runtimeId, runtimeElements.get(runtimeId).blueprintId,
+                        XADLRuntimeEventType.BEGIN);
             }
         }
     }
@@ -247,9 +246,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
 
         for (IMyxName b : getBrickNames(path, brickName)) {
             String runtimeId = b.getName();
-            if (runtime2blueprint.containsKey(runtimeId)) {
+            if (runtimeElements.containsKey(runtimeId)) {
                 // send event
-                dispatchXADLRuntimeEvent(runtimeId, runtime2blueprint.get(runtimeId), XADLRuntimeEventType.END);
+                dispatchXADLRuntimeEvent(runtimeId, runtimeElements.get(runtimeId).blueprintId,
+                        XADLRuntimeEventType.END);
             }
         }
     }
@@ -282,15 +282,14 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         Tuple<String, String> sourceIntf = new Tuple<>(sourceRuntimeId, sourceInterfaceName);
         Tuple<String, String> destinationIntf = new Tuple<>(destinationRuntimeId, destinationInterfaceName);
 
-        if (runtime2blueprint.containsKey(sourceRuntimeId) && runtime2blueprint.containsKey(destinationRuntimeId)) {
-            String sourceBlueprintId = runtime2blueprint.get(sourceRuntimeId), destinationBlueprintId = runtime2blueprint
-                    .get(destinationRuntimeId);
+        if (runtimeElements.containsKey(sourceRuntimeId) && runtimeElements.containsKey(destinationRuntimeId)) {
+            RuntimeElement src = runtimeElements.get(sourceRuntimeId), dst = runtimeElements.get(destinationRuntimeId);
             if (interfaces.containsKey(sourceIntf) && interfaces.containsKey(destinationIntf)) {
                 String sourceInterfaceType = interfaces.get(sourceIntf), destinationInterfaceType = interfaces
                         .get(destinationIntf);
                 // send event
-                dispatchXADLLinkEvent(sourceRuntimeId, sourceBlueprintId, sourceInterfaceType, destinationRuntimeId,
-                        destinationBlueprintId, destinationInterfaceType, xadlEventType);
+                dispatchXADLLinkEvent(sourceRuntimeId, src.blueprintId, sourceInterfaceType, destinationRuntimeId,
+                        dst.blueprintId, destinationInterfaceType, xadlEventType);
             }
         }
     }
@@ -415,6 +414,13 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             bricks.add(brickName);
         }
         return bricks;
+    }
+
+    protected class RuntimeElement {
+        public String runtimeId;
+        public String blueprintId;
+        public XADLElementType elementType;
+        public Set<IMyxWeld> welds = new HashSet<>();
     }
 
 }

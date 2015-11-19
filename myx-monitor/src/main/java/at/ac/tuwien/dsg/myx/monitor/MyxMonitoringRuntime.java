@@ -44,16 +44,6 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
      */
     protected Map<String, RuntimeElement> runtimeElements = new HashMap<>();
 
-    /**
-     * This map is used to keep track of the added interfaces.
-     */
-    protected Map<Tuple<String, String>, String> interfaces = new HashMap<>();
-
-    /**
-     * This map is used to keep track of the active welds of a brick.
-     */
-    // protected Map<String, Set<IMyxWeld>> activeWelds = new HashMap<>();
-
     public MyxMonitoringRuntime(EventManager eventManager) {
         this.eventManager = eventManager;
 
@@ -179,10 +169,10 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
             Properties initProperties = ((IMyxInitPropertiesInterfaceDescription) interfaceDescription).getInitParams();
             if (initProperties != null && initProperties.containsKey(MyxProperties.ARCHITECTURE_INTERFACE_TYPE)) {
                 // save interface type for brick- and interface name
-                Tuple<String, String> brickIntf = new Tuple<>();
-                brickIntf.setFst(brickName.getName());
-                brickIntf.setSnd(interfaceName.getName());
-                interfaces.put(brickIntf, initProperties.getProperty(MyxProperties.ARCHITECTURE_INTERFACE_TYPE));
+                if (runtimeElements.containsKey(brickName.getName())) {
+                    runtimeElements.get(brickName.getName()).interfaceTypes.put(interfaceName.getName(),
+                            initProperties.getProperty(MyxProperties.ARCHITECTURE_INTERFACE_TYPE));
+                }
             }
         }
     }
@@ -194,9 +184,9 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         Tuple<String, String> brickIntf = new Tuple<>();
         brickIntf.setFst(brickName.getName());
         brickIntf.setSnd(interfaceName.getName());
-        if (interfaces.containsKey(brickIntf)) {
+        if (runtimeElements.containsKey(brickName.getName())) {
             // remove the interface
-            interfaces.remove(brickIntf);
+            runtimeElements.get(brickName.getName()).interfaceTypes.remove(interfaceName.getName());
         }
     }
 
@@ -278,18 +268,14 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                 .getRequiredInterfaceName().getName();
         String destinationRuntimeId = weld.getProvidedBrickName().getName(), destinationInterfaceName = weld
                 .getProvidedInterfaceName().getName();
-
-        Tuple<String, String> sourceIntf = new Tuple<>(sourceRuntimeId, sourceInterfaceName);
-        Tuple<String, String> destinationIntf = new Tuple<>(destinationRuntimeId, destinationInterfaceName);
-
         if (runtimeElements.containsKey(sourceRuntimeId) && runtimeElements.containsKey(destinationRuntimeId)) {
             RuntimeElement src = runtimeElements.get(sourceRuntimeId), dst = runtimeElements.get(destinationRuntimeId);
-            if (interfaces.containsKey(sourceIntf) && interfaces.containsKey(destinationIntf)) {
-                String sourceInterfaceType = interfaces.get(sourceIntf), destinationInterfaceType = interfaces
-                        .get(destinationIntf);
+            if (src.interfaceTypes.containsKey(sourceInterfaceName)
+                    && dst.interfaceTypes.containsKey(destinationInterfaceName)) {
                 // send event
-                dispatchXADLLinkEvent(sourceRuntimeId, src.blueprintId, sourceInterfaceType, destinationRuntimeId,
-                        dst.blueprintId, destinationInterfaceType, xadlEventType);
+                dispatchXADLLinkEvent(sourceRuntimeId, src.blueprintId, src.interfaceTypes.get(sourceInterfaceName),
+                        destinationRuntimeId, dst.blueprintId, dst.interfaceTypes.get(destinationInterfaceName),
+                        xadlEventType);
             }
         }
     }
@@ -420,6 +406,7 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
         public String runtimeId;
         public String blueprintId;
         public XADLElementType elementType;
+        public Map<String, String> interfaceTypes = new HashMap<>();
         public Set<IMyxWeld> welds = new HashSet<>();
     }
 

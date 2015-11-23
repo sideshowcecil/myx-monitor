@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
+import at.ac.tuwien.dsg.myx.monitor.AbstractMyxExternalConnectionBrick;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.middleware.interfaces.IPublisher;
 import at.ac.tuwien.dsg.pubsub.middleware.myx.DynamicArchitectureModelProperties;
@@ -13,7 +13,7 @@ import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.publisher.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public abstract class Publisher<E> extends AbstractVirtualExternalMyxSimpleBrick implements IPublisher<E> {
+public abstract class Publisher<E> extends AbstractMyxExternalConnectionBrick implements IPublisher<E> {
 
     private static Logger logger = LoggerFactory.getLogger(Publisher.class);
 

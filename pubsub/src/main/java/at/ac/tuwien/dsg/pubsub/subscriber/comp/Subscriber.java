@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.dsg.myx.monitor.AbstractVirtualExternalMyxSimpleBrick;
+import at.ac.tuwien.dsg.myx.monitor.AbstractMyxExternalConnectionBrick;
 import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import at.ac.tuwien.dsg.pubsub.message.Message;
 import at.ac.tuwien.dsg.pubsub.message.Message.Type;
@@ -21,7 +21,7 @@ import at.ac.tuwien.dsg.pubsub.network.Endpoint;
 import at.ac.tuwien.dsg.pubsub.subscriber.myx.MyxInterfaceNames;
 import edu.uci.isr.myx.fw.IMyxName;
 
-public abstract class Subscriber<E> extends AbstractVirtualExternalMyxSimpleBrick {
+public abstract class Subscriber<E> extends AbstractMyxExternalConnectionBrick {
 
     private static Logger logger = LoggerFactory.getLogger(Subscriber.class);
 

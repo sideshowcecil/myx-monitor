@@ -1,18 +1,22 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
-import java.util.Properties;
-
 import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLExternalLinkEvent;
 import at.ac.tuwien.dsg.myx.util.MyxUtils;
 import edu.uci.isr.myx.fw.AbstractMyxSimpleBrick;
 
-public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxSimpleBrick {
+public abstract class AbstractMyxExternalConnectionBrick extends AbstractMyxSimpleBrick {
 
-    private EventManager eventManager = MyxUtils.getEventManager();
+    private final EventManager eventManager = MyxUtils.getEventManager();
 
-    public AbstractVirtualExternalMyxSimpleBrick() {
+    private String runtimeId;
+    private String blueprintId;
+
+    /**
+     * Constructor.
+     */
+    public AbstractMyxExternalConnectionBrick() {
     }
 
     /**
@@ -47,16 +51,18 @@ public abstract class AbstractVirtualExternalMyxSimpleBrick extends AbstractMyxS
      */
     private void dispatchExternalLinkEvent(String interfaceType, String externalConnectionIdentifier,
             XADLEventType eventType) {
-        Properties initProperties = MyxUtils.getInitProperties(this);
-        if (initProperties.containsKey(MyxProperties.ARCHITECTURE_BLUEPRINT_ID)) {
-            // we can only send the event if we have a blueprint id
-            String runtimeId = MyxUtils.getName(this).getName();
-            String blueprintId = initProperties.getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID);
-
-            XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, blueprintId, interfaceType,
-                    externalConnectionIdentifier, eventType);
-            e.setEventSourceId(this.getClass().getName());
-            eventManager.handle(e);
+        // extract the runtime- and blueprint id if we have not yet got it
+        if (runtimeId == null) {
+            runtimeId = MyxUtils.getName(this).getName();
+            blueprintId = MyxUtils.getInitProperties(this).getProperty(MyxProperties.ARCHITECTURE_BLUEPRINT_ID);
         }
+        // we can only send the event if we have a blueprint id
+        if (blueprintId == null) {
+            return;
+        }
+        XADLExternalLinkEvent e = new XADLExternalLinkEvent(runtimeId, blueprintId, interfaceType,
+                externalConnectionIdentifier, eventType);
+        e.setEventSourceId(this.getClass().getName());
+        eventManager.handle(e);
     }
 }

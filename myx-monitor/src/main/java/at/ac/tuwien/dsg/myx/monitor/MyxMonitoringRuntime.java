@@ -393,11 +393,12 @@ public class MyxMonitoringRuntime extends MyxBasicRuntime {
                 }
             }
         } else {
-            if (container.getInternalBrick(brickName) == null) {
+            IMyxBrick internal = container.getInternalBrick(brickName); 
+            if (internal == null) {
                 throw new IllegalArgumentException("No brick found with name: " + brickName + " at "
                         + MyxUtils.pathToString(path));
             }
-            bricks.add(brickName);
+            bricks.add(MyxUtils.getName(internal));
         }
         return bricks;
     }

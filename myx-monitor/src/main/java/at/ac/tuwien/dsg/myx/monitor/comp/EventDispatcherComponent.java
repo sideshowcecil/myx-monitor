@@ -20,6 +20,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
     public static final IMyxName INTERFACE_NAME_OUT_EVENTMANAGER = MyxUtils.createName("event-manager");
 
     List<EventDispatcher> dispatchers;
+    ExecutorService executor;
 
     @Override
     public Object getServiceObject(IMyxName interfaceName) {
@@ -29,11 +30,8 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
     @Override
     public void init() {
         Properties initProperties = MyxUtils.getInitProperties(this);
-
         EventManager eventManager = MyxUtils.getFirstRequiredServiceObject(this, INTERFACE_NAME_OUT_EVENTMANAGER);
-
         String[] dispatcherClassNames = (String[]) initProperties.get(MyxProperties.EVENT_DISPATCHER_CLASSES);
-
         dispatchers = getDispatchers(dispatcherClassNames, eventManager);
     }
 
@@ -67,10 +65,17 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
     @Override
     public void begin() {
         if (!dispatchers.isEmpty()) {
-            ExecutorService executor = Executors.newFixedThreadPool(dispatchers.size());
+            executor = Executors.newFixedThreadPool(dispatchers.size());
             for (EventDispatcher ed : dispatchers) {
                 executor.execute(ed);
             }
+        }
+    }
+    
+    @Override
+    public void end() {
+        if (!dispatchers.isEmpty()) {
+            executor.shutdownNow();
         }
     }
 

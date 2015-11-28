@@ -180,7 +180,7 @@ public class Bootstrap {
             }
         }
         if (eventManager == null) {
-            eventManager = new EventManagerImpl(architectureRuntimeId, hostId, connectionString);
+            eventManager = new EventManagerImpl();
         }
 
         MyxUtils.initEventManager(eventManager);

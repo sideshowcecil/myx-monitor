@@ -14,12 +14,6 @@ public abstract class AbstractMyxExternalConnectionBrick extends AbstractMyxSimp
     private String blueprintId;
 
     /**
-     * Constructor.
-     */
-    public AbstractMyxExternalConnectionBrick() {
-    }
-
-    /**
      * Dispatch a event that an external link has been connected.
      * 
      * @param interfaceName

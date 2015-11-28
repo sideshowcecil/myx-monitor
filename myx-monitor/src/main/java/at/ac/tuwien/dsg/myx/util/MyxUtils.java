@@ -13,15 +13,16 @@ import edu.uci.isr.myx.fw.MyxContainer;
 import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
 
 /**
- * This class is an extension of {@link edu.uci.isr.myx.fw.MyxUtils} which provides the
- * {@link MyxMonitoringImplementation} as the and additional implementation.
+ * This class is an extension of {@link edu.uci.isr.myx.fw.MyxUtils} which
+ * provides the {@link MyxMonitoringImplementation} as the and additional
+ * implementation.
  * 
  * @author bernd.rathmanner
  * 
  */
 public final class MyxUtils {
 
-    private static IMyxImplementation currentImplementation;
+    private static IMyxImplementation currentImplementation = getDefaultImplementation();
     private static EventManager currentEventManager;
 
     protected static final IMyxBrickDescription CONTAINER_BRICK_DESCRIPTION = new MyxJavaClassBrickDescription(

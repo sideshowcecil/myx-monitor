@@ -418,7 +418,7 @@
             </implementationext:implementation>
         </types:component>
         <types:component types:id="componentffa80065-3843884a-2879723f-a2830547" xsi:type="implementationext:ComponentImpl">
-            <types:description xsi:type="instance:Description">XADLRuntimeAdapter</types:description>
+            <types:description xsi:type="instance:Description">XADLRuntimeManager</types:description>
             <types:interface types:id="interfaceffa80065-38445d4e-4679b3be-a2830610" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">IN Subscriber</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
@@ -436,7 +436,7 @@
             </implementationext:implementation>
         </types:component>
         <types:component types:id="componentffa80065-3843f2e6-4117a116-a28305a0" xsi:type="implementationext:ComponentImpl">
-            <types:description xsi:type="instance:Description">HostedRuntimeAdapter</types:description>
+            <types:description xsi:type="instance:Description">HostedRuntimeManager</types:description>
             <types:interface types:id="interfaceffa80065-38446aee-85df5730-a2830632" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">IN Subscriber</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>

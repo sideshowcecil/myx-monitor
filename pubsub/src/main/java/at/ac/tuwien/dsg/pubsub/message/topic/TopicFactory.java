@@ -29,6 +29,8 @@ public class TopicFactory {
      */
     public Topic create(Type type, String pattern) {
         switch (type) {
+        case STRING:
+            return new StringTopic(pattern);
         case GLOB:
             return new GlobTopic(pattern);
         case REGEX:
@@ -38,6 +40,6 @@ public class TopicFactory {
     }
 
     public static enum Type {
-        REGEX, GLOB
+        STRING, REGEX, GLOB
     }
 }

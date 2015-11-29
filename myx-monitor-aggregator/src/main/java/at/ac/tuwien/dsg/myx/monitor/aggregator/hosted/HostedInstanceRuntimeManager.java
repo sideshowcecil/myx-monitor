@@ -1,10 +1,10 @@
 package at.ac.tuwien.dsg.myx.monitor.aggregator.hosted;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +33,10 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
     private final Map<String, IElementRef> elementRefIndex = new HashMap<>();
 
     private final ModelRoot modelRoot;
-    private final List<Topic> topics;
+    private final Set<Topic> topics = new LinkedHashSet<>();
 
     public HostedInstanceRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
-        topics = new ArrayList<>();
         topics.add(new TopicFactory().create(EventUtils.getTopicPattern(XADLHostEvent.class)));
     }
 
@@ -69,11 +68,9 @@ public class HostedInstanceRuntimeManager implements ISubscriber<Event> {
      * @return
      */
     private boolean matches(String topic) {
-        if (topics != null) {
-            for (Topic t : topics) {
-                if (t.matches(topic)) {
-                    return true;
-                }
+        for (Topic t : topics) {
+            if (t.matches(topic)) {
+                return true;
             }
         }
         return false;

@@ -2,9 +2,11 @@ package at.ac.tuwien.dsg.myx.monitor.aggregator.xadl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,12 +63,11 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
     private final Map<String, List<IMappedInterfaceInstance>> externalConnections = new HashMap<>();
 
     private final ModelRoot modelRoot;
-    private final List<Topic> topics;
+    private final Set<Topic> topics = new LinkedHashSet<>();
 
     public XADLInstanceRuntimeManager(ModelRoot modelRoot) {
         this.modelRoot = modelRoot;
         TopicFactory factory = new TopicFactory();
-        topics = new ArrayList<>();
         topics.add(factory.create(EventUtils.getTopicPattern(XADLEvent.class)));
         topics.add(factory.create(EventUtils.getTopicPattern(XADLExternalLinkEvent.class)));
         topics.add(factory.create(EventUtils.getTopicPattern(XADLLinkEvent.class)));
@@ -103,11 +104,9 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
      * @return
      */
     private boolean matches(String topic) {
-        if (topics != null) {
-            for (Topic t : topics) {
-                if (t.matches(topic)) {
-                    return true;
-                }
+        for (Topic t : topics) {
+            if (t.matches(topic)) {
+                return true;
             }
         }
         return false;
@@ -363,8 +362,8 @@ public class XADLInstanceRuntimeManager implements ISubscriber<Event> {
                 } else if (!externalConnections.get(event.getXadlExternalConnectionIdentifier()).isEmpty()) {
                     for (IMappedInterfaceInstance destination : externalConnections.get(event
                             .getXadlExternalConnectionIdentifier())) {
-                        IExternalIdentifiedLinkInstance link = createExternalIdentifiedLink(event.getXadlRuntimeId(), intf,
-                                event.getXadlExternalConnectionIdentifier(), destination,
+                        IExternalIdentifiedLinkInstance link = createExternalIdentifiedLink(event.getXadlRuntimeId(),
+                                intf, event.getXadlExternalConnectionIdentifier(), destination,
                                 event.getXadlExternalConnectionIdentifier());
                         if (link != null) {
                             instance.addLinkInstance(link);

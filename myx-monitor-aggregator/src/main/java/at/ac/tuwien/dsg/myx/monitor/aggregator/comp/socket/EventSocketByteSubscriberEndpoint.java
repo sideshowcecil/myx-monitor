@@ -103,27 +103,25 @@ public class EventSocketByteSubscriberEndpoint extends SubscriberEndpoint<Event>
             private ModelResponseEvent getElementRespone(ModelElementRequestEvent request) {
                 synchronized (modelRoot) {
                     for (IArchStructure structure : modelRoot.getArchStructures()) {
-                        for (IComponent component : DBLUtils.getComponents(structure)) {
-                            if (component.getId().equals(request.getRuntimeId())) {
-                                ModelElementResponseEvent response = new ModelElementResponseEvent(
-                                        request.getRuntimeId(), XADLElementType.COMPONENT);
-                                response.setDescription(DBLUtils.getDescription(component));
-                                for (IInterface intf : DBLUtils.getInterfaces(component)) {
-                                    response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
-                                }
-                                return response;
+                        IComponent component = DBLUtils.getComponent(structure, request.getRuntimeId());
+                        if (component != null) {
+                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
+                                    XADLElementType.COMPONENT);
+                            response.setDescription(DBLUtils.getDescription(component));
+                            for (IInterface intf : DBLUtils.getInterfaces(component)) {
+                                response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
                             }
+                            return response;
                         }
-                        for (IConnector connector : DBLUtils.getConnectors(structure)) {
-                            if (connector.getId().equals(request.getRuntimeId())) {
-                                ModelElementResponseEvent response = new ModelElementResponseEvent(
-                                        request.getRuntimeId(), XADLElementType.CONNECTOR);
-                                response.setDescription(DBLUtils.getDescription(connector));
-                                for (IInterface intf : DBLUtils.getInterfaces(connector)) {
-                                    response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
-                                }
-                                return response;
+                        IConnector connector = DBLUtils.getConnector(structure, request.getRuntimeId());
+                        if (connector != null) {
+                            ModelElementResponseEvent response = new ModelElementResponseEvent(request.getRuntimeId(),
+                                    XADLElementType.CONNECTOR);
+                            response.setDescription(DBLUtils.getDescription(connector));
+                            for (IInterface intf : DBLUtils.getInterfaces(connector)) {
+                                response.getInterfaces().put(DBLUtils.getId(intf), DBLUtils.getId(intf.getType()));
                             }
+                            return response;
                         }
                     }
                     return new ModelNoSuchElementResponseEvent(request.getRuntimeId());

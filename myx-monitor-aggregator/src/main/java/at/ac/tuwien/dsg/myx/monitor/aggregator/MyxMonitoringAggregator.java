@@ -51,4 +51,23 @@ public class MyxMonitoringAggregator extends Bootstrap {
         // call the myx-monitor bootstrap
         new MyxMonitoringAggregator().run(adaptedArgs.toArray(new String[0]));
     }
+
+    @Override
+    protected void usage() {
+        System.err.println("Usage:");
+        System.err
+                .println("  java "
+                        + this.getClass().getName()
+                        + " [file] [-s|--structure structureName] [-i|--id architectureRuntimeId] [-d|--event-dispatcher className] [-e|--event-manager className] [-c|--event-manager-connection-string connectionString]");
+        System.err.println();
+        System.err.println("  where:");
+        System.err.println("    file: the name of the xADL file to bootstrap, default: " + ARCHITECTURE_FILE_NAME);
+        System.err.println("    -s structureName: the name of the structure to bootstrap, default: " + STRUCTURE_NAME);
+        System.err.println("    -i architectureInstanceId: the architecture runtime id");
+        System.err.println("    -d className: the event dispatcher class name that should be instantiated");
+        System.err.println("    -e className: the event manager class name that should be used to propagate events");
+        System.err.println("    -c connectionString: the connection string that should be used to propate events");
+        System.err.println();
+        System.exit(-2);
+    }
 }

@@ -1,21 +1,37 @@
 package at.ac.tuwien.dsg.myx.monitor;
 
-import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
-import at.ac.tuwien.dsg.myx.monitor.comp.*;
-import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
-import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
-import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
-import at.ac.tuwien.dsg.myx.util.IdGenerator;
-import at.ac.tuwien.dsg.myx.util.MyxUtils;
-import edu.uci.isr.myx.fw.*;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import at.ac.tuwien.dsg.myx.monitor.aim.Launcher;
+import at.ac.tuwien.dsg.myx.monitor.comp.BootstrapComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.EventDispatcherComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.EventManagerComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.LauncherComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.ModelRootComponent;
+import at.ac.tuwien.dsg.myx.monitor.comp.MyxRuntimeComponent;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManager;
+import at.ac.tuwien.dsg.myx.monitor.em.EventManagerImpl;
+import at.ac.tuwien.dsg.myx.monitor.model.ModelRoot;
+import at.ac.tuwien.dsg.myx.util.IdGenerator;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
+import edu.uci.isr.myx.fw.EMyxInterfaceDirection;
+import edu.uci.isr.myx.fw.IMyxBrickDescription;
+import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
+import edu.uci.isr.myx.fw.IMyxName;
+import edu.uci.isr.myx.fw.IMyxRuntime;
+import edu.uci.isr.myx.fw.MyxJavaClassBrickDescription;
+import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
+
 public class Bootstrap {
+
+    private static Logger logger = LoggerFactory.getLogger(Bootstrap.class);
 
     public static final IMyxName BOOTSTRAP_NAME = MyxUtils.createName("bootstrap-comp");
     public static final IMyxName EVENT_DISPATCHER_NAME = MyxUtils.createName("event-dispatcher-comp");
@@ -43,15 +59,20 @@ public class Bootstrap {
         // parse arguments
         Properties[] p = parseArgs(args);
 
-        // init
-        initEventManager(p[3].getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID),
-                p[3].getProperty(MyxProperties.ARCHITECTURE_HOST_ID),
-                p[3].getProperty(MyxProperties.EVENT_MANAGER_CLASS),
-                p[3].getProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING));
-        initMyxMonitoringImplementation();
+        try {
+            // init
+            initEventManager(p[3].getProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID),
+                    p[3].getProperty(MyxProperties.ARCHITECTURE_HOST_ID),
+                    p[3].getProperty(MyxProperties.EVENT_MANAGER_CLASS),
+                    p[3].getProperty(MyxProperties.EVENT_MANAGER_CONNECTION_STRING));
+            initMyxMonitoringImplementation();
 
-        // bootstrap components
-        doBootstrap(p[0], p[1], p[2]);
+            // bootstrap components
+            doBootstrap(p[0], p[1], p[2]);
+        } catch (Exception e) {
+            logger.error("An error occurred while running the application", e);
+            System.exit(-3);
+        }
     }
 
     /**
@@ -117,7 +138,8 @@ public class Bootstrap {
         }
 
         p[2] = new Properties();
-        p[2].put(MyxProperties.EVENT_DISPATCHER_CLASSES, eventDispatcherClasses.toArray(new String[eventDispatcherClasses.size()]));
+        p[2].put(MyxProperties.EVENT_DISPATCHER_CLASSES,
+                eventDispatcherClasses.toArray(new String[eventDispatcherClasses.size()]));
 
         p[3] = new Properties();
         p[3].setProperty(MyxProperties.ARCHITECTURE_RUNTIME_ID, architectureRuntimeId);
@@ -142,9 +164,12 @@ public class Bootstrap {
         System.err.println("    file: the name of the xADL file to bootstrap");
         System.err.println("    --structure structureName: the name of the structure to bootstrap");
         System.err.println("    --id architectureInstanceId: the architecture runtime id");
-        System.err.println("    --event-dispatcher className: the event dispatcher class name that should be instantiated");
-        System.err.println("    --event-manager className: the event manager class name that should be used to propagate events");
-        System.err.println("    --event-manager-connection-string connectionString: the connection string that should be used to propate events");
+        System.err
+                .println("    --event-dispatcher className: the event dispatcher class name that should be instantiated");
+        System.err
+                .println("    --event-manager className: the event manager class name that should be used to propagate events");
+        System.err
+                .println("    --event-manager-connection-string connectionString: the connection string that should be used to propate events");
         System.err.println();
         System.exit(-2);
     }
@@ -164,19 +189,18 @@ public class Bootstrap {
             return;
         } catch (NullPointerException e) {
         }
-        
+
         EventManager eventManager = null;
         if (!eventManagerClassName.isEmpty()) {
             try {
                 Class<?> eventManagerClass = Class.forName(eventManagerClassName);
                 if (EventManager.class.isAssignableFrom(eventManagerClass)) {
-                    Constructor<?> c = eventManagerClass.getConstructor(String.class, String.class,
-                            String.class);
+                    Constructor<?> c = eventManagerClass.getConstructor(String.class, String.class, String.class);
                     eventManager = (EventManager) c.newInstance(architectureRuntimeId, hostId, connectionString);
                 }
             } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
                     | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                // we ignore non compatible event managers
+                throw new RuntimeException("EventManager could not be created", e);
             }
         }
         if (eventManager == null) {
@@ -309,8 +333,8 @@ public class Bootstrap {
             myx.begin(null, LAUNCHER_NAME);
             myx.begin(null, BOOTSTRAP_NAME);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-3);
+            logger.error("An error occurred while instantiating the application", e);
+            System.exit(-4);
         }
     }
 

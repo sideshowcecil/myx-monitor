@@ -55,7 +55,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
                     dispatchers.add((EventDispatcher) c.newInstance(eventManager));
                 } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
                         | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    // we ignore non compatible dispatchers
+                    throw new RuntimeException("Could not create EventDispatcher instance", e);
                 }
             }
         }
@@ -71,7 +71,7 @@ public class EventDispatcherComponent extends AbstractMyxSimpleBrick {
             }
         }
     }
-    
+
     @Override
     public void end() {
         if (!dispatchers.isEmpty()) {

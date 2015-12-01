@@ -69,27 +69,27 @@ public class Bootstrap {
         String connectionString = "";
 
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-s") || args[i].equals("--structure")) {
+            if (args[i].equals("--structure")) {
                 if (++i == args.length || structureName != null) {
                     usage();
                 }
                 structureName = args[i];
-            } else if (args[i].equals("-i") || args[i].equals("--id")) {
+            } else if (args[i].equals("--id")) {
                 if (++i == args.length || architectureRuntimeId != null) {
                     usage();
                 }
                 architectureRuntimeId = args[i];
-            } else if (args[i].equals("-d") || args[i].equals("--event-dispatcher")) {
+            } else if (args[i].equals("--event-dispatcher")) {
                 if (++i == args.length) {
                     usage();
                 }
                 eventDispatcherClasses.add(args[i]);
-            } else if (args[i].equals("-e") || args[i].equals("--event-manager")) {
+            } else if (args[i].equals("--event-manager")) {
                 if (++i == args.length) {
                     usage();
                 }
                 eventManagerClass = args[i];
-            } else if (args[i].equals("-c") || args[i].equals("--event-manager-connection-string")) {
+            } else if (args[i].equals("--event-manager-connection-string")) {
                 if (++i == args.length) {
                     usage();
                 }
@@ -136,15 +136,15 @@ public class Bootstrap {
         System.err
                 .println("  java "
                         + this.getClass().getName()
-                        + " file [-s|--structure structureName] [-i|--id architectureRuntimeId] [-d|--event-dispatcher className] [-e|--event-manager className] [-c|--event-manager-connection-string connectionString]");
+                        + " file [--structure structureName] [--id architectureRuntimeId] [--event-dispatcher className] [--event-manager className] [--event-manager-connection-string connectionString]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
-        System.err.println("    -s structureName: the name of the structure to bootstrap");
-        System.err.println("    -i architectureInstanceId: the architecture runtime id");
-        System.err.println("    -d className: the event dispatcher class name that should be instantiated");
-        System.err.println("    -e className: the event manager class name that should be used to propagate events");
-        System.err.println("    -c connectionString: the connection string that should be used to propate events");
+        System.err.println("    --structure structureName: the name of the structure to bootstrap");
+        System.err.println("    --id architectureInstanceId: the architecture runtime id");
+        System.err.println("    --event-dispatcher className: the event dispatcher class name that should be instantiated");
+        System.err.println("    --event-manager className: the event manager class name that should be used to propagate events");
+        System.err.println("    --event-manager-connection-string connectionString: the connection string that should be used to propate events");
         System.err.println();
         System.exit(-2);
     }

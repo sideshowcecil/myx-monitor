@@ -42,7 +42,7 @@ public class MyxMonitoringAggregator extends Bootstrap {
             adaptedArgs.add(architectureFilePath);
         }
         // add the structure name if none was given
-        if (!realArgs.contains("-s") && !realArgs.contains("--structure")) {
+        if (!realArgs.contains("--structure")) {
             adaptedArgs.add("--structure");
             adaptedArgs.add(STRUCTURE_NAME);
         }
@@ -58,15 +58,15 @@ public class MyxMonitoringAggregator extends Bootstrap {
         System.err
                 .println("  java "
                         + this.getClass().getName()
-                        + " [file] [-s|--structure structureName] [-i|--id architectureRuntimeId] [-d|--event-dispatcher className] [-e|--event-manager className] [-c|--event-manager-connection-string connectionString]");
+                        + " [file] [--structure structureName] [--id architectureRuntimeId] [--event-dispatcher className] [--event-manager className] [--event-manager-connection-string connectionString]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap, default: " + ARCHITECTURE_FILE_NAME);
-        System.err.println("    -s structureName: the name of the structure to bootstrap, default: " + STRUCTURE_NAME);
-        System.err.println("    -i architectureInstanceId: the architecture runtime id");
-        System.err.println("    -d className: the event dispatcher class name that should be instantiated");
-        System.err.println("    -e className: the event manager class name that should be used to propagate events");
-        System.err.println("    -c connectionString: the connection string that should be used to propate events");
+        System.err.println("    --structure structureName: the name of the structure to bootstrap, default: " + STRUCTURE_NAME);
+        System.err.println("    --id architectureInstanceId: the architecture runtime id");
+        System.err.println("    --event-dispatcher className: the event dispatcher class name that should be instantiated");
+        System.err.println("    --event-manager className: the event manager class name that should be used to propagate events");
+        System.err.println("    --event-manager-connection-string connectionString: the connection string that should be used to propate events");
         System.err.println();
         System.exit(-2);
     }

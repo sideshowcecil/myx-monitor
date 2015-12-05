@@ -8,7 +8,7 @@ public abstract class AbstractMyxMonitoringRuntimeAdapter extends AbstractMyxSim
 
     private IMyxRuntime myx = MyxUtils.getMonitoringImplementation().createRuntime();
 
-    protected IMyxRuntime getMyxRuntime() {
+    protected final IMyxRuntime getMyxRuntime() {
         return myx;
     }
 

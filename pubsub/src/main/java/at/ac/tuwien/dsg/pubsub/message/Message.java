@@ -14,9 +14,9 @@ public class Message<E> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Type type;
-    private String topic;
-    private E data;
+    private final Type type;
+    private final String topic;
+    private final E data;
 
     /**
      * Basic constructor with predefined message type <code>DATA</code>.

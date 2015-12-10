@@ -37,11 +37,10 @@ public class MessageDistributor extends EventPumpConnector {
     private Map<String, List<Tuple<Method, Object[]>>> initCalls = new HashMap<>();
 
     protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
-
-    protected final IdentifiableExecutorService executor;
+    protected final IdentifiableExecutorService asyncExecutor;
 
     public MessageDistributor() {
-        executor = new IdentifiableThreadPoolExecutor();
+        asyncExecutor = new IdentifiableThreadPoolExecutor();
     }
 
     @Override
@@ -81,9 +80,9 @@ public class MessageDistributor extends EventPumpConnector {
 
     @Override
     public void end() {
-        executor.shutdown();
+        asyncExecutor.shutdown();
         try {
-            executor.awaitTermination(5L, TimeUnit.SECONDS);
+            asyncExecutor.awaitTermination(5L, TimeUnit.SECONDS);
         } catch (InterruptedException ie) {
         }
     }
@@ -112,7 +111,7 @@ public class MessageDistributor extends EventPumpConnector {
                                 }
                             }
                         };
-                        executor.execute(r, serviceObject.hashCode());
+                        asyncExecutor.execute(r, serviceObject.hashCode());
                     }
                 }
             }
@@ -175,7 +174,7 @@ public class MessageDistributor extends EventPumpConnector {
                     }
                 }
             };
-            executor.execute(r, serviceObject.hashCode());
+            asyncExecutor.execute(r, serviceObject.hashCode());
         }
         // we don't return values from asynchronous calls
         return null;

@@ -72,7 +72,10 @@ public abstract class PublisherEndpoint<E> extends AbstractMyxExternalConnection
                     dispatchExternalLinkDisconnectedEvent(
                             DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                             connectionIdentifier);
-                    endpoint.close();
+                    try {
+                        endpoint.close();
+                    } catch (IOException e) {
+                    }
                 }
                 myxAdapter.shutdownPublisherEndpoint(PublisherEndpoint.this);
             }

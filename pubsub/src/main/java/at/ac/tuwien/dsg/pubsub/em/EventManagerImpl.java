@@ -93,7 +93,10 @@ public class EventManagerImpl implements EventManager {
         }
         // if we could not send the message we invalidate the connection
         logger.error("Could not send message", last);
-        endpoint.close();
+        try {
+            endpoint.close();
+        } catch (IOException e) {
+        }
         endpoint = null;
     }
 }

@@ -46,7 +46,10 @@ public abstract class Publisher<E> extends AbstractMyxExternalConnectionBrick im
     @Override
     public void end() {
         logger.info("Disconnecting");
-        endpoint.close();
+        try {
+            endpoint.close();
+        } catch (IOException e) {
+        }
         dispatchExternalLinkDisconnectedEvent(
                 DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,
                 connectionIdentifier);
@@ -58,7 +61,10 @@ public abstract class Publisher<E> extends AbstractMyxExternalConnectionBrick im
             try {
                 endpoint.send(message);
             } catch (IOException e) {
-                endpoint.close();
+                try {
+                    endpoint.close();
+                } catch (IOException e1) {
+                }
                 endpoint = null;
                 dispatchExternalLinkDisconnectedEvent(
                         DynamicArchitectureModelProperties.PUBLISHER_ENDPOINT_VIRTUAL_EXTERNAL_INTERFACE_TYPE,

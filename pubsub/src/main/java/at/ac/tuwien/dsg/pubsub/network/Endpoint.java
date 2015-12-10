@@ -1,5 +1,6 @@
 package at.ac.tuwien.dsg.pubsub.network;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import at.ac.tuwien.dsg.pubsub.message.Message;
@@ -9,7 +10,7 @@ import at.ac.tuwien.dsg.pubsub.message.Message;
  * 
  * @param <E>
  */
-public interface Endpoint<E> {
+public interface Endpoint<E> extends Closeable {
     /**
      * Receive a message.
      * 
@@ -23,9 +24,4 @@ public interface Endpoint<E> {
      * @param msg
      */
     public void send(Message<E> msg) throws IOException;
-
-    /**
-     * Closes (shutdown) the endpoint.
-     */
-    public void close();
 }

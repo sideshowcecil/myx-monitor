@@ -81,7 +81,7 @@ public final class EventSocketByteMessageProtocol implements Endpoint<Event> {
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
         protocol.close();
     }
 

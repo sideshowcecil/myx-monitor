@@ -137,13 +137,10 @@ public final class SocketByteMessageProtocol implements Endpoint<byte[]> {
     }
 
     @Override
-    public void close() {
-        try {
-            in.close();
-            out.close();
-            socket.close();
-        } catch (IOException e) {
-        }
+    public void close() throws IOException {
+        in.close();
+        out.close();
+        socket.close();
     }
 
     /**

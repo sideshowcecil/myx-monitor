@@ -107,7 +107,10 @@ public abstract class SubscriberEndpoint<E> extends AbstractMyxExternalConnectio
                 try {
                     endpoint.send(message);
                 } catch (IOException e) {
-                    endpoint.close();
+                    try {
+                        endpoint.close();
+                    } catch (IOException e1) {
+                    }
                     shutdown = true;
                     if (connectionIdentifier != null) {
                         // send event that the virtual external interface was

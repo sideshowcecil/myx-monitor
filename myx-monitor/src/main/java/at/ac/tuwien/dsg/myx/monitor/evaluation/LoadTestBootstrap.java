@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class LoadTestBootstrap extends Bootstrap {
 
-    private static Logger logger = LoggerFactory.getLogger(LoadTestBootstrap.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoadTestBootstrap.class);
 
     public static void main(final String[] args) {
         // read the count argument if it is given

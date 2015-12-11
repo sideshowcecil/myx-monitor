@@ -118,16 +118,16 @@ public class MessageDistributor extends EventPumpConnector {
         }
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void interfaceDisconnecting(final IMyxName interfaceName, final Object serviceObject) {
+    }
+
+    @Override
+    public void interfaceDisconnected(final IMyxName interfaceName, final Object serviceObject) {
         if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
             trueServiceObjects.remove(serviceObject);
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Override
-    public void interfaceDisconnected(final IMyxName interfaceName, final Object serviceObject) {
     }
 
     @Override

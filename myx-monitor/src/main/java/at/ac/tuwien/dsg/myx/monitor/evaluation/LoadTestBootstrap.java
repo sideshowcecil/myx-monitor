@@ -2,6 +2,7 @@ package at.ac.tuwien.dsg.myx.monitor.evaluation;
 
 import at.ac.tuwien.dsg.myx.monitor.Bootstrap;
 import at.ac.tuwien.dsg.myx.util.IdGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,53 +30,47 @@ public final class LoadTestBootstrap extends Bootstrap {
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
-                case "-a":
-                case "--amount":
-                    if (++i == args.length) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    count = Integer.parseInt(args[i]);
-                    break;
-                case "-r":
-                case "--ramp-up-time":
-                    if (++i == args.length) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    rampUpTime = Integer.parseInt(args[i]);
-                    break;
-                case "-t":
-                case "--run-time":
-                    if (++i == args.length) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    runtime = Integer.parseInt(args[i]);
-                    break;
-                case "-i":
-                case "--id":
-                    customArgs.add(args[i]);
-                    if (++i == args.length || architectureRuntimeId != null) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    customArgs.add(args[i]);
-                    architectureRuntimeId = args[i];
-                    break;
-                case "-e":
-                case "--event-manager":
-                    if (++i == args.length) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    eventManagerClass = args[i];
-                    break;
-                case "-c":
-                case "--event-manager-connection-string":
-                    if (++i == args.length) {
-                        new LoadTestBootstrap().usage();
-                    }
-                    connectionString = args[i];
-                    break;
-                default:
-                    customArgs.add(args[i]);
-                    break;
+            case "--amount":
+                if (++i == args.length) {
+                    new LoadTestBootstrap().usage();
+                }
+                count = Integer.parseInt(args[i]);
+                break;
+            case "--ramp-up-time":
+                if (++i == args.length) {
+                    new LoadTestBootstrap().usage();
+                }
+                rampUpTime = Integer.parseInt(args[i]);
+                break;
+            case "--run-time":
+                if (++i == args.length) {
+                    new LoadTestBootstrap().usage();
+                }
+                runtime = Integer.parseInt(args[i]);
+                break;
+            case "--id":
+                customArgs.add(args[i]);
+                if (++i == args.length || architectureRuntimeId != null) {
+                    new LoadTestBootstrap().usage();
+                }
+                customArgs.add(args[i]);
+                architectureRuntimeId = args[i];
+                break;
+            case "--event-manager":
+                if (++i == args.length) {
+                    new LoadTestBootstrap().usage();
+                }
+                eventManagerClass = args[i];
+                break;
+            case "--event-manager-connection-string":
+                if (++i == args.length) {
+                    new LoadTestBootstrap().usage();
+                }
+                connectionString = args[i];
+                break;
+            default:
+                customArgs.add(args[i]);
+                break;
             }
         }
 
@@ -135,18 +130,21 @@ public final class LoadTestBootstrap extends Bootstrap {
         System.err
                 .println("  java "
                         + this.getClass().getName()
-                        + " file [-s|--structure structureName] [-i|--id architectureRuntimeId] [-d|--event-dispatcher className] [-e|--event-manager className] [-c|--event-manager-connection-string connectionString] [-a|--amount count] [-r|--ramp-up-time seconds] [-t | --run-time seconds]");
+                        + " file [--structure structureName] [--id architectureRuntimeId] [--event-dispatcher className] [--event-manager className] [--event-manager-connection-string connectionString] [--amount count] [--ramp-up-time seconds] [--run-time seconds]");
         System.err.println();
         System.err.println("  where:");
         System.err.println("    file: the name of the xADL file to bootstrap");
-        System.err.println("    -s structureName: the name of the structure to bootstrap");
-        System.err.println("    -i architectureInstanceId: the architecture runtime id");
-        System.err.println("    -d className: the event dispatcher class name that should be instantiated");
-        System.err.println("    -e className: the event manager class name that should be used to propagate events");
-        System.err.println("    -c connectionString: the connection string that should be used to propate events");
-        System.err.println("    -a count: the amount of instances to create");
-        System.err.println("    -r seconds: the time in which the instances should be launched");
-        System.err.println("    -t seconds: the time in seconds how long the application is kept running");
+        System.err.println("    --structure structureName: the name of the structure to bootstrap");
+        System.err.println("    --id architectureInstanceId: the architecture runtime id");
+        System.err
+                .println("    --event-dispatcher className: the event dispatcher class name that should be instantiated");
+        System.err
+                .println("    --event-manager className: the event manager class name that should be used to propagate events");
+        System.err
+                .println("    --event-manager-connection-string connectionString: the connection string that should be used to propate events");
+        System.err.println("    --amount count: the amount of instances to create");
+        System.err.println("    --ramp-up-time seconds: the time in which the instances should be launched");
+        System.err.println("    --run-time seconds: the time in seconds how long the application is kept running");
         System.err.println();
         System.exit(-2);
     }

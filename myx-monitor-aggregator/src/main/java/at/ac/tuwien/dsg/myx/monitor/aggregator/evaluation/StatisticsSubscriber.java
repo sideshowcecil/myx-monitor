@@ -205,8 +205,8 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     if (!cpuUtilization.containsKey(e.getHostId())) {
                         cpuUtilization.put(e.getHostId(), new TreeMap<Long, Short>());
                     }
-                    cpuUtilization.get(e.getHostId()).put(timestamp,
-                            ((Double) hostProperties.get(XADLHostProperties.CPU_SYSTEM_LOAD)).shortValue());
+                    Double utilization = (Double) hostProperties.get(XADLHostProperties.CPU_SYSTEM_LOAD) * 100;
+                    cpuUtilization.get(e.getHostId()).put(timestamp, utilization.shortValue());
                 }
             }
             // memory
@@ -214,10 +214,10 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
                     || hostProperties.containsKey(XADLHostProperties.MEMORY_NON_HEAP_USED)) {
                 long usedMemory = 0;
                 if (hostProperties.containsKey(XADLHostProperties.MEMORY_HEAP_USED)) {
-                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_HEAP_USED) / 1024;
+                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_HEAP_USED) / 1024 / 1024;
                 }
                 if (hostProperties.containsKey(XADLHostProperties.MEMORY_NON_HEAP_USED)) {
-                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_NON_HEAP_USED) / 1024;
+                    usedMemory += (long) hostProperties.get(XADLHostProperties.MEMORY_NON_HEAP_USED) / 1024 / 1024;
                 }
                 synchronized (memoryUtilization) {
                     if (!memoryUtilization.containsKey(e.getHostId())) {

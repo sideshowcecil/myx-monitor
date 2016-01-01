@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: pubsub
+Bundle-SymbolicName: pubsub
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: pubsub.jar
+Export-Package: at.ac.tuwien.dsg.pubsub,
+ at.ac.tuwien.dsg.pubsub.message,
+ at.ac.tuwien.dsg.pubsub.middleware.comp,
+ at.ac.tuwien.dsg.pubsub.middleware.interfaces,
+ at.ac.tuwien.dsg.pubsub.middleware.myx,
+ at.ac.tuwien.dsg.pubsub.network
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

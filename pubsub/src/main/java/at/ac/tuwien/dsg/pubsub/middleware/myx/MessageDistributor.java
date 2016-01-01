@@ -1,0 +1,182 @@
+package at.ac.tuwien.dsg.pubsub.middleware.myx;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+
+import at.ac.tuwien.dsg.concurrent.IdentifiableExecutorService;
+import at.ac.tuwien.dsg.concurrent.IdentifiableThreadPoolExecutor;
+import at.ac.tuwien.dsg.myx.util.MyxUtils;
+import at.ac.tuwien.dsg.myx.util.Tuple;
+import at.ac.tuwien.dsg.pubsub.message.Message;
+import at.ac.tuwien.dsg.pubsub.message.Message.Type;
+import edu.uci.isr.myx.conn.EventPumpConnector;
+import edu.uci.isr.myx.fw.IMyxClassManager;
+import edu.uci.isr.myx.fw.IMyxInterfaceDescription;
+import edu.uci.isr.myx.fw.IMyxName;
+import edu.uci.isr.myx.fw.MyxJavaClassInterfaceDescription;
+
+/**
+ * An alternative implementation of the EventPumpConnector that allows to save
+ * special calls that are sent to every connected interface.
+ * 
+ * @author bernd.rathmanner
+ * 
+ */
+public class MessageDistributor extends EventPumpConnector {
+
+    private Map<String, List<Tuple<Method, Object[]>>> initCalls = new HashMap<>();
+
+    protected final List<Object> trueServiceObjects = new CopyOnWriteArrayList<>();
+    protected final IdentifiableExecutorService asyncExecutor;
+
+    public MessageDistributor() {
+        asyncExecutor = new IdentifiableThreadPoolExecutor();
+    }
+
+    @Override
+    public void init() {
+        final Set<String> interfaceClassNames = new HashSet<String>();
+
+        IMyxInterfaceDescription miDesc = getMyxBrickItems().getInterfaceManager().getInterfaceDescription(
+                PROVIDED_INTERFACE_NAME);
+        if (miDesc instanceof MyxJavaClassInterfaceDescription) {
+            MyxJavaClassInterfaceDescription jmiDesc = (MyxJavaClassInterfaceDescription) miDesc;
+            interfaceClassNames.addAll(Arrays.asList(jmiDesc.getServiceObjectInterfaceNames()));
+        }
+
+        for (int i = 0;; i++) {
+            final String interfaceClassName = MyxUtils.getInitProperties(this).getProperty("interfaceClassName" + i);
+            if (interfaceClassName == null)
+                break;
+            interfaceClassNames.add(interfaceClassName);
+        }
+
+        final List<Class<?>> interfaceClassList = new ArrayList<Class<?>>();
+        final IMyxClassManager classManager = getMyxBrickItems().getClassManager();
+        for (final String interfaceClassName : interfaceClassNames) {
+            try {
+                final Class<?> interfaceClass = classManager.classForName(interfaceClassName);
+                interfaceClassList.add(interfaceClass);
+            } catch (ClassNotFoundException cnfe) {
+                throw new IllegalArgumentException("Can't find interface class: " + cnfe.getMessage());
+            }
+        }
+
+        final Class<?>[] interfaceClasses = interfaceClassList.toArray(new Class[interfaceClassList.size()]);
+        if (interfaceClasses.length > 0) {
+            proxyObject = Proxy.newProxyInstance(interfaceClasses[0].getClassLoader(), interfaceClasses, this);
+        }
+    }
+
+    @Override
+    public void end() {
+        asyncExecutor.shutdown();
+        try {
+            asyncExecutor.awaitTermination(5L, TimeUnit.SECONDS);
+        } catch (InterruptedException ie) {
+        }
+    }
+
+    @Override
+    public void interfaceConnected(final IMyxName interfaceName, final Object serviceObject) {
+        if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
+            trueServiceObjects.add(serviceObject);
+
+            if (proxyObject == null) {
+                proxyObject = Proxy.newProxyInstance(serviceObject.getClass().getClassLoader(), serviceObject
+                        .getClass().getInterfaces(), this);
+            }
+
+            if (initCalls.size() > 0) {
+                for (final List<Tuple<Method, Object[]>> calls : initCalls.values()) {
+                    for (final Tuple<Method, Object[]> call : calls) {
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                try {
+                                    call.getFst().invoke(serviceObject, call.getSnd());
+                                } catch (IllegalAccessException iae) {
+                                    iae.printStackTrace();
+                                } catch (InvocationTargetException ite) {
+                                    ite.printStackTrace();
+                                }
+                            }
+                        };
+                        asyncExecutor.execute(r, serviceObject.hashCode());
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Override
+    public void interfaceDisconnecting(final IMyxName interfaceName, final Object serviceObject) {
+    }
+
+    @Override
+    public void interfaceDisconnected(final IMyxName interfaceName, final Object serviceObject) {
+        if (interfaceName.equals(REQUIRED_INTERFACE_NAME)) {
+            trueServiceObjects.remove(serviceObject);
+        }
+    }
+
+    @Override
+    public Object getServiceObject(final IMyxName interfaceName) {
+        if (interfaceName.equals(PROVIDED_INTERFACE_NAME)) {
+            return proxyObject;
+        }
+        return null;
+    }
+
+    @Override
+    public Object invoke(@SuppressWarnings("unused") final Object proxy, final Method method, final Object[] args)
+            throws Throwable {
+        if (proxyObject == null || trueServiceObjects.isEmpty()) {
+            // asynchronous messages do not have to get delivered.
+            return null;
+        }
+
+        // if the given arguments contain message objects we search for
+        // application specific init-messages
+        for (final Object object : args) {
+            if (object instanceof Message<?>) {
+                final Message<?> msg = (Message<?>) object;
+                if (msg.getType() == Type.INIT) {
+                    if (!initCalls.containsKey(msg.getTopic())) {
+                        initCalls.put(msg.getTopic(), new ArrayList<Tuple<Method, Object[]>>());
+                    }
+                    initCalls.get(msg.getTopic()).add(new Tuple<Method, Object[]>(method, args));
+                } else if (msg.getType() == Type.CLOSE) {
+                    initCalls.remove(msg.getTopic());
+                }
+            }
+        }
+
+        for (final Object serviceObject : trueServiceObjects) {
+            final Runnable r = new Runnable() {
+                public void run() {
+                    try {
+                        method.invoke(serviceObject, args);
+                    } catch (IllegalAccessException iae) {
+                        iae.printStackTrace();
+                    } catch (InvocationTargetException ite) {
+                        ite.printStackTrace();
+                    }
+                }
+            };
+            asyncExecutor.execute(r, serviceObject.hashCode());
+        }
+        // we don't return values from asynchronous calls
+        return null;
+    }
+}

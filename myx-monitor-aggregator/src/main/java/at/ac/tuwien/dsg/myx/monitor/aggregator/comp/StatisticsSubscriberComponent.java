@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import at.ac.tuwien.dsg.myx.monitor.aggregator.evaluation.StatisticsSubscriber;
+import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.aggregator.myx.MyxInterfaceNames;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.util.MyxUtils;
@@ -15,6 +16,7 @@ import edu.uci.isr.myx.fw.IMyxName;
 public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
 
     public static final IMyxName IN_ISUBSCRIBER = MyxInterfaceNames.ISUBSCRIBER;
+    public static final IMyxName OUT_MODEL_ROOT = MyxInterfaceNames.MODEL_ROOT;
 
     private ISubscriber<Event> statisticsSubscriber;
 
@@ -29,7 +31,6 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
     @Override
     public void init() {
         Properties initProps = MyxUtils.getInitProperties(this);
-
         String brickCountStatisticsFile = initProps.getProperty("brickCountStatisticsFile", null);
         String externalConnectionCountStatisticsFile = initProps.getProperty("externalConnectionCountStatisticsFile",
                 null);
@@ -44,8 +45,10 @@ public class StatisticsSubscriberComponent extends AbstractMyxSimpleBrick {
         String eventStatisticsFile = initProps.getProperty("eventStatisticsFile", null);
         String hostCPUStatisticsFile = initProps.getProperty("hostCPUStatisticsFile", null);
         String hostMemoryStatisticsFile = initProps.getProperty("hostMemoryStatisticsFile", null);
+        ModelRoot modelRoot = MyxUtils.getFirstRequiredServiceObject(this, OUT_MODEL_ROOT);
+        String runtimeArchFile = initProps.getProperty("runtimeArchFile", null);
 
-        statisticsSubscriber = new StatisticsSubscriber(brickCountStatisticsFile,
+        statisticsSubscriber = new StatisticsSubscriber(modelRoot, runtimeArchFile, brickCountStatisticsFile,
                 externalConnectionCountStatisticsFile, watchedBricksStatisticsFile, watchedBricks, hostStatisticsFile,
                 eventStatisticsFile, hostCPUStatisticsFile, hostMemoryStatisticsFile);
     }

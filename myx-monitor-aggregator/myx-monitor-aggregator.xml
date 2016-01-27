@@ -144,6 +144,13 @@
                     <changes:interface xlink:href="#interfaceffa83801-5b1b754f-d1ad941a-9d0c012b" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 </changes:interfaceChange>
             </changes:componentChange>
+            <changes:componentChange changes:id="componentChange0a0a1001-84c419ad-584d9955-c5ad01e3" changes:type="update" xsi:type="changes:ComponentChange">
+                <changes:description xsi:type="instance:Description">New interface</changes:description>
+                <changes:component xlink:href="#componentffa83801-5b1ae067-a348c37e-9d0c00d3" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <changes:interfaceChange changes:id="interfaceChange0a0a1001-84c419ad-2c691b36-c5ad01e4" changes:type="add" xsi:type="changes:InterfaceChange">
+                    <changes:interface xlink:href="#interface0a0a1001-84c419ad-18d137f1-c5ad01e2" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                </changes:interfaceChange>
+            </changes:componentChange>
             <changes:linkChange changes:id="linkChangeffa80065-38401eeb-f20e39e5-a28304e7" changes:type="add" xsi:type="changes:LinkChange">
                 <changes:description xsi:type="instance:Description">New Link</changes:description>
                 <changes:link xlink:href="#linkffa80065-38401eeb-15b07eff-a28304e6" xlink:type="simple" xsi:type="instance:XMLLink"/>
@@ -201,6 +208,10 @@
                 <changes:description xsi:type="instance:Description">New Link</changes:description>
                 <changes:link xlink:href="#linkffa83801-5b1bf31f-16fb22e5-9d0c0139" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </changes:linkChange>
+            <changes:linkChange changes:id="linkChange0a0a1001-84c43c00-6fd85ea6-c5ad01ee" changes:type="add" xsi:type="changes:LinkChange">
+                <changes:description xsi:type="instance:Description">New Link</changes:description>
+                <changes:link xlink:href="#link0a0a1001-84c43c00-910be430-c5ad01ed" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </changes:linkChange>
             <changes:statechartChange changes:id="statechartChangeffa80065-37b4272c-c8b591ff-a2830201" changes:type="add" xsi:type="changes:StatechartChange">
                 <changes:description xsi:type="instance:Description">New Statechart</changes:description>
                 <changes:statechart xlink:href="#statechartffa80065-37b42722-ae8b02a5-a28301fe" xlink:type="simple" xsi:type="instance:XMLLink"/>
@@ -212,6 +223,44 @@
                     <statecharts:description xsi:type="instance:Description">[New Statechart]</statecharts:description>
                 </changes:copyOfRemovedStatechart>
             </changes:statechartChange>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -476,6 +525,15 @@
                 <types:direction xsi:type="instance:Direction">in</types:direction>
                 <types:type xlink:href="#interfaceTypeffa80065-37c108ee-b5588e5c-a28303cd" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
+            <types:interface types:id="interface0a0a1001-84c419ad-18d137f1-c5ad01e2" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">OUT ModelRoot</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceTypeffa80065-37c01338-956b2eb8-a28303ca" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                
+                
+            </types:interface>
+            
+            
             <implementationext:implementation xsi:type="javaimplementation:JavaImplementation">
                 <javaimplementation:mainClass xsi:type="javainitparams:JavaClassFileParams">
                     <javaimplementation:javaClassName xsi:type="javaimplementation:JavaClassName">at.ac.tuwien.dsg.myx.monitor.aggregator.comp.StatisticsSubscriberComponent</javaimplementation:javaClassName>
@@ -489,6 +547,18 @@
                     <javainitparams:initializationParameter javainitparams:name="hostStatisticsFile" javainitparams:value="stat-hosts.txt" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="hostCPUStatisticsFile" javainitparams:value="stat-hosts-cpu.txt" xsi:type="javainitparams:InitializationParameter"/>
                     <javainitparams:initializationParameter javainitparams:name="hostMemoryStatisticsFile" javainitparams:value="stat-hosts-memory.txt" xsi:type="javainitparams:InitializationParameter"/>
+                    <javainitparams:initializationParameter javainitparams:name="runtimeArchFile" xsi:type="javainitparams:InitializationParameter" javainitparams:value="runtime-arch.xml"/>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     
                     
                     
@@ -676,6 +746,33 @@
                 <instance:anchorOnInterface xlink:href="#interfaceffa83801-5b1b754f-d1ad941a-9d0c012b" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
         </types:link>
+        <types:link types:id="link0a0a1001-84c43c00-910be430-c5ad01ed" xsi:type="types:Link">
+            <types:description xsi:type="instance:Description">[New Link]</types:description>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interfaceffa80065-38470f31-3cccec1b-a28307e1" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:point>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interface0a0a1001-84c419ad-18d137f1-c5ad01e2" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:point>
+        </types:link>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1432,6 +1529,83 @@
                         <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                 </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interface0a0a1001-84c419ad-18d137f1-c5ad01e2" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="11200,10025" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="255,255,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#link0a0a1001-84c43c00-910be430-c5ad01ed" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10855,9951" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="11195,10024" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 
                 

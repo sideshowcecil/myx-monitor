@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import at.ac.tuwien.dsg.myx.monitor.aggregator.model.ModelRoot;
 import at.ac.tuwien.dsg.myx.monitor.em.events.Event;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEvent;
 import at.ac.tuwien.dsg.myx.monitor.em.events.XADLEventType;
@@ -71,21 +72,26 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
 
     // files used to save statistics data
 
-    private String brickCountStatisticsFile;
-    private String externalConnectionCountStatisticsFile;
-    private String watchedBricksStatisticsFile;
-    private Set<String> watchedBricks;
-    private String eventStatisticsFile;
-    private String hostStatisticsFile;
-    private String hostCPUStatisticsFile;
-    private String hostMemoryStatisticsFile;
+    private final ModelRoot modelRoot;
+    private final String runtimeArchFile;
+    private final String brickCountStatisticsFile;
+    private final String externalConnectionCountStatisticsFile;
+    private final String watchedBricksStatisticsFile;
+    private final Set<String> watchedBricks;
+    private final String eventStatisticsFile;
+    private final String hostStatisticsFile;
+    private final String hostCPUStatisticsFile;
+    private final String hostMemoryStatisticsFile;
 
     private ScheduledExecutorService persistenceExecutor = Executors.newScheduledThreadPool(1);
     private long startingTimestamp = System.currentTimeMillis() / 1000;
 
-    public StatisticsSubscriber(String brickCountStatisticsFile, String externalConnectionCountStatisticsFile,
-            String watchedBricksStatisticsFile, Set<String> watchedBricks, String hostStatisticsFile,
-            String eventStatisticsFile, String hostCPUStatisticsFile, String hostMemoryStatisticsFile) {
+    public StatisticsSubscriber(ModelRoot modelRoot, String runtimeArchFile, String brickCountStatisticsFile,
+            String externalConnectionCountStatisticsFile, String watchedBricksStatisticsFile,
+            Set<String> watchedBricks, String hostStatisticsFile, String eventStatisticsFile,
+            String hostCPUStatisticsFile, String hostMemoryStatisticsFile) {
+        this.modelRoot = modelRoot;
+        this.runtimeArchFile = runtimeArchFile;
         this.brickCountStatisticsFile = brickCountStatisticsFile;
         this.externalConnectionCountStatisticsFile = externalConnectionCountStatisticsFile;
         this.watchedBricksStatisticsFile = watchedBricksStatisticsFile;
@@ -239,6 +245,11 @@ public class StatisticsSubscriber implements ISubscriber<Event> {
      * Persist/Print the statistics.
      */
     public void persist() {
+        // persist the model
+        if (modelRoot != null && runtimeArchFile != null) {
+            modelRoot.save(runtimeArchFile);
+        }
+
         // compute statistics
         long now = System.currentTimeMillis() / 1000;
         SortedMap<Long, Long> brickCountStatistics = new TreeMap<>();
